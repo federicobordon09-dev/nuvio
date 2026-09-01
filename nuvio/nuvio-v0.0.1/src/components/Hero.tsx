@@ -54,7 +54,7 @@ export default function Hero() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
-                href="#"
+                href="/auth/login"
                 className="inline-flex h-11 items-center justify-center rounded-lg bg-ink-950 px-6 text-[14px] font-medium text-white shadow-[0_1px_2px_rgba(11,20,38,0.12)] transition-all duration-200 ease-out hover:bg-ink-900 hover:shadow-[0_2px_8px_rgba(11,20,38,0.15)] active:scale-[0.98]"
               >
                 Subir un documento

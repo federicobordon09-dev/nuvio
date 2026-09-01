@@ -55,12 +55,12 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        <a
-          href="#"
+        <Link
+          href="/auth/login"
           className="inline-flex h-9 items-center rounded-lg bg-ink-950 px-4 text-[13px] font-medium text-white transition-all duration-200 ease-out hover:bg-ink-900 hover:shadow-[0_2px_8px_rgba(11,20,38,0.15)] active:scale-[0.98]"
         >
           Empezar
-        </a>
+        </Link>
       </div>
     </header>
   );
