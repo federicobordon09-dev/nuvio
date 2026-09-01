@@ -75,9 +75,9 @@ C:\Users\Usuario\Desktop\Proyectos\nuvio\nuvio-v0.0.1
 
 # Estado actual
 
-El proyecto se encuentra en una etapa inicial de desarrollo.
+El proyecto se encuentra con la autenticación por Google OAuth completamente funcional.
 
-La aplicación base de Next.js ya fue creada, pero Nuvio todavía debe construirse desde cero.
+La aplicación base de Next.js ya fue creada y se integró Supabase como proveedor de autenticación. Nuvio debe seguir construyéndose desde cero en su capa médica (subida de documentos, IA, explicaciones).
 
 No asumir que existen componentes, sistemas de diseño, APIs, autenticación, base de datos o funcionalidades médicas implementadas.
 
@@ -407,7 +407,66 @@ Si una funcionalidad agrega complejidad sin aportar valor significativo, reconsi
 
 ---
 
-## Comando de desarrollo
+# Autenticación
+
+Nuvio usa **Supabase Auth** con **Google OAuth** y el flujo **PKCE** (Proof Key for Code Exchange), adaptado para el App Router de Next.js 16 mediante `@supabase/ssr`.
+
+## Flujo
+
+```text
+Usuario hace clic en "Continuar con Google"
+  → signInWithOAuth guarda el code verifier en cookies del navegador
+  → Redirección a Google
+  → Google autentica y redirige de vuelta a /auth/callback?code=…&flow_id=…
+  → El route handler intercambia el code por una sesión (exchangeCodeForSession)
+  → La cookie de sesión se envía al navegador en la redirección
+  → El navegador navega a /dashboard → el middleware valida la sesión (getClaims)
+```
+
+## Archivos clave
+
+- `src/lib/supabase/client.ts` — cliente del lado del servidor (`createServerClient`)
+- `src/lib/supabase/server.ts` — helpers de servidor
+- `src/middleware.ts` — valida la sesión en cada petición; hace **skip de `/auth/callback`** antes de crear el cliente para no romper el flujo
+- `src/app/auth/login/page.tsx` — página de login con `signInWithOAuth`
+- `src/app/auth/callback/route.ts` — route handler que recibe el `code` de Google y lo intercambia por sesión
+- `src/lib/actions/auth.ts` — acciones del servidor relacionadas con auth
+
+## Notas técnicas
+
+- El verifier PKCE se almacena en **cookies** (SSR), no en localStorage.
+- En el servidor, `exchangeCodeForSession(code)` lee el verifier desde la cookie legacy `{storageKey}-code-verifier` cuando no se pasa `flowId` explícito.
+- Next.js 16 marca `middleware` como **deprecated** y lo renombra a `proxy`; el archivo sigue funcionando con un warning (migrar con `npx @next/codemod@canary middleware-to-proxy .` cuando se quiera).
+- **No usar localStorage ni `getSession`** como sustituto de `exchangeCodeForSession`.
+
+## Variables de entorno
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=<url-del-proyecto-Supabase>
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<clave-pública-Supabase>
+```
+
+El archivo `.env.example` contiene los placeholders sin valores reales.
+
+## Despliegue
+
+- **Repositorio**: https://github.com/federicobordon09-dev/nuvio.git
+- **Producción**: https://nuvio-lemon-six.vercel.app
+- **Local**: http://localhost:3000
+- **Pipeline**: cada cambio se hace con `commit` + `push` a `main`; **Vercel redesplega automáticamente** tras el push.
+- Para probar en producción: subí el cambio (`git push`) y visitá la URL en producción. En local usá `pnpm dev`.
+
+## Errores corregidos
+
+### `fix: saltar middleware antes de crear cliente Supabase en /auth/callback`
+El middleware intentaba crear el cliente Supabase para la ruta `/auth/callback`, lo que interrumpía el flujo PKCE antes de que el verifier llegara al servidor. Se añadió una salida anticipada en el middleware para esa ruta.
+
+### `fix: preservar cookies de sesión en el redirect de /auth/callback`
+**Causa raíz del fallo**: el callback construía `supabaseResponse` con las cookies de sesión, pero devolvía una respuesta `NextResponse.redirect` nueva que **no las incluía**. La sesión nunca llegaba al navegador, el usuario volvía silenciosamente a `/auth/login`, y los reintentos acumulaban verifiers huérfanos que terminaban produciendo `PKCE code verifier not found in storage`. La corrección reconstruye la respuesta de redirección dentro de `setAll()`, de modo que las cookies escritas por el cliente Supabase siempre se preservan en la respuesta final, tanto en éxito como en error.
+
+---
+
+# Comando de desarrollo
 
 Para iniciar el proyecto:
 
