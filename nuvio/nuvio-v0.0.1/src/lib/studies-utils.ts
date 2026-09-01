@@ -22,7 +22,7 @@ export type StudyType = typeof ALLOWED_STUDY_TYPES[number];
 export const STUDY_TYPE_LABELS: Record<StudyType, string> = {
   blood_test: "Análisis de sangre",
   MRI: "Resonancia magnética",
-  CT: "Tomografía",
+  CT: "Tomografía computarizada",
   ECG: "Electrocardiograma",
   epicrisis: "Epicrisis",
   medical_report: "Informe médico",

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { uploadStudy } from "@/lib/actions/studies";
-import { ALLOWED_STUDY_TYPES, MAX_FILE_SIZE, formatFileSize, type StudyType } from "@/lib/studies-utils";
+import { ALLOWED_STUDY_TYPES, MAX_FILE_SIZE, formatFileSize, getStudyTypeLabel, type StudyType } from "@/lib/studies-utils";
 
 const MIME_LABELS: Record<string, string> = {
   "application/pdf": "PDF",
@@ -15,35 +15,33 @@ export default function SubirPage() {
   const [file, setFile] = useState<File | null>(null);
   const [studyType, setStudyType] = useState<StudyType>("blood_test");
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = e.target.files?.[0] ?? null;
     setFile(selected);
     setError(null);
-    setSuccess(false);
   }
 
   function handleCancel() {
     setFile(null);
     setError(null);
-    setSuccess(false);
     setStudyType("blood_test");
+    if (formRef.current) formRef.current.reset();
   }
 
-  async function handleSubmit(formData: FormData) {
-    setError(null);
-    setSuccess(false);
-    setUploading(true);
-    try {
-      await uploadStudy(formData);
-      setSuccess(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error inesperado.");
-    } finally {
-      setUploading(false);
+  function handlePreSubmit(e: React.FormEvent<HTMLFormElement>) {
+    if (!file) {
+      e.preventDefault();
+      setError("Debés seleccionar un archivo.");
+      return;
     }
+    if (file.size > MAX_FILE_SIZE) {
+      e.preventDefault();
+      setError(`El archivo supera el tamaño máximo de ${MAX_FILE_SIZE / (1024 * 1024)} MB.`);
+      return;
+    }
+    setError(null);
   }
 
   return (
@@ -57,19 +55,18 @@ export default function SubirPage() {
         </p>
       </div>
 
-      {success && (
-        <div className="mb-6 rounded-xl border border-cyan-500/40 bg-cyan-50 p-4 text-[14px] text-cyan-800">
-          ¡Estudio subido correctamente! Redirigiendo…
-        </div>
-      )}
-
       {error && (
         <div className="mb-6 rounded-xl border border-red-400/50 bg-red-50 p-4 text-[14px] text-red-800">
           {error}
         </div>
       )}
 
-      <form action={handleSubmit} className="space-y-6">
+      <form
+        ref={formRef}
+        action={uploadStudy}
+        onSubmit={handlePreSubmit}
+        className="space-y-6"
+      >
         {/* File input */}
         <div className="rounded-xl border-2 border-dashed border-ink-700/20 bg-white p-8 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
           <div className="flex flex-col items-center justify-center text-center">
@@ -107,7 +104,6 @@ export default function SubirPage() {
               onChange={handleFileChange}
               className="mt-4 hidden"
               id="file-input"
-              disabled={uploading}
             />
             <label
               htmlFor="file-input"
@@ -129,11 +125,10 @@ export default function SubirPage() {
             value={studyType}
             onChange={(e) => setStudyType(e.target.value as StudyType)}
             className="w-full rounded-lg border border-ink-700/20 bg-white px-3 py-2.5 text-[14px] text-foreground transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
-            disabled={uploading}
           >
             {ALLOWED_STUDY_TYPES.map((type) => (
               <option key={type} value={type}>
-                {type.replace("_", " ")}
+                {getStudyTypeLabel(type)}
               </option>
             ))}
           </select>
@@ -143,17 +138,16 @@ export default function SubirPage() {
         <div className="flex items-center gap-3">
           <button
             type="submit"
-            disabled={!file || uploading}
+            disabled={!file}
             className="inline-flex items-center justify-center rounded-lg bg-primary-600 px-6 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-primary-700 disabled:opacity-50"
           >
-            {uploading ? "Subiendo…" : "Subir estudio"}
+            Subir estudio
           </button>
           {file && (
             <button
               type="button"
               onClick={handleCancel}
-              disabled={uploading}
-              className="rounded-lg px-4 py-2.5 text-[14px] font-medium text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground disabled:opacity-50"
+              className="rounded-lg px-4 py-2.5 text-[14px] font-medium text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
             >
               Cancelar
             </button>
