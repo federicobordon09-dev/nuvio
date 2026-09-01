@@ -21,8 +21,8 @@ export default function ProductPreview() {
         </div>
 
         <div className="p-5">
-          {/* Input section */}
-          <div className="mb-4 flex items-center gap-3 rounded-xl border border-dashed border-border bg-muted/30 px-4 py-3">
+          {/* Input section — solid border, no dashed */}
+          <div className="mb-4 flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 px-4 py-3">
             <svg
               className="h-4 w-4 shrink-0 text-muted-foreground/50"
               fill="none"

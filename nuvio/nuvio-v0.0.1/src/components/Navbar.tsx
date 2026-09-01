@@ -39,7 +39,7 @@ export default function Navbar() {
             <li>
               <a
                 href="#como-funciona"
-                className="transition-colors hover:text-foreground"
+                className="relative transition-colors duration-200 ease-out hover:text-foreground after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-foreground/40 after:transition-transform after:duration-200 after:ease-out hover:after:scale-x-100"
               >
                 Cómo funciona
               </a>
@@ -47,7 +47,7 @@ export default function Navbar() {
             <li>
               <a
                 href="#seguridad"
-                className="transition-colors hover:text-foreground"
+                className="relative transition-colors duration-200 ease-out hover:text-foreground after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-foreground/40 after:transition-transform after:duration-200 after:ease-out hover:after:scale-x-100"
               >
                 Seguridad
               </a>
@@ -57,7 +57,7 @@ export default function Navbar() {
 
         <a
           href="#"
-          className="inline-flex h-9 items-center rounded-lg bg-ink-950 px-4 text-[13px] font-medium text-primary-foreground transition-all hover:bg-ink-900 active:scale-[0.98]"
+          className="inline-flex h-9 items-center rounded-lg bg-ink-950 px-4 text-[13px] font-medium text-primary-foreground transition-all duration-200 ease-out hover:bg-ink-900 hover:shadow-[0_2px_8px_rgba(11,20,38,0.15)] active:scale-[0.98]"
         >
           Empezar
         </a>

@@ -1,23 +1,6 @@
 export default function Disclaimer() {
   return (
     <section className="bg-muted/30">
-      {/* Dotted separator */}
-      <div className="mx-auto max-w-6xl px-6 lg:px-8" aria-hidden="true">
-        <svg className="w-full opacity-[0.12]" height="8">
-          <pattern
-            id="dot-sep-3"
-            x="0"
-            y="0"
-            width="16"
-            height="8"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle cx="2" cy="4" r="1.2" fill="currentColor" />
-          </pattern>
-          <rect width="100%" height="100%" fill="url(#dot-sep-3)" />
-        </svg>
-      </div>
-
       <div className="mx-auto max-w-6xl px-6 py-16 lg:px-8">
         <div className="max-w-3xl rounded-2xl border border-border bg-surface p-6 shadow-[0_1px_2px_rgba(11,20,38,0.03)] sm:p-8">
           <div className="flex gap-4">

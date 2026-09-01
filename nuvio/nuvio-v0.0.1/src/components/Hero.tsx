@@ -59,13 +59,13 @@ export default function Hero() {
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#"
-                className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-7 text-sm font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(11,20,38,0.2),0_4px_12px_rgba(11,20,38,0.12)] transition-all hover:shadow-[0_1px_3px_rgba(11,20,38,0.25),0_6px_16px_rgba(11,20,38,0.15)] hover:brightness-110 active:scale-[0.98]"
+                className="inline-flex h-12 items-center justify-center rounded-xl bg-ink-950 px-7 text-sm font-semibold text-primary-foreground shadow-[0_1px_2px_rgba(11,20,38,0.2),0_4px_12px_rgba(11,20,38,0.12)] transition-all duration-200 ease-out hover:bg-ink-900 hover:shadow-[0_2px_4px_rgba(11,20,38,0.2),0_8px_20px_rgba(11,20,38,0.14)] active:scale-[0.98]"
               >
                 Subir un documento
               </a>
               <a
                 href="#como-funciona"
-                className="inline-flex h-12 items-center justify-center rounded-xl border border-border px-7 text-sm font-semibold text-foreground transition-all hover:bg-muted active:scale-[0.98]"
+                className="inline-flex h-12 items-center justify-center rounded-xl border border-border px-7 text-sm font-semibold text-foreground transition-all duration-200 ease-out hover:border-border/80 hover:bg-primary-50 active:scale-[0.98]"
               >
                 Cómo funciona
               </a>
