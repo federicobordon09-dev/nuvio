@@ -1,9 +1,11 @@
 import { getStudy } from "@/lib/actions/studies";
-import { formatFileSize, getStudyTypeLabel } from "@/lib/studies-utils";
+import { formatFileSize, getProcessingErrorLabel, getStudyTypeLabel } from "@/lib/studies-utils";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { StudyDeleteButton } from "@/components/dashboard/StudyDeleteButton";
 import { StudyDownloadButton } from "@/components/dashboard/StudyDownloadButton";
+import { StudyProcessButton } from "@/components/dashboard/StudyProcessButton";
+import { StudyStatusBadge } from "@/components/dashboard/StudyStatusBadge";
 
 export default async function EstudioDetailPage({
   params,
@@ -89,36 +91,40 @@ export default async function EstudioDetailPage({
               Estado
             </dt>
             <dd className="mt-1 text-[15px] text-foreground">
-              {study.status === "uploaded" && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-50 px-2.5 py-0.5 text-[13px] font-medium text-cyan-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-500" />
-                  Subido
-                </span>
-              )}
-              {study.status === "processing" && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-50 px-2.5 py-0.5 text-[13px] font-medium text-yellow-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
-                  Procesando
-                </span>
-              )}
-              {study.status === "processed" && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-0.5 text-[13px] font-medium text-green-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                  Procesado
-                </span>
-              )}
-              {study.status === "error" && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-0.5 text-[13px] font-medium text-red-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-                  Error
-                </span>
-              )}
+              <StudyStatusBadge status={study.status} />
             </dd>
           </div>
         </dl>
       </div>
 
-      <div className="mt-6 flex items-center gap-3">
+      {study.status === "uploaded" && (
+        <div className="mt-6 rounded-xl border border-cyan-400/40 bg-cyan-50 p-4 text-[14px] leading-[1.6] text-cyan-900">
+          El documento está pendiente de procesamiento. Iniciá el procesamiento
+          para extraer su contenido.
+        </div>
+      )}
+      {study.status === "processing" && (
+        <div className="mt-6 rounded-xl border border-yellow-400/40 bg-yellow-50 p-4 text-[14px] leading-[1.6] text-yellow-900">
+          Se está procesando el documento. Esta operación suele tardar unos
+          segundos.
+        </div>
+      )}
+      {study.status === "processed" && (
+        <div className="mt-6 rounded-xl border border-green-400/40 bg-green-50 p-4 text-[14px] leading-[1.6] text-green-900">
+          El documento fue procesado correctamente. El contenido extraído
+          estará disponible próximamente.
+        </div>
+      )}
+      {study.status === "error" && (
+        <div className="mt-6 rounded-xl border border-red-400/40 bg-red-50 p-4 text-[14px] leading-[1.6] text-red-900">
+          {getProcessingErrorLabel(study.processing_error)}
+        </div>
+      )}
+
+      <div className="mt-6 flex flex-wrap items-center gap-3">
+        {(study.status === "uploaded" ||
+          study.status === "processing" ||
+          study.status === "error") && <StudyProcessButton studyId={study.id} />}
         <StudyDownloadButton studyId={study.id} />
         <StudyDeleteButton studyId={study.id} />
       </div>

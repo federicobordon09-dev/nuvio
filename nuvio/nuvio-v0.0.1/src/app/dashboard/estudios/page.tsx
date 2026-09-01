@@ -1,5 +1,6 @@
 import { listStudies } from "@/lib/actions/studies";
 import { formatFileSize, getStudyTypeLabel } from "@/lib/studies-utils";
+import { StudyStatusBadge } from "@/components/dashboard/StudyStatusBadge";
 import Link from "next/link";
 
 export default async function EstudiosPage() {
@@ -59,6 +60,9 @@ export default async function EstudiosPage() {
                   <p className="mt-1 text-[13px] text-muted-foreground">
                     {getStudyTypeLabel(study.study_type)}
                   </p>
+                  <div className="mt-2">
+                    <StudyStatusBadge status={study.status} />
+                  </div>
                 </div>
                 <div className="flex items-center gap-4 text-[13px] text-muted-foreground">
                   <span>{formatFileSize(study.file_size)}</span>

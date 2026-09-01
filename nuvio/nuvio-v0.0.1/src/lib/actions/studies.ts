@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { processStudy } from "@/lib/studies/processing";
 import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, ALLOWED_STUDY_TYPES, type StudyType } from "@/lib/studies-utils";
 
 async function assertAuthenticated(supabase: Awaited<ReturnType<typeof createClient>>) {
@@ -36,6 +37,7 @@ export async function listStudies() {
     mime_type: string;
     study_type: StudyType;
     status: string;
+    processing_error: string | null;
     created_at: string;
     updated_at: string;
   }>;
@@ -195,4 +197,25 @@ export async function deleteStudyAction(formData: FormData) {
     throw new Error("ID de estudio inválido.");
   }
   await deleteStudy(studyId);
+}
+
+function getStudyIdFromForm(formData: FormData): string {
+  const studyId = formData.get("studyId");
+  if (typeof studyId !== "string" || !studyId) {
+    throw new Error("ID de estudio inválido.");
+  }
+  return studyId;
+}
+
+export async function processStudyAction(formData: FormData) {
+  const studyId = getStudyIdFromForm(formData);
+
+  const supabase = await createClient();
+  const user = await assertAuthenticated(supabase);
+
+  await processStudy(supabase, user.id, studyId);
+
+  revalidatePath("/dashboard/estudios");
+  revalidatePath(`/dashboard/estudios/${studyId}`);
+  redirect(`/dashboard/estudios/${studyId}`);
 }
