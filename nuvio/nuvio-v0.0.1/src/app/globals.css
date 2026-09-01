@@ -20,6 +20,11 @@
   --ink-800: #1A2744;
   --ink-700: #243352;
   --ink-600: #334766;
+  --color-ink-950: #0B1426;
+  --color-ink-900: #111D35;
+  --color-ink-800: #1A2744;
+  --color-ink-700: #243352;
+  --color-ink-600: #334766;
 
   /* Primary — azul del logo */
   --primary-50: #EFF6FF;
@@ -31,11 +36,23 @@
   --primary-700: #1D4ED8;
   --primary-800: #1E40AF;
   --primary-900: #1E3A8A;
+  --color-primary-50: #EFF6FF;
+  --color-primary-100: #DBEAFE;
+  --color-primary-200: #BFDBFE;
+  --color-primary-400: #60A5FA;
+  --color-primary-500: #3B82F6;
+  --color-primary-600: #2563EB;
+  --color-primary-700: #1D4ED8;
+  --color-primary-800: #1E40AF;
+  --color-primary-900: #1E3A8A;
 
   /* Cyan — mitad clara del degradé */
   --cyan-400: #22D3EE;
   --cyan-500: #06B6D4;
   --cyan-600: #0891B2;
+  --color-cyan-400: #22D3EE;
+  --color-cyan-500: #06B6D4;
+  --color-cyan-600: #0891B2;
 
   /* Status — valores exactos de la spec */
   --status-normal: var(--cyan-600);
