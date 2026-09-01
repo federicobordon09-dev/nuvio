@@ -61,6 +61,24 @@ export async function getStudy(studyId: string) {
   return data;
 }
 
+export async function getStudyExtraction(studyId: string) {
+  const supabase = await createClient();
+  const user = await assertAuthenticated(supabase);
+
+  const { data, error } = await supabase
+    .from("study_extractions")
+    .select("extracted_text, page_count, method")
+    .eq("study_id", studyId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error("Error al cargar la extracción del estudio.");
+  }
+
+  return data;
+}
+
 export async function uploadStudy(formData: FormData) {
   const supabase = await createClient();
   const user = await assertAuthenticated(supabase);

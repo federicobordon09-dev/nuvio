@@ -1,4 +1,4 @@
-import { getStudy } from "@/lib/actions/studies";
+import { getStudy, getStudyExtraction } from "@/lib/actions/studies";
 import { formatFileSize, getProcessingErrorLabel, getStudyTypeLabel } from "@/lib/studies-utils";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -19,6 +19,16 @@ export default async function EstudioDetailPage({
     study = await getStudy(id);
   } catch {
     notFound();
+  }
+
+  let extraction: { extracted_text: string; page_count: number | null; method: string } | null = null;
+  if (study.status === "processed") {
+    try {
+      extraction = await getStudyExtraction(id);
+    } catch {
+      // La tabla puede no existir aún o haber un error transitorio.
+      // Se muestra el fallback sin romper la página.
+    }
   }
 
   return (
@@ -109,10 +119,29 @@ export default async function EstudioDetailPage({
           segundos.
         </div>
       )}
-      {study.status === "processed" && (
+      {study.status === "processed" && extraction && (
+        <div className="mt-6 rounded-xl border border-ink-700/10 bg-white shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
+          <div className="border-b border-ink-700/10 px-6 py-4">
+            <h2 className="text-[15px] font-medium text-foreground">
+              Contenido extraído
+            </h2>
+            {extraction.page_count != null && (
+              <p className="mt-0.5 text-[12px] text-muted-foreground">
+                Extraído del documento original · {extraction.page_count} página{extraction.page_count !== 1 ? "s" : ""}
+              </p>
+            )}
+          </div>
+          <div className="max-h-[600px] overflow-y-auto px-6 py-4">
+            <pre className="whitespace-pre-wrap break-words font-sans text-[14px] leading-[1.6] text-foreground">
+              {extraction.extracted_text}
+            </pre>
+          </div>
+        </div>
+      )}
+      {study.status === "processed" && !extraction && (
         <div className="mt-6 rounded-xl border border-green-400/40 bg-green-50 p-4 text-[14px] leading-[1.6] text-green-900">
-          El documento fue procesado correctamente. El contenido extraído
-          estará disponible próximamente.
+          El documento fue procesado correctamente, pero el contenido extraído
+          todavía no está disponible.
         </div>
       )}
       {study.status === "error" && (
