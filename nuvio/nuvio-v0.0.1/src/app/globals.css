@@ -14,14 +14,14 @@
   --color-surface: #ffffff;
   --color-surface-elevated: #ffffff;
 
-  /* Ink: dark navy from logo right side */
+  /* Ink — reemplaza negro puro */
   --ink-950: #0B1426;
   --ink-900: #111D35;
   --ink-800: #1A2744;
   --ink-700: #243352;
   --ink-600: #334766;
 
-  /* Primary: blue from logo gradient bottom */
+  /* Primary — azul del logo */
   --primary-50: #EFF6FF;
   --primary-100: #DBEAFE;
   --primary-200: #BFDBFE;
@@ -32,10 +32,21 @@
   --primary-800: #1E40AF;
   --primary-900: #1E3A8A;
 
-  /* Cyan: bright cyan from logo gradient top */
+  /* Cyan — mitad clara del degradé */
   --cyan-400: #22D3EE;
   --cyan-500: #06B6D4;
   --cyan-600: #0891B2;
+
+  /* Status — valores exactos de la spec */
+  --status-normal: var(--cyan-600);
+  --status-normal-bg: #E0F7FA;
+  --status-elevated: #EF4444;
+  --status-elevated-bg: #FEE2E2;
+  --status-warning: #F59E0B;
+  --status-warning-bg: #FEF3C7;
+
+  /* Degradé de marca — uso restringido */
+  --gradient-brand: linear-gradient(135deg, #22D3EE, #3B82F6, #2563EB);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

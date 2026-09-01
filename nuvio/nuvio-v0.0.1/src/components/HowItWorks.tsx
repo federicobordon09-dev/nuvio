@@ -5,24 +5,24 @@ export default function HowItWorks() {
       className="bg-muted/30"
       aria-labelledby="como-funciona-heading"
     >
-      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32 lg:px-8">
+      <div className="mx-auto max-w-6xl px-6 py-20 sm:py-24 lg:px-8">
         <h2
           id="como-funciona-heading"
-          className="text-3xl font-bold tracking-[-0.03em] sm:text-4xl"
+          className="text-[22px] font-medium leading-[1.4] tracking-[-0.02em] text-foreground"
         >
           Cómo funciona
         </h2>
-        <p className="mt-4 max-w-lg text-muted-foreground">
+        <p className="mt-3 max-w-lg text-[15px] leading-[1.6] text-muted-foreground">
           Tres pasos simples para entender tus resultados.
         </p>
 
-        <div className="relative mt-16">
-          {/* Subtle connecting line, desktop only */}
+        <div className="relative mt-12">
+          {/* Connecting line — sutil, no punteado */}
           <div
             className="pointer-events-none absolute inset-x-0 top-1/2 hidden h-px sm:block"
             aria-hidden="true"
           >
-            <div className="mx-16 h-full bg-gradient-to-r from-cyan-500/20 via-primary-500/20 to-ink-800/20" />
+            <div className="mx-16 h-full bg-ink-700/10" />
           </div>
 
           <div className="grid gap-6 sm:grid-cols-3">
@@ -37,6 +37,7 @@ export default function HowItWorks() {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={1.5}
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -57,6 +58,7 @@ export default function HowItWorks() {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={1.5}
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -77,6 +79,7 @@ export default function HowItWorks() {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={1.5}
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -105,17 +108,19 @@ function Step({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="relative rounded-2xl border border-border bg-surface p-6 shadow-[0_1px_2px_rgba(11,20,38,0.03)] transition-all duration-200 ease-out hover:bg-muted/40 hover:shadow-[0_2px_8px_rgba(11,20,38,0.06)] hover:border-border/80">
+    <div className="relative rounded-xl border border-ink-700/10 bg-white p-5 shadow-[0_1px_2px_rgba(11,20,38,0.04)] transition-all duration-200 ease-out hover:bg-muted/40 hover:shadow-[0_2px_8px_rgba(11,20,38,0.06)] hover:border-ink-700/15">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/[0.07] text-cyan-600">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-50 text-primary-600">
           {icon}
         </div>
-        <span className="text-[11px] font-bold tracking-widest text-ink-600/50 uppercase">
+        <span className="text-[11px] font-medium tracking-widest text-muted-foreground uppercase">
           {step}
         </span>
       </div>
-      <h3 className="text-[15px] font-semibold text-foreground">{title}</h3>
-      <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+      <h3 className="text-[18px] font-medium leading-[1.4] text-foreground">
+        {title}
+      </h3>
+      <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
         {description}
       </p>
     </div>

@@ -1,22 +1,19 @@
 export default function Security() {
   return (
-    <section
-      id="seguridad"
-      aria-labelledby="seguridad-heading"
-    >
-      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32 lg:px-8">
+    <section id="seguridad" aria-labelledby="seguridad-heading">
+      <div className="mx-auto max-w-6xl px-6 py-20 sm:py-24 lg:px-8">
         <h2
           id="seguridad-heading"
-          className="text-3xl font-bold tracking-[-0.03em] sm:text-4xl"
+          className="text-[22px] font-medium leading-[1.4] tracking-[-0.02em] text-foreground"
         >
           Tus datos están protegidos
         </h2>
-        <p className="mt-4 max-w-lg text-muted-foreground">
-          La privacidad es parte fundamental de la arquitectura de Nuvio, no
-          una función adicional.
+        <p className="mt-3 max-w-lg text-[15px] leading-[1.6] text-muted-foreground">
+          La privacidad es parte fundamental de la arquitectura de Nuvio, no una
+          función adicional.
         </p>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-3">
+        <div className="mt-12 grid gap-6 sm:grid-cols-3">
           <Feature
             title="Interpretación, no diagnóstico"
             description="Nuvio es una herramienta de interpretación y educación. Nunca presenta sus resultados como un diagnóstico médico confirmado."
@@ -27,6 +24,7 @@ export default function Security() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={1.5}
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -46,6 +44,7 @@ export default function Security() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={1.5}
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -65,6 +64,7 @@ export default function Security() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={1.5}
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -90,12 +90,14 @@ function Feature({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-6 shadow-[0_1px_2px_rgba(11,20,38,0.03)] transition-all duration-200 ease-out hover:bg-muted/40 hover:shadow-[0_2px_8px_rgba(11,20,38,0.06)] hover:border-border/80">
-      <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500/[0.07] text-primary-600">
+    <div className="rounded-xl border border-ink-700/10 bg-white p-5 shadow-[0_1px_2px_rgba(11,20,38,0.04)] transition-all duration-200 ease-out hover:bg-muted/40 hover:shadow-[0_2px_8px_rgba(11,20,38,0.06)] hover:border-ink-700/15">
+      <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary-50 text-primary-600">
         {icon}
       </div>
-      <h3 className="text-[15px] font-semibold text-foreground">{title}</h3>
-      <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+      <h3 className="text-[18px] font-medium leading-[1.4] text-foreground">
+        {title}
+      </h3>
+      <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
         {description}
       </p>
     </div>

@@ -2,8 +2,8 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 sm:h-16 sm:flex-row sm:py-0 lg:px-8">
+    <footer className="border-t border-ink-700/10">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 sm:h-16 sm:flex-row sm:py-0 lg:px-8">
         <Image
           src="/nuvio_logo.png"
           alt="Nuvio"
@@ -11,10 +11,10 @@ export default function Footer() {
           height={24}
           className="h-6 w-auto"
         />
-        <p className="text-[12px] text-ink-600">
+        <p className="text-[13px] leading-[1.6] text-muted-foreground">
           Información médica compleja. Explicada de forma clara.
         </p>
-        <p className="text-[12px] text-ink-600/60">
+        <p className="text-[12px] leading-[1.4] text-muted-foreground/70">
           &copy; {new Date().getFullYear()} Nuvio
         </p>
       </div>
