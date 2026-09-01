@@ -29,9 +29,15 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const { data } = await supabase.auth.getClaims();
-
   const pathname = request.nextUrl.pathname;
+
+  // Skip /auth/callback — the route handler needs the raw request cookies
+  // (including the PKCE code verifier) to call exchangeCodeForSession().
+  if (pathname === "/auth/callback") {
+    return supabaseResponse;
+  }
+
+  const { data } = await supabase.auth.getClaims();
 
   if (!data && pathname.startsWith("/dashboard")) {
     const url = request.nextUrl.clone();
