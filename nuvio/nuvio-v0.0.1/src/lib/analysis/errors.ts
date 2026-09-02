@@ -33,6 +33,8 @@ export const ANALYSIS_ERROR_MESSAGES: Record<string, string> = {
     "Ocurrió un problema al comunicarnos con el servicio de IA.",
   persist_failed:
     "El análisis se generó pero no se pudo guardar. Intentá de nuevo.",
+  analysis_in_progress:
+    "El análisis ya está en curso. Esperá unos segundos.",
 };
 
 export function getAnalysisErrorMessage(code: string): string {

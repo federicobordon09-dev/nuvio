@@ -56,6 +56,10 @@ describe("getAnalysisErrorMessage", () => {
       "persist_failed",
       "El análisis se generó pero no se pudo guardar. Intentá de nuevo.",
     ],
+    [
+      "analysis_in_progress",
+      "El análisis ya está en curso. Esperá unos segundos.",
+    ],
   ];
 
   for (const [code, expected] of cases) {
@@ -83,8 +87,8 @@ describe("Constantes de error", () => {
     assert.ok(ANALYSIS_GENERIC_ERROR.length > 0);
   });
 
-  it("ANALYSIS_ERROR_MESSAGES tiene exactamente 12 entradas", () => {
-    assert.equal(Object.keys(ANALYSIS_ERROR_MESSAGES).length, 12);
+  it("ANALYSIS_ERROR_MESSAGES tiene exactamente 13 entradas", () => {
+    assert.equal(Object.keys(ANALYSIS_ERROR_MESSAGES).length, 13);
   });
 
   it("todas las claves de ANALYSIS_ERROR_MESSAGES son strings no vacíos", () => {

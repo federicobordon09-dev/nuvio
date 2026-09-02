@@ -1,12 +1,14 @@
-import { createClient } from "@/lib/supabase/server";
+import type { createClient } from "@/lib/supabase/server";
 import { analyzeStudyText, GeminiError } from "./gemini.ts";
-import { upsertStudyAnalysis } from "@/lib/actions/studies.ts";
 import type { StudyAnalysis } from "./schema.ts";
+
+type Supabase = Awaited<ReturnType<typeof createClient>>;
 
 type StudyRow = {
   id: string;
   user_id: string;
   status: string;
+  analysis_status: string;
 };
 
 type ExtractionRow = {
@@ -25,9 +27,35 @@ export class AnalysisError extends Error {
   }
 }
 
-async function assertAuthenticated(
-  supabase: Awaited<ReturnType<typeof createClient>>
-) {
+// ── Núcleo testable (deps inyectadas) ─────────────────────────
+
+/**
+ * Pipeline server-side completo: extracted_text → Gemini → Zod → study_analyses.
+ *
+ * - Claim atómico: setea `analysis_status = 'processing'` solo si no está ya
+ *   en curso (evita llamadas duplicadas a Gemini).
+ * - On success: upsert + `analysis_status = 'completed'`.
+ * - On failure: `analysis_status = 'failed'`, `analysis_error = <código>`.
+ * - No modifica study_extractions ni MuPDF.
+ *
+ * @param supabase Cliente Supabase autenticado (o doble de prueba).
+ * @param analyzeText Función que ejecuta Gemini y devuelve StudyAnalysis.
+ * @param upsertAnalysis Función que persiste el análisis (upsert por study_id).
+ */
+export async function analyzeStudyWithDeps(
+  studyId: string,
+  deps: {
+    supabase: Supabase;
+    analyzeText: (text: string) => Promise<StudyAnalysis>;
+    upsertAnalysis: (
+      studyId: string,
+      data: Record<string, unknown>
+    ) => Promise<void>;
+  }
+): Promise<StudyAnalysis> {
+  const { supabase, analyzeText, upsertAnalysis } = deps;
+
+  // ── Paso A: autenticación ──────────────────────────────────
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -37,25 +65,11 @@ async function assertAuthenticated(
       "No hay sesión activa. Iniciá sesión para continuar."
     );
   }
-  return user;
-}
-
-/**
- * Pipeline server-side: extracted_text → Gemini → Zod → study_analyses.
- *
- * No modifica study_extractions ni MuPDF.
- * No se ejecuta automáticamente (se llama explícitamente).
- */
-export async function analyzeStudy(
-  studyId: string
-): Promise<StudyAnalysis> {
-  const supabase = await createClient();
-  const user = await assertAuthenticated(supabase);
 
   // ── Paso B: obtener el estudio ──────────────────────────────
   const { data: study, error: studyError } = await supabase
     .from("studies")
-    .select("id, user_id, status")
+    .select("id, user_id, status, analysis_status")
     .eq("id", studyId)
     .eq("user_id", user.id)
     .single();
@@ -107,17 +121,43 @@ export async function analyzeStudy(
     );
   }
 
-  // ── Paso D: llamar a Gemini ─────────────────────────────────
+  // ── Paso D: claim atómico ───────────────────────────────────
+  // Solo un proceso puede reclamar a la vez. Neq('processing') garantiza
+  // atomicidad a nivel de fila: si otro proceso ya está en curso, devuelve 0
+  // filas y no llamamos a Gemini.
+  const { data: claimed } = await supabase
+    .from("studies")
+    .update({ analysis_status: "processing", analysis_error: null })
+    .eq("id", studyId)
+    .eq("user_id", user.id)
+    .neq("analysis_status", "processing")
+    .select("id");
+
+  if (!claimed || claimed.length === 0) {
+    throw new AnalysisError(
+      "analysis_in_progress",
+      "El análisis ya está en curso. Esperá unos segundos."
+    );
+  }
+
+  // ── Paso E: llamar a Gemini ─────────────────────────────────
   let analysis: StudyAnalysis;
   try {
-    analysis = await analyzeStudyText(targetExtraction.extracted_text);
+    analysis = await analyzeText(targetExtraction.extracted_text);
   } catch (err) {
+    // Marcar como fallido sin persistir análisis inválido.
+    const code =
+      err instanceof GeminiError ? err.type : "gemini_failed";
+    await supabase
+      .from("studies")
+      .update({ analysis_status: "failed", analysis_error: code })
+      .eq("id", studyId)
+      .eq("user_id", user.id);
+
     if (err instanceof GeminiError) {
       console.error(
         `[nuvio:analyze-study] Gemini ${err.type} for study=${studyId}: ${err.message}`
       );
-      // El code del AnalysisError coincide con el type del GeminiError.
-      // El mapa de errores en errors.ts resuelve el mensaje amigable.
       throw new AnalysisError(
         err.type,
         `Gemini ${err.type}: ${err.message}`
@@ -131,20 +171,61 @@ export async function analyzeStudy(
     throw new AnalysisError("gemini_failed", "El análisis con IA falló.");
   }
 
-  // ── Paso E: persistir ───────────────────────────────────────
+  // ── Paso F: persistir ───────────────────────────────────────
   try {
-    await upsertStudyAnalysis(studyId, analysis as Record<string, unknown>);
+    await upsertAnalysis(studyId, analysis as Record<string, unknown>);
   } catch (err) {
     const message =
       err instanceof Error ? err.message : "Error desconocido de persistencia";
     console.error(
       `[nuvio:analyze-study] Persist failed for study=${studyId}: ${message}`
     );
+    await supabase
+      .from("studies")
+      .update({
+        analysis_status: "failed",
+        analysis_error: "persist_failed",
+      })
+      .eq("id", studyId)
+      .eq("user_id", user.id);
     throw new AnalysisError(
       "persist_failed",
       "El análisis se generó pero no se pudo guardar."
     );
   }
 
+  // ── Paso G: marcar completado ───────────────────────────────
+  await supabase
+    .from("studies")
+    .update({ analysis_status: "completed", analysis_error: null })
+    .eq("id", studyId)
+    .eq("user_id", user.id);
+
   return analysis;
+}
+
+// ── Entrada pública (cablea deps reales) ─────────────────────
+
+/**
+ * Wrapper público: crea cliente Supabase real y llama al núcleo con las
+ * dependencias reales (analyzeStudyText + upsertStudyAnalysis).
+ */
+export async function analyzeStudy(
+  studyId: string
+): Promise<StudyAnalysis> {
+  // Import dinámico (lazy): tanto `createClient` como `upsertStudyAnalysis`
+  // viven en módulos que usan el alias `@/`, no resolvible por el runner de
+  // tests (node:test). Al cargarlos bajo demanda, analyze-study.ts se puede
+  // importar en tests (para `analyzeStudyWithDeps`) sin arrastrar Supabase
+  // ni las server actions. Solo se resuelven en runtime real.
+  const { createClient } = await import("@/lib/supabase/server");
+  const { upsertStudyAnalysis } = await import("@/lib/actions/studies.ts");
+  const supabase = await createClient();
+  return analyzeStudyWithDeps(studyId, {
+    supabase,
+    analyzeText: analyzeStudyText,
+    upsertAnalysis: async (id, data) => {
+      await upsertStudyAnalysis(id, data);
+    },
+  });
 }

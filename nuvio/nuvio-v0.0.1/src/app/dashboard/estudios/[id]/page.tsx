@@ -10,6 +10,8 @@ import { StudyProcessButton } from "@/components/dashboard/StudyProcessButton";
 import { StudyStatusBadge } from "@/components/dashboard/StudyStatusBadge";
 import { AnalyzeStudyButton } from "@/components/studies/AnalyzeStudyButton";
 import { AnalysisResult } from "@/components/studies/AnalysisResult";
+import { StudyPipelineController } from "@/components/studies/StudyPipelineController";
+import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
 
 /**
  * Límite de ejecución en Vercel (Hobby: máx 60 s, Pro: máx 300 s).
@@ -153,18 +155,25 @@ export default async function EstudioDetailPage({
                 <AnalyzeStudyButton studyId={study.id} hasAnalysis />
               </div>
             </>
-          ) : (
+          ) : study.analysis_status === "failed" ? (
             <div className="rounded-xl border border-ink-700/10 bg-white p-6 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
               <h2 className="text-[15px] font-medium text-foreground">
                 Análisis de IA
               </h2>
-              <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
-                Este estudio todavía no tiene un análisis generado.
+              <p className="mt-2 text-[14px] leading-[1.6] text-red-600">
+                {getAnalysisErrorMessage(study.analysis_error ?? "gemini_failed")}
               </p>
               <div className="mt-4">
                 <AnalyzeStudyButton studyId={study.id} hasAnalysis={false} />
               </div>
             </div>
+          ) : (
+            <StudyPipelineController
+              studyId={study.id}
+              status={study.status}
+              analysisStatus={study.analysis_status ?? "pending"}
+              hasAnalysis={false}
+            />
           )}
         </div>
       )}

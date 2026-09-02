@@ -40,6 +40,8 @@ export async function listStudies() {
     study_type: StudyType;
     status: string;
     processing_error: string | null;
+    analysis_status: string;
+    analysis_error: string | null;
     created_at: string;
     updated_at: string;
   }>;
@@ -143,7 +145,7 @@ export async function uploadStudy(formData: FormData) {
   }
 
   revalidatePath("/dashboard/estudios");
-  redirect("/dashboard/estudios");
+  redirect(`/dashboard/estudios/${studyId}`);
 }
 
 export async function getSignedUrl(studyId: string) {
@@ -227,16 +229,39 @@ function getStudyIdFromForm(formData: FormData): string {
   return studyId;
 }
 
-export async function processStudyAction(formData: FormData) {
-  const studyId = getStudyIdFromForm(formData);
-
+/**
+ * Procesa el documento de un estudio SIN redirect.
+ * Usado por el pipeline automático (StudyPipelineController) y por
+ * processStudyAction (botón manual).
+ */
+export async function processStudyAuto(
+  studyId: string
+): Promise<{ status: string; processing_error: string | null }> {
   const supabase = await createClient();
   const user = await assertAuthenticated(supabase);
 
   await processStudy(supabase, user.id, studyId);
 
-  revalidatePath("/dashboard/estudios");
   revalidatePath(`/dashboard/estudios/${studyId}`);
+
+  const { data } = await supabase
+    .from("studies")
+    .select("status, processing_error")
+    .eq("id", studyId)
+    .eq("user_id", user.id)
+    .single();
+
+  return data as { status: string; processing_error: string | null };
+}
+
+/**
+ * Procesamiento manual desde botón: reutiliza processStudyAuto + redirect.
+ */
+export async function processStudyAction(formData: FormData) {
+  const studyId = getStudyIdFromForm(formData);
+  await processStudyAuto(studyId);
+
+  revalidatePath("/dashboard/estudios");
   redirect(`/dashboard/estudios/${studyId}`);
 }
 
