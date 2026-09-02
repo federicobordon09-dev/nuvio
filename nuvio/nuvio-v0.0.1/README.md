@@ -25,373 +25,261 @@ La plataforma debe ayudar a responder preguntas como:
 
 ---
 
-# Objetivos del proyecto
-
-Nuvio se está desarrollando completamente desde cero como una nueva versión conceptual y técnica de un proyecto anterior.
-
-No se debe reutilizar arquitectura, código, componentes ni decisiones de diseño del proyecto anterior salvo que exista una razón técnica clara para hacerlo.
-
-Los objetivos principales son:
-
-1. Crear una experiencia de usuario extremadamente simple.
-2. Permitir subir documentos médicos de forma intuitiva.
-3. Extraer y procesar correctamente el contenido de los documentos.
-4. Utilizar IA para explicar la información médica en lenguaje comprensible.
-5. Separar claramente información, interpretación y advertencias.
-6. Mantener una interfaz moderna, limpia y profesional.
-7. Priorizar accesibilidad, responsive design y rendimiento.
-8. Construir una arquitectura escalable y mantenible.
-9. Mantener límites claros entre información educativa y diagnóstico médico.
-
----
-
 # Stack tecnológico
 
-El proyecto utiliza inicialmente:
-
-* **Next.js**
-* **React**
-* **TypeScript**
-* **Tailwind CSS**
-* **ESLint**
-* **pnpm**
-* **App Router**
-* **src directory**
-* **Path alias:** `@/*`
-
-El proyecto fue creado mediante:
-
-```bash
-pnpm dlx create-next-app@latest nuvio-v0.0.1 --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
-```
-
-Ubicación local del proyecto:
-
-```text
-C:\Users\Usuario\Desktop\Proyectos\nuvio\nuvio-v0.0.1
-```
+* **Framework:** Next.js 16.3.3 (App Router, src directory)
+* **Frontend:** React, TypeScript, Tailwind CSS
+* **Backend:** Server Actions, Route Handlers
+* **Auth:** Supabase Auth (Google OAuth + PKCE)
+* **Base de datos:** Supabase (PostgreSQL + RLS)
+* **Storage:** Supabase Storage (archivos PDF)
+* **Extracción de texto:** MuPDF WASM (`mupdf@1.28.0`)
+* **IA:** Google Gemini (`gemini-3-flash-preview` via `@google/genai@2.20.0`)
+* **Validación:** Zod (`zod@4.5.4`)
+* **Testing:** Node.js built-in test runner (`node:test`)
+* **Linting:** ESLint
+* **Package manager:** pnpm 11.24.0
+* **Node:** 24.20.0
+* **Despliegue:** Vercel (auto-despliegue desde `main`)
 
 ---
 
-# Estado actual
+# Estado actual del proyecto
 
-El proyecto se encuentra con la autenticación por Google OAuth completamente funcional.
+## Fases completadas
 
-La aplicación base de Next.js ya fue creada y se integró Supabase como proveedor de autenticación. Nuvio debe seguir construyéndose desde cero en su capa médica (subida de documentos, IA, explicaciones).
+### Fase 1 — Autenticación
+- Google OAuth con PKCE via Supabase Auth
+- Middleware que valida sesión en cada petición
+- Login, callback, logout funcionales
 
-No asumir que existen componentes, sistemas de diseño, APIs, autenticación, base de datos o funcionalidades médicas implementadas.
+### Fase 2 — Upload y Storage
+- Subida de PDFs a Supabase Storage (`study-pdfs`)
+- Validación de MIME type, extensión y tamaño (máx. 50 MB)
+- Registro en tabla `studies` con estado inicial `uploaded`
 
-Antes de introducir dependencias nuevas, evaluar si realmente son necesarias.
+### Fase 3 — Procesamiento y extracción de texto
+- Server action `processStudyAction()` que orquesta el flujo
+- Extracción de texto con **MuPDF WASM** (lazy-load, timeout 8s, cleanup en try/finally)
+- Almacenamiento en tabla `study_extractions` (extracted_text, page_count, method)
+- Estados del estudio: `uploaded → processing → processed` (o `error` / `ocr_required`)
 
----
+### Fase 4.1 — Visualización del contenido extraído
+- Página `/dashboard/estudios/[id]` muestra el texto extraído
+- Estados manejados: uploaded, processing, processed, error, ocr_required
 
-# Dirección de diseño
+### Fase 4.2.1 — Contrato estructurado Zod
+- `src/lib/analysis/schema.ts`: `StudyAnalysisSchema`, `KeyFindingSchema`, `FindingStatusSchema`
+- Tipos: `StudyAnalysis`, `KeyFinding`, `FindingStatus`
+- Helpers: `parseStudyAnalysis()`, `safeParseStudyAnalysis()`
+- 14 tests unitarios
 
-Nuvio debe sentirse como un **producto tecnológico moderno enfocado en salud**, no como una clínica tradicional.
+### Fase 4.2.2 — Integración con Gemini
+- `src/lib/analysis/gemini.ts`: `analyzeStudyText(extractedText)`
+- Modelo: `gemini-3-flash-preview`
+- System prompt de Nuvio (explicación médica, sin diagnósticos)
+- Respuesta estructurada con `responseJsonSchema`
+- Timeout 30s, validación de entrada y salida
+- Prueba real verificada en Vercel
 
-La interfaz debe transmitir:
+### Fase 4.2.3 — Persistencia del análisis
+- Tabla `study_analyses` (1:1 con `studies`, JSONB)
+- RLS con policies de INSERT, SELECT, UPDATE, DELETE por usuario
+- `getStudyAnalysis()` y `upsertStudyAnalysis()` en server actions
+- Idempotente (upsert con `onConflict: study_id`)
 
-* claridad
-* confianza
-* precisión
-* simplicidad
-* tecnología
-* inteligencia artificial
-* seguridad
+### Fase 4.2.4 — Pipeline de análisis IA
+- `src/lib/analysis/analyze-study.ts`: función `analyzeStudy(studyId)`
+- Flujo: `extracted_text → Gemini → JSON → Zod → study_analyses`
+- Autenticación + ownership verification
+- Validación de estado del estudio (`processed` solamente)
+- `AnalysisError` con codes: `unauthenticated`, `study_not_found`, `study_not_ready`, `extraction_missing`, `extraction_empty`, `gemini_failed`, `persist_failed`
+- 11 tests unitarios adicionales
+- Prueba real en Vercel verificada (12.5s, 8 findings, Zod validó)
 
-Evitar diseños médicos genéricos.
+## Fases pendientes
 
-No utilizar como recurso visual principal:
-
-* cruces médicas
-* estetoscopios
-* hospitales
-* pastillas
-* corazones médicos
-* doctores
-* cerebros genéricos asociados a IA
-
-La identidad visual debe construirse alrededor del concepto de **transformar información médica compleja en claridad**.
-
-La interfaz debe ser:
-
-* minimalista
-* moderna
-* limpia
-* profesional
-* accesible
-* responsive
-* visualmente consistente
-
-Evitar interfaces sobrecargadas, gradientes excesivos, glassmorphism exagerado, sombras innecesarias y componentes visuales sin propósito.
-
----
-
-# Principios de UX
-
-La experiencia principal debe poder entenderse sin instrucciones.
-
-El flujo conceptual principal es:
-
-```text
-Usuario
-  ↓
-Sube documento médico
-  ↓
-Nuvio procesa el documento
-  ↓
-IA analiza la información
-  ↓
-Nuvio organiza los resultados
-  ↓
-Usuario recibe una explicación clara
-```
-
-La información debe presentarse progresivamente.
-
-No mostrar grandes bloques de texto médico.
-
-Priorizar:
-
-* títulos claros
-* tarjetas informativas
-* valores importantes
-* estados visuales
-* explicaciones breves
-* lenguaje natural
-* preguntas sugeridas para el médico
-
----
-
-# Seguridad y responsabilidad médica
-
-Nuvio es una herramienta de **interpretación y educación**, no un sistema de diagnóstico.
-
-La aplicación nunca debe presentar una interpretación de IA como un diagnóstico médico confirmado.
-
-La comunicación debe evitar afirmaciones absolutas como:
-
-* "Tenés esta enfermedad."
-* "Esto significa que tenés X."
-* "No tenés ningún problema."
-* "No necesitás consultar a un médico."
-
-Preferir expresiones como:
-
-* "Este resultado puede estar relacionado con..."
-* "Este valor aparece fuera del rango indicado en el documento."
-* "Conviene consultar este resultado con un profesional."
-* "La IA no puede confirmar un diagnóstico."
-* "El significado clínico depende del contexto y debe ser evaluado por un profesional."
-
-Cuando exista información insuficiente, la aplicación debe reconocer esa limitación en lugar de inventar información.
-
----
-
-# Reglas de desarrollo
-
-OpenCode debe trabajar como un desarrollador senior de software.
-
-Antes de implementar una funcionalidad:
-
-1. Comprender la arquitectura existente.
-2. Revisar los archivos relacionados.
-3. Identificar dependencias entre componentes.
-4. Evitar modificar archivos que no sean necesarios.
-5. Mantener la implementación simple y mantenible.
-
-El código debe ser:
-
-* TypeScript estricto
-* mantenible
-* modular
-* reutilizable
-* legible
-* correctamente tipado
-* preparado para producción
-
-Evitar:
-
-* `any` salvo casos realmente justificados
-* código duplicado
-* componentes gigantes
-* lógica de negocio dentro de componentes visuales
-* nombres ambiguos
-* estados innecesarios
-* dependencias innecesarias
-* soluciones temporales que puedan convertirse en deuda técnica
+- **Fase 4.3** — UI de resultados del análisis (mostrar findings, warnings, etc.)
+- **Fase 4.4** — Automatizar análisis después del upload
+- **Fase 5** — Dashboard y navegación
+- **Fase 6** — Pulido visual, responsive, accesibilidad
+- **Fase 7** — Producción y optimización
 
 ---
 
 # Arquitectura
 
-Mantener una separación clara entre:
-
-* UI
-* componentes reutilizables
-* lógica de negocio
-* servicios
-* procesamiento de documentos
-* integración con IA
-* validación
-* manejo de errores
-
-Cuando una funcionalidad pueda aislarse correctamente, crear módulos independientes en lugar de concentrar toda la lógica en una única página.
-
-Priorizar Server Components de Next.js cuando sea apropiado.
-
-Utilizar Client Components únicamente cuando sean necesarios por interactividad, estado del cliente, APIs del navegador o librerías que los requieran.
-
----
-
-# Manejo de errores
-
-Todas las funcionalidades que involucren datos externos, archivos, APIs o IA deben contemplar errores.
-
-Como mínimo considerar:
-
-* archivo inválido
-* formato no soportado
-* archivo demasiado grande
-* documento vacío
-* extracción de texto fallida
-* API no disponible
-* timeout
-* respuesta inválida de IA
-* errores inesperados
-* falta de información suficiente
-
-Los errores mostrados al usuario deben ser comprensibles y accionables.
-
-No mostrar stack traces ni errores internos.
-
----
-
-# Accesibilidad
-
-La accesibilidad debe considerarse desde el comienzo.
-
-Utilizar HTML semántico y controles accesibles.
-
-Considerar:
-
-* navegación mediante teclado
-* labels apropiados
-* contraste suficiente
-* estados de focus
-* mensajes de error accesibles
-* `aria-*` únicamente cuando sean necesarios
-* textos alternativos para imágenes
-* botones y controles con nombres claros
-
-No utilizar elementos visuales como sustitutos de información textual importante.
+```text
+src/
+├── app/
+│   ├── auth/
+│   │   ├── login/page.tsx          # Login con Google OAuth
+│   │   └── callback/route.ts       # Intercambia code por sesión (PKCE)
+│   ├── dashboard/
+│   │   ├── page.tsx                # Dashboard principal
+│   │   ├── subir/page.tsx          # Subida de documentos
+│   │   ├── estudios/
+│   │   │   ├── page.tsx            # Lista de estudios
+│   │   │   └── [id]/page.tsx       # Detalle del estudio + texto extraído
+│   │   ├── chat/page.tsx           # Chat (futuro)
+│   │   ├── comparar/page.tsx       # Comparar estudios (futuro)
+│   │   └── perfil/page.tsx         # Perfil del usuario
+│   └── layout.tsx                  # Layout raíz
+├── lib/
+│   ├── supabase/
+│   │   ├── client.ts               # Cliente server-side
+│   │   └── server.ts               # Helpers de servidor
+│   ├── actions/
+│   │   ├── auth.ts                 # Acciones de autenticación
+│   │   └── studies.ts              # Server actions de estudios
+│   ├── extraction/
+│   │   └── pdf.ts                  # Extracción con MuPDF WASM
+│   ├── analysis/
+│   │   ├── schema.ts               # Contrato Zod (StudyAnalysis)
+│   │   ├── gemini.ts               # Cliente Gemini + analyzeStudyText()
+│   │   ├── analyze-study.ts        # Pipeline: extracted_text → Gemini → Zod → DB
+│   │   └── __tests__/              # Tests unitarios
+│   ├── studies/
+│   │   └── processing.ts           # Pipeline de procesamiento
+│   ├── studies-utils.ts            # Tipos, labels, constantes
+│   └── auth/
+│       └── callbacks.ts            # Helpers de auth
+├── components/
+│   ├── ui/                         # Componentes base (shadcn/ui)
+│   ├── auth/                       # Componentes de autenticación
+│   └── dashboard/                  # Componentes del dashboard
+├── middleware.ts                    # Proxy/middleware de auth
+└── types/
+    └── database.ts                 # Tipos de Supabase
+```
 
 ---
 
-# Responsive Design
+# Base de datos (Supabase)
 
-Nuvio debe funcionar correctamente en:
+## Tablas
 
-* teléfonos
-* tablets
-* notebooks
-* monitores de escritorio
+### `studies`
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| id | uuid PK | UUID único del estudio |
+| user_id | uuid FK | Propietario (→ auth.users) |
+| file_name | text | Nombre del archivo |
+| file_size | integer | Tamaño en bytes |
+| mime_type | text | Tipo MIME |
+| storage_path | text | Ruta en Supabase Storage |
+| status | text | uploaded / processing / processed / error / ocr_required |
+| created_at | timestamptz | Fecha de creación |
+| updated_at | timestamptz | Última actualización (trigger) |
 
-El diseño debe partir de una experiencia mobile-first cuando sea conveniente.
+### `study_extractions`
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| id | uuid PK | UUID único |
+| study_id | uuid FK UNIQUE | 1:1 con studies (CASCADE) |
+| user_id | uuid FK | Propietario |
+| extracted_text | text | Texto extraído del PDF |
+| page_count | integer | Cantidad de páginas |
+| method | text | Método de extracción (mupdf) |
+| created_at | timestamptz | Fecha de creación |
+| updated_at | timestamptz | Última actualización (trigger) |
 
-No solucionar problemas responsive agregando hacks o valores arbitrarios sin entender la causa.
+### `study_analyses`
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| id | uuid PK | UUID único |
+| study_id | uuid FK UNIQUE | 1:1 con studies (CASCADE) |
+| user_id | uuid FK | Propietario |
+| analysis | jsonb | Objeto StudyAnalysis completo |
+| created_at | timestamptz | Fecha de creación |
+| updated_at | timestamptz | Última actualización (trigger) |
 
----
+## Seguridad (RLS)
 
-# IA
-
-La integración con inteligencia artificial debe diseñarse como una capa independiente.
-
-No acoplar toda la aplicación directamente a un proveedor específico.
-
-La arquitectura debería permitir cambiar el proveedor o modelo posteriormente sin tener que reconstruir toda la aplicación.
-
-Las respuestas de la IA deben tener una estructura controlada y validable.
-
-No confiar ciegamente en texto libre cuando la aplicación necesite datos estructurados.
-
-Validar las respuestas antes de mostrarlas al usuario.
-
----
-
-# Documentos médicos
-
-Los documentos son información potencialmente sensible.
-
-El sistema debe minimizar la exposición innecesaria de información personal.
-
-Siempre que sea posible:
-
-* validar archivos antes de procesarlos
-* limitar tamaños
-* validar MIME type y extensión
-* evitar almacenar información innecesariamente
-* no registrar contenido médico en logs
-* no exponer documentos mediante URLs públicas
-* manejar correctamente errores de procesamiento
-* separar datos temporales de datos persistentes
-
-La privacidad debe considerarse parte fundamental de la arquitectura, no una funcionalidad posterior.
+- Cada tabla tiene RLS habilitado
+- Policies por usuario autenticado (`auth.uid()`)
+- INSERT verifica ownership del estudio asociado
+- SELECT, UPDATE, DELETE filtrados por `user_id`
+- No se usa `service_role` en la aplicación
 
 ---
 
-# Git
+# Pipeline de análisis IA
 
-Realizar cambios pequeños y coherentes aca te dejo el link para que subas todos los cambios del proyecto a mi github. https://github.com/federicobordon09-dev/nuvio.git
-
-Los commits deben representar cambios lógicos.
-
-Evitar commits que mezclen:
-
-* refactors
-* nuevas funcionalidades
-* cambios visuales
-* modificaciones de configuración
-
-sin una razón clara.
-
-No eliminar ni modificar archivos existentes sin comprobar primero su propósito.
-
----
-
-# Dependencias
-
-Antes de instalar una nueva dependencia, evaluar:
-
-1. Si realmente es necesaria.
-2. Si Next.js, React o las APIs existentes ya resuelven el problema.
-3. El mantenimiento del paquete.
-4. Su impacto en bundle/performance.
-5. Su compatibilidad con el proyecto.
-
-No instalar librerías simplemente por conveniencia.
+```text
+study_extractions.extracted_text
+      ↓
+analyzeStudy(studyId)
+      ├── Autenticar usuario (Supabase Auth)
+      ├── Obtener estudio → verificar ownership + status = "processed"
+      ├── Obtener extracted_text → verificar que no esté vacío
+      ├── analyzeStudyText(extractedText)  →  Gemini API
+      │     ├── validateInput() → trim + check empty
+      │     ├── genai.models.generateContent() con responseJsonSchema
+      │     ├── JSON.parse(response.text)
+      │     └── parseStudyAnalysis(parsed) → Zod validation
+      ├── upsertStudyAnalysis(studyId, analysis)  →  Supabase
+      │     └── onConflict: study_id (idempotente)
+      └── Return StudyAnalysis
+```
 
 ---
 
-# Regla fundamental para OpenCode
+# Variables de entorno
 
-**No implementar por implementar.**
+```env
+NEXT_PUBLIC_SUPABASE_URL=<url-del-proyecto-Supabase>
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<clave-pública-Supabase>
+GEMINI_API_KEY=<clave-de-API-de-Google-Gemini>
+```
 
-Antes de realizar cambios importantes, analizar el problema y la arquitectura existente.
+El archivo `.env.example` contiene los placeholders sin valores reales.
 
-Si una decisión técnica tiene varias alternativas razonables, elegir la que tenga mejor equilibrio entre:
+---
 
-* simplicidad
-* mantenibilidad
-* seguridad
-* rendimiento
-* escalabilidad
+# Comandos
 
-Cuando se encuentre un problema existente, identificar primero:
+```bash
+# Desarrollo local
+pnpm dev
 
-**Causa raíz → Solución → Prevención**
+# Build de producción
+pnpm build
 
-No aplicar parches que oculten el problema original.
+# Lint
+pnpm lint
+
+# Tests
+pnpm test
+
+# Deploy (automático tras push a main)
+git push
+```
+
+---
+
+# Despliegue
+
+- **Repositorio:** https://github.com/federicobordon09-dev/nuvio.git
+- **Producción:** https://nuvio-lemon-six.vercel.app
+- **Local:** http://localhost:3000
+- **Pipeline:** cada cambio se hace con `commit` + `push` a `main`; **Vercel redesplega automáticamente** tras el push.
+
+---
+
+# Comandos de desarrollo
+
+Para iniciar el proyecto:
+
+```bash
+pnpm dev
+```
+
+Por defecto, la aplicación estará disponible en:
+
+```text
+http://localhost:3000
+```
 
 ---
 
@@ -407,87 +295,4 @@ Si una funcionalidad agrega complejidad sin aportar valor significativo, reconsi
 
 ---
 
-# Autenticación
-
-Nuvio usa **Supabase Auth** con **Google OAuth** y el flujo **PKCE** (Proof Key for Code Exchange), adaptado para el App Router de Next.js 16 mediante `@supabase/ssr`.
-
-## Flujo
-
-```text
-Usuario hace clic en "Continuar con Google"
-  → signInWithOAuth guarda el code verifier en cookies del navegador
-  → Redirección a Google
-  → Google autentica y redirige de vuelta a /auth/callback?code=…&flow_id=…
-  → El route handler intercambia el code por una sesión (exchangeCodeForSession)
-  → La cookie de sesión se envía al navegador en la redirección
-  → El navegador navega a /dashboard → el middleware valida la sesión (getClaims)
-```
-
-## Archivos clave
-
-- `src/lib/supabase/client.ts` — cliente del lado del servidor (`createServerClient`)
-- `src/lib/supabase/server.ts` — helpers de servidor
-- `src/middleware.ts` — valida la sesión en cada petición; hace **skip de `/auth/callback`** antes de crear el cliente para no romper el flujo
-- `src/app/auth/login/page.tsx` — página de login con `signInWithOAuth`
-- `src/app/auth/callback/route.ts` — route handler que recibe el `code` de Google y lo intercambia por sesión
-- `src/lib/actions/auth.ts` — acciones del servidor relacionadas con auth
-
-## Notas técnicas
-
-- El verifier PKCE se almacena en **cookies** (SSR), no en localStorage.
-- En el servidor, `exchangeCodeForSession(code)` lee el verifier desde la cookie legacy `{storageKey}-code-verifier` cuando no se pasa `flowId` explícito.
-- Next.js 16 marca `middleware` como **deprecated** y lo renombra a `proxy`; el archivo sigue funcionando con un warning (migrar con `npx @next/codemod@canary middleware-to-proxy .` cuando se quiera).
-- **No usar localStorage ni `getSession`** como sustituto de `exchangeCodeForSession`.
-
-## Variables de entorno
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=<url-del-proyecto-Supabase>
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<clave-pública-Supabase>
-```
-
-El archivo `.env.example` contiene los placeholders sin valores reales.
-
-## Despliegue
-
-- **Repositorio**: https://github.com/federicobordon09-dev/nuvio.git
-- **Producción**: https://nuvio-lemon-six.vercel.app
-- **Local**: http://localhost:3000
-- **Pipeline**: cada cambio se hace con `commit` + `push` a `main`; **Vercel redesplega automáticamente** tras el push.
-- Para probar en producción: subí el cambio (`git push`) y visitá la URL en producción. En local usá `pnpm dev`.
-
-## Errores corregidos
-
-### `fix: saltar middleware antes de crear cliente Supabase en /auth/callback`
-El middleware intentaba crear el cliente Supabase para la ruta `/auth/callback`, lo que interrumpía el flujo PKCE antes de que el verifier llegara al servidor. Se añadió una salida anticipada en el middleware para esa ruta.
-
-### `fix: preservar cookies de sesión en el redirect de /auth/callback`
-**Causa raíz del fallo**: el callback construía `supabaseResponse` con las cookies de sesión, pero devolvía una respuesta `NextResponse.redirect` nueva que **no las incluía**. La sesión nunca llegaba al navegador, el usuario volvía silenciosamente a `/auth/login`, y los reintentos acumulaban verifiers huérfanos que terminaban produciendo `PKCE code verifier not found in storage`. La corrección reconstruye la respuesta de redirección dentro de `setAll()`, de modo que las cookies escritas por el cliente Supabase siempre se preservan en la respuesta final, tanto en éxito como en error.
-
----
-
-# Comando de desarrollo
-
-Para iniciar el proyecto:
-
-```bash
-pnpm dev
-```
-
-Por defecto, la aplicación estará disponible en:
-
-```text
-http://localhost:3000
-```
-
-## Estructura inicial
-
-La estructura debe evolucionar a medida que el proyecto crezca, manteniendo una separación clara de responsabilidades.
-
-No crear carpetas o abstracciones innecesarias antes de que exista una necesidad real.
-
----
-
-## Nuvio
-
-**Información médica compleja. Explicada de forma clara.**
+**Nuvio — Información médica compleja. Explicada de forma clara.**
