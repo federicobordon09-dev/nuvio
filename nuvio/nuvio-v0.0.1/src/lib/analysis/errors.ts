@@ -21,6 +21,14 @@ export const ANALYSIS_ERROR_MESSAGES: Record<string, string> = {
     "No encontramos el contenido extraído necesario para realizar el análisis.",
   extraction_empty:
     "El contenido extraído está vacío. No hay material suficiente para analizar.",
+  gemini_timeout:
+    "La IA tardó demasiado en responder. Intentá de nuevo.",
+  gemini_network:
+    "Ocurrió un problema de conexión con el servicio de IA. Intentá de nuevo.",
+  gemini_api_error:
+    "El servicio de IA no pudo procesar la solicitud. Intentá de nuevo más tarde.",
+  gemini_invalid_response:
+    "El servicio de IA devolvió una respuesta no válida. Intentá de nuevo.",
   gemini_failed:
     "Ocurrió un problema al comunicarnos con el servicio de IA.",
   persist_failed:

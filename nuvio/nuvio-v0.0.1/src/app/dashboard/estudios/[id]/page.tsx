@@ -11,6 +11,13 @@ import { StudyStatusBadge } from "@/components/dashboard/StudyStatusBadge";
 import { AnalyzeStudyButton } from "@/components/studies/AnalyzeStudyButton";
 import { AnalysisResult } from "@/components/studies/AnalysisResult";
 
+/**
+ * Límite de ejecución en Vercel (Hobby: máx 60 s, Pro: máx 300 s).
+ * Debe ser estrictamente mayor que ANALYSIS_TIMEOUT_MS (45 s) en gemini.ts
+ * para que AbortController pueda actuar antes de que la plataforma corte la función.
+ */
+export const maxDuration = 60;
+
 export default async function EstudioDetailPage({
   params,
 }: {

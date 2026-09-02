@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { analyzeStudyText } from "./gemini.ts";
+import { analyzeStudyText, GeminiError } from "./gemini.ts";
 import { upsertStudyAnalysis } from "@/lib/actions/studies.ts";
 import type { StudyAnalysis } from "./schema.ts";
 
@@ -112,6 +112,17 @@ export async function analyzeStudy(
   try {
     analysis = await analyzeStudyText(targetExtraction.extracted_text);
   } catch (err) {
+    if (err instanceof GeminiError) {
+      console.error(
+        `[nuvio:analyze-study] Gemini ${err.type} for study=${studyId}: ${err.message}`
+      );
+      // El code del AnalysisError coincide con el type del GeminiError.
+      // El mapa de errores en errors.ts resuelve el mensaje amigable.
+      throw new AnalysisError(
+        err.type,
+        `Gemini ${err.type}: ${err.message}`
+      );
+    }
     const message =
       err instanceof Error ? err.message : "Error desconocido de Gemini";
     console.error(

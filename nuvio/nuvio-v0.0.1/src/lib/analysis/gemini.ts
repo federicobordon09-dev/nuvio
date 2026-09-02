@@ -3,7 +3,96 @@ import { parseStudyAnalysis, type StudyAnalysis } from "./schema.ts";
 
 const GEMINI_MODEL = "gemini-3-flash-preview";
 
-const ANALYSIS_TIMEOUT_MS = 30_000;
+/**
+ * Timeout máximo para la llamada a Gemini.
+ *
+ * Debe ser estrictamente menor que el `maxDuration` de Vercel (60 s en Hobby)
+ * para que AbortController pueda cancelar la request antes de que la plataforma
+ * corte la función. 45 s deja 15 s de margen para Supabase + Zod + persistencia.
+ */
+export const ANALYSIS_TIMEOUT_MS = 45_000;
+
+// ── Clasificación de errores de Gemini ────────────────────────────
+
+export type GeminiErrorType =
+  | "gemini_timeout"
+  | "gemini_network"
+  | "gemini_api_error"
+  | "gemini_invalid_response";
+
+export class GeminiError extends Error {
+  readonly type: GeminiErrorType;
+
+  constructor(
+    type: GeminiErrorType,
+    message: string,
+    opts?: { cause?: unknown }
+  ) {
+    super(message, opts);
+    this.name = "GeminiError";
+    this.type = type;
+  }
+}
+
+export function classifyGeminiError(err: unknown): GeminiError {
+  if (err instanceof GeminiError) return err;
+
+  const error = err instanceof Error ? err : new Error(String(err));
+
+  // Timeout detectado por AbortController / @google/genai
+  if (
+    error.name === "AbortError" ||
+    error.message.includes("excedió el tiempo máximo") ||
+    error.message.includes("timed out") ||
+    error.message.includes("abort")
+  ) {
+    return new GeminiError(
+      "gemini_timeout",
+      "La llamada a Gemini excedió el tiempo máximo.",
+      { cause: error }
+    );
+  }
+
+  // Errores de red (fetch / conexión)
+  const msg = error.message.toLowerCase();
+  if (
+    msg.includes("fetch failed") ||
+    msg.includes("econnrefused") ||
+    msg.includes("enetunreach") ||
+    msg.includes("etimedout") ||
+    msg.includes("econnreset") ||
+    msg.includes("network") ||
+    msg.includes("enotfound") ||
+    (error.name === "TypeError" &&
+      (msg.includes("failed") || msg.includes("fetch")))
+  ) {
+    return new GeminiError(
+      "gemini_network",
+      `Error de red: ${error.message}`,
+      { cause: error }
+    );
+  }
+
+  // Errores de API (HTTP 4xx/5xx)
+  if (
+    "status" in error &&
+    typeof (error as { status: unknown }).status === "number"
+  ) {
+    const status = (error as { status: number }).status;
+    return new GeminiError(
+      "gemini_api_error",
+      `Error de API Gemini (HTTP ${status}): ${error.message}`,
+      { cause: error }
+    );
+  }
+
+  // Fallback para errores inesperados de Gemini
+  return new GeminiError(
+    "gemini_api_error",
+    `Error desconocido de Gemini: ${error.message}`,
+    { cause: error }
+  );
+}
 
 const SYSTEM_PROMPT = `Sos Nuvio, un sistema de explicación de documentos médicos. Tu función es analizar el texto extraído de un documento médico y devolver una explicación estructurada.
 
@@ -126,57 +215,98 @@ function validateInput(text: unknown): string {
   return trimmed;
 }
 
-function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(new Error("La llamada a Gemini excedió el tiempo máximo."));
-    }, ms);
-
-    promise.then(
-      (value) => {
-        clearTimeout(timer);
-        resolve(value);
-      },
-      (error) => {
-        clearTimeout(timer);
-        reject(error);
-      }
-    );
-  });
+/**
+ * Interfaz mínima del cliente Gemini que `analyzeStudyText` necesita.
+ * Se declara localmente para poder inyectar un doble de prueba sin mockear
+ * el módulo `@google/genai` (evita problemas de ESM y mantiene la lógica
+ * testable con un stub simple).
+ */
+export interface GeminiClient {
+  models: {
+    generateContent(args: unknown): Promise<{ text?: string }>;
+  };
 }
 
-export async function analyzeStudyText(
-  extractedText: unknown
+/**
+ * Núcleo de `analyzeStudyText`, separado para permitir inyección del cliente.
+ * `createClient` construye el `GoogleGenAI` real; en tests se pasa un stub.
+ */
+export async function analyzeStudyTextWithClient(
+  extractedText: unknown,
+  genai: GeminiClient
 ): Promise<StudyAnalysis> {
   const text = validateInput(extractedText);
 
-  const apiKey = getApiKey();
-  const genai = new GoogleGenAI({ apiKey });
+  // ── Timeout con AbortController ───────────────────────────────
+  // Cancela la request HTTP cuando se excede ANALYSIS_TIMEOUT_MS.
+  // @google/genai soporta abortSignal en GenerateContentConfig.
+  const controller = new AbortController();
+  const timer = setTimeout(
+    () => controller.abort(),
+    ANALYSIS_TIMEOUT_MS
+  );
 
-  const response = await withTimeout(
-    genai.models.generateContent({
+  let response;
+  try {
+    response = await genai.models.generateContent({
       model: GEMINI_MODEL,
       contents: text,
       config: {
         systemInstruction: SYSTEM_PROMPT,
         responseMimeType: "application/json",
         responseJsonSchema: ANALYSIS_RESPONSE_SCHEMA,
+        abortSignal: controller.signal,
       },
-    }),
-    ANALYSIS_TIMEOUT_MS
-  );
+    });
+  } catch (err) {
+    clearTimeout(timer);
+    throw classifyGeminiError(err);
+  }
+  clearTimeout(timer);
+
+  // ── Validación de la respuesta ────────────────────────────────
 
   const rawOutput = response.text;
   if (!rawOutput) {
-    throw new Error("Gemini devolvió una respuesta vacía.");
+    throw new GeminiError(
+      "gemini_invalid_response",
+      "Gemini devolvió una respuesta vacía."
+    );
   }
 
   let parsed: unknown;
   try {
     parsed = JSON.parse(rawOutput);
   } catch {
-    throw new Error("Gemini devolvió un JSON inválido.");
+    throw new GeminiError(
+      "gemini_invalid_response",
+      "Gemini devolvió un JSON inválido."
+    );
   }
 
-  return parseStudyAnalysis(parsed);
+  try {
+    return parseStudyAnalysis(parsed);
+  } catch {
+    throw new GeminiError(
+      "gemini_invalid_response",
+      "Gemini devolvió una respuesta que no cumple el schema esperado."
+    );
+  }
+}
+
+/**
+ * Entrada pública: construye el cliente `GoogleGenAI` real y delega en
+ * `analyzeStudyTextWithClient`. Único punto donde se instancia el SDK.
+ */
+export async function analyzeStudyText(
+  extractedText: unknown
+): Promise<StudyAnalysis> {
+  const apiKey = getApiKey();
+  const genai = new GoogleGenAI({ apiKey });
+  // El SDK real expone más parámetros en generateContent; la interfaz mínima
+  // es un subconjunto estructural suficiente para el uso interno y los tests.
+  return analyzeStudyTextWithClient(
+    extractedText,
+    genai as unknown as GeminiClient
+  );
 }

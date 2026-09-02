@@ -33,6 +33,22 @@ describe("getAnalysisErrorMessage", () => {
       "El contenido extraído está vacío. No hay material suficiente para analizar.",
     ],
     [
+      "gemini_timeout",
+      "La IA tardó demasiado en responder. Intentá de nuevo.",
+    ],
+    [
+      "gemini_network",
+      "Ocurrió un problema de conexión con el servicio de IA. Intentá de nuevo.",
+    ],
+    [
+      "gemini_api_error",
+      "El servicio de IA no pudo procesar la solicitud. Intentá de nuevo más tarde.",
+    ],
+    [
+      "gemini_invalid_response",
+      "El servicio de IA devolvió una respuesta no válida. Intentá de nuevo.",
+    ],
+    [
       "gemini_failed",
       "Ocurrió un problema al comunicarnos con el servicio de IA.",
     ],
@@ -67,8 +83,8 @@ describe("Constantes de error", () => {
     assert.ok(ANALYSIS_GENERIC_ERROR.length > 0);
   });
 
-  it("ANALYSIS_ERROR_MESSAGES tiene exactamente 8 entradas", () => {
-    assert.equal(Object.keys(ANALYSIS_ERROR_MESSAGES).length, 8);
+  it("ANALYSIS_ERROR_MESSAGES tiene exactamente 12 entradas", () => {
+    assert.equal(Object.keys(ANALYSIS_ERROR_MESSAGES).length, 12);
   });
 
   it("todas las claves de ANALYSIS_ERROR_MESSAGES son strings no vacíos", () => {

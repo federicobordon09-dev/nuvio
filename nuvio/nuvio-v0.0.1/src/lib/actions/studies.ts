@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { processStudy } from "@/lib/studies/processing";
 import { analyzeStudy, AnalysisError } from "@/lib/analysis/analyze-study";
+import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
 import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, ALLOWED_STUDY_TYPES, type StudyType } from "@/lib/studies-utils";
 
 async function assertAuthenticated(supabase: Awaited<ReturnType<typeof createClient>>) {
@@ -325,7 +326,7 @@ export async function requestStudyAnalysis(
     return { success: true, analysis: analysis as Record<string, unknown> };
   } catch (err) {
     if (err instanceof AnalysisError) {
-      return { success: false, error: err.message };
+      return { success: false, error: getAnalysisErrorMessage(err.code) };
     }
     console.error("[nuvio:requestStudyAnalysis] Unexpected error:", err);
     return { success: false, error: "No pudimos analizar este estudio." };
