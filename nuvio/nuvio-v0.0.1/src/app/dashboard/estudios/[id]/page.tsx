@@ -128,7 +128,10 @@ export default async function EstudioDetailPage({
               Estado
             </dt>
             <dd className="mt-1 text-[15px] text-foreground">
-              <StudyStatusBadge status={study.status} />
+              <StudyStatusBadge
+                status={study.status}
+                analysisStatus={study.analysis_status}
+              />
             </dd>
           </div>
         </dl>
@@ -213,7 +216,7 @@ export default async function EstudioDetailPage({
           study.status === "processing" ||
           study.status === "error") && <StudyProcessButton studyId={study.id} />}
         <StudyDownloadButton studyId={study.id} />
-        <StudyDeleteButton studyId={study.id} />
+        <StudyDeleteButton studyId={study.id} studyName={study.file_name} />
       </div>
     </div>
   );

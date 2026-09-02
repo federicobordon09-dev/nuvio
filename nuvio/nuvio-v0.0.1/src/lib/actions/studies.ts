@@ -7,6 +7,7 @@ import { processStudy } from "@/lib/studies/processing";
 import { analyzeStudy, AnalysisError } from "@/lib/analysis/analyze-study";
 import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
 import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, ALLOWED_STUDY_TYPES, type StudyType } from "@/lib/studies-utils";
+import { deleteStudyCore, countStudiesCore } from "@/lib/studies/study-ops";
 
 async function assertAuthenticated(supabase: Awaited<ReturnType<typeof createClient>>) {
   const { data: { user } } = await supabase.auth.getUser();
@@ -176,41 +177,22 @@ export async function getSignedUrl(studyId: string) {
 
 export async function deleteStudy(studyId: string) {
   const supabase = await createClient();
-  const user = await assertAuthenticated(supabase);
-
-  const { data: study, error: fetchError } = await supabase
-    .from("studies")
-    .select("file_path, user_id")
-    .eq("id", studyId)
-    .eq("user_id", user.id)
-    .single();
-
-  if (fetchError || !study) {
-    throw new Error("Estudio no encontrado o sin acceso");
-  }
-
-  const { error: storageError } = await supabase.storage
-    .from("medical-studies")
-    .remove([study.file_path]);
-
-  // Se elimina el registro igualmente; si falla el storage, el archivo
-  // queda huérfano pero el usuario recibe feedback de la operación principal.
-  if (storageError) {
-    // No propagar: se continúa con la eliminación del registro.
-  }
-
-  const { error: dbError } = await supabase
-    .from("studies")
-    .delete()
-    .eq("id", studyId)
-    .eq("user_id", user.id);
-
-  if (dbError) {
-    throw new Error(`Error al eliminar el estudio: ${dbError.message}`);
-  }
+  await assertAuthenticated(supabase);
+  await deleteStudyCore(studyId, { supabase });
 
   revalidatePath("/dashboard/estudios");
+  revalidatePath("/dashboard");
   redirect("/dashboard/estudios");
+}
+
+/**
+ * Devuelve la cantidad total de estudios del usuario autenticado.
+ * Se usa en el dashboard para mostrar el conteo real.
+ */
+export async function getStudyCount(): Promise<number> {
+  const supabase = await createClient();
+  const user = await assertAuthenticated(supabase);
+  return countStudiesCore(supabase, user.id);
 }
 
 export async function deleteStudyAction(formData: FormData) {

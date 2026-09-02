@@ -1,6 +1,7 @@
 import { listStudies } from "@/lib/actions/studies";
 import { formatFileSize, getStudyTypeLabel } from "@/lib/studies-utils";
 import { StudyStatusBadge } from "@/components/dashboard/StudyStatusBadge";
+import { StudyDeleteButton } from "@/components/dashboard/StudyDeleteButton";
 import Link from "next/link";
 
 export default async function EstudiosPage() {
@@ -47,29 +48,40 @@ export default async function EstudiosPage() {
       ) : (
         <div className="space-y-4">
           {studies.map((study) => (
-            <Link
+            <div
               key={study.id}
-              href={`/dashboard/estudios/${study.id}`}
-              className="block rounded-xl border border-ink-700/10 bg-white p-5 shadow-[0_1px_2px_rgba(11,20,38,0.04)] transition-colors hover:border-primary-300 hover:bg-primary-50/30"
+              className="rounded-xl border border-ink-700/10 bg-white p-5 shadow-[0_1px_2px_rgba(11,20,38,0.04)] transition-colors hover:border-primary-300 hover:bg-primary-50/30"
             >
-              <div className="flex items-center justify-between gap-4">
-                <div className="min-w-0 flex-1">
-                  <p className="text-[15px] font-medium text-foreground truncate">
+              <div className="flex items-start justify-between gap-4">
+                <Link
+                  href={`/dashboard/estudios/${study.id}`}
+                  className="min-w-0 flex-1"
+                >
+                  <p className="text-[15px] font-medium text-foreground truncate transition-colors hover:text-primary-600">
                     {study.file_name}
                   </p>
                   <p className="mt-1 text-[13px] text-muted-foreground">
                     {getStudyTypeLabel(study.study_type)}
                   </p>
                   <div className="mt-2">
-                    <StudyStatusBadge status={study.status} />
+                    <StudyStatusBadge
+                      status={study.status}
+                      analysisStatus={study.analysis_status}
+                    />
                   </div>
-                </div>
-                <div className="flex items-center gap-4 text-[13px] text-muted-foreground">
-                  <span>{formatFileSize(study.file_size)}</span>
-                  <span>{new Date(study.created_at).toLocaleDateString("es-AR")}</span>
+                </Link>
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                  <div className="flex items-center gap-3 text-[13px] text-muted-foreground">
+                    <span>{formatFileSize(study.file_size)}</span>
+                    <span>{new Date(study.created_at).toLocaleDateString("es-AR")}</span>
+                  </div>
+                  <StudyDeleteButton
+                    studyId={study.id}
+                    studyName={study.file_name}
+                  />
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}

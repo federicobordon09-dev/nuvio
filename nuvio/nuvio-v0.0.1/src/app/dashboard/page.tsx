@@ -1,6 +1,14 @@
 import Link from "next/link";
+import { getStudyCount } from "@/lib/actions/studies";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  let studyCount = 0;
+  try {
+    studyCount = await getStudyCount();
+  } catch {
+    studyCount = 0;
+  }
+
   return (
     <div>
       <div className="mb-8">
@@ -44,6 +52,9 @@ export default function DashboardPage() {
           </h3>
           <p className="mt-1 text-[13px] text-muted-foreground">
             Revisá tus estudios anteriores.
+          </p>
+          <p className="mt-3 text-[13px] font-medium text-foreground">
+            {studyCount} {studyCount === 1 ? "estudio" : "estudios"}
           </p>
         </Link>
 

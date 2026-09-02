@@ -92,3 +92,156 @@ export function formatFileSize(bytes: number): string {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
+
+// ── Analysis statuses ──────────────────────────────────────────
+
+export const ANALYSIS_STATUSES = [
+  { value: "pending", label: "Pendiente" },
+  { value: "processing", label: "En progreso" },
+  { value: "completed", label: "Completado" },
+  { value: "failed", label: "Fallido" },
+] as const;
+
+export function getAnalysisStatusLabel(status: string): string {
+  const found = ANALYSIS_STATUSES.find((s) => s.value === status);
+  return found?.label ?? "Desconocido";
+}
+
+// ── Study stages (combined document + analysis status) ─────────
+
+export type StudyStage =
+  | "pending_processing"
+  | "processing"
+  | "error_processing"
+  | "pending_analysis"
+  | "analyzing"
+  | "ready"
+  | "error_analysis"
+  | "unknown";
+
+export const STUDY_STAGE_LABELS: Record<StudyStage, string> = {
+  pending_processing: "Pendiente de procesamiento",
+  processing: "Procesando",
+  error_processing: "Error de procesamiento",
+  pending_analysis: "Análisis pendiente",
+  analyzing: "Analizando con IA",
+  ready: "Listo",
+  error_analysis: "Error de análisis",
+  unknown: "Estado desconocido",
+};
+
+export const STUDY_STAGE_STYLES: Record<
+  StudyStage,
+  { bg: string; text: string; dot: string }
+> = {
+  pending_processing: {
+    bg: "bg-cyan-50",
+    text: "text-cyan-700",
+    dot: "bg-cyan-500",
+  },
+  processing: {
+    bg: "bg-yellow-50",
+    text: "text-yellow-700",
+    dot: "bg-yellow-500",
+  },
+  error_processing: {
+    bg: "bg-red-50",
+    text: "text-red-700",
+    dot: "bg-red-500",
+  },
+  pending_analysis: {
+    bg: "bg-blue-50",
+    text: "text-blue-700",
+    dot: "bg-blue-500",
+  },
+  analyzing: {
+    bg: "bg-yellow-50",
+    text: "text-yellow-700",
+    dot: "bg-yellow-500",
+  },
+  ready: {
+    bg: "bg-green-50",
+    text: "text-green-700",
+    dot: "bg-green-500",
+  },
+  error_analysis: {
+    bg: "bg-red-50",
+    text: "text-red-700",
+    dot: "bg-red-500",
+  },
+  unknown: {
+    bg: "bg-muted",
+    text: "text-muted-foreground",
+    dot: "bg-muted-foreground",
+  },
+};
+
+/**
+ * Determina el stage combinado de un estudio (documento + análisis).
+ */
+export function getStudyStage(
+  status: string,
+  analysisStatus?: string
+): StudyStage {
+  if (status === "uploaded") return "pending_processing";
+  if (status === "processing") return "processing";
+  if (status === "error") return "error_processing";
+  if (status === "processed") {
+    if (analysisStatus === "processing") return "analyzing";
+    if (analysisStatus === "completed") return "ready";
+    if (analysisStatus === "failed") return "error_analysis";
+    return "pending_analysis";
+  }
+  return "unknown";
+}
+
+/**
+ * Devuelve la etiqueta del stage combinado (p. ej. "Listo", "Analizando con IA").
+ */
+export function getStudyStageLabel(
+  status: string,
+  analysisStatus?: string
+): string {
+  return STUDY_STAGE_LABELS[getStudyStage(status, analysisStatus)];
+}
+
+/**
+ * Devuelve las clases de Tailwind para el badge del stage combinado.
+ */
+export function getStudyStageStyles(
+  status: string,
+  analysisStatus?: string
+): string {
+  const stage = getStudyStage(status, analysisStatus);
+  const styles = STUDY_STAGE_STYLES[stage];
+  return `${styles.bg} ${styles.text}`;
+}
+
+/**
+ * Devuelve la clase del dot colorido para el badge del stage.
+ */
+export function getStudyStageDotStyle(
+  status: string,
+  analysisStatus?: string
+): string {
+  const stage = getStudyStage(status, analysisStatus);
+  return STUDY_STAGE_STYLES[stage].dot;
+}
+
+// ── Analysis errors ─────────────────────────────────────────────
+
+export const ANALYSIS_ERRORS = [
+  { code: "unauthenticated", label: "Sesión expirada" },
+  { code: "study_not_found", label: "Estudio no encontrado" },
+  { code: "study_not_ready", label: "Estudio sin procesar" },
+  { code: "extraction_error", label: "Error al leer el contenido" },
+  { code: "extraction_missing", label: "Contenido no disponible" },
+  { code: "extraction_empty", label: "Contenido vacío" },
+  { code: "gemini_timeout", label: "La IA tardó demasiado" },
+  { code: "gemini_network", label: "Error de conexión con la IA" },
+  { code: "gemini_api_error", label: "Error del servicio de IA" },
+  { code: "gemini_invalid_response", label: "Respuesta no válida de la IA" },
+  { code: "gemini_failed", label: "Error desconocido de la IA" },
+  { code: "persist_failed", label: "No se pudo guardar el análisis" },
+  { code: "analysis_in_progress", label: "Análisis en curso" },
+] as const;
