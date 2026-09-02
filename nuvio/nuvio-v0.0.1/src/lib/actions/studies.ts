@@ -295,35 +295,3 @@ export async function upsertStudyAnalysis(
 
   return data as StudyAnalysisRow;
 }
-
-/**
- * TEMPORAL — Fase 4.2.4 verificación del pipeline.
- * Eliminar después de la prueba.
- */
-export async function _testAnalyzeStudy(studyId: string) {
-  const supabase = await createClient();
-  await assertAuthenticated(supabase);
-
-  const { analyzeStudy } = await import("@/lib/analysis/analyze-study.ts");
-
-  const start = Date.now();
-  const analysis = await analyzeStudy(studyId);
-  const elapsedMs = Date.now() - start;
-
-  return {
-    ok: true,
-    elapsedMs,
-    summary: analysis.summary,
-    documentType: analysis.document_type,
-    findingsCount: analysis.key_findings.length,
-    findings: analysis.key_findings.map((f) => ({
-      title: f.title,
-      value: f.value,
-      status: f.status,
-    })),
-    observationsCount: analysis.observations.length,
-    warningsCount: analysis.warnings.length,
-    recommendationsCount: analysis.recommendations.length,
-    limitationsCount: analysis.limitations.length,
-  };
-}
