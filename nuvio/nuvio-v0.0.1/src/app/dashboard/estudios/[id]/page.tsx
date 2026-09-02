@@ -1,4 +1,6 @@
-import { getStudy, getStudyExtraction } from "@/lib/actions/studies";
+import { getStudy, getStudyExtraction, getStudyAnalysis } from "@/lib/actions/studies";
+import type { StudyAnalysis } from "@/lib/analysis/schema";
+import { parseStoredAnalysis } from "@/lib/analysis/stored";
 import { formatFileSize, getProcessingErrorLabel, getStudyTypeLabel } from "@/lib/studies-utils";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -6,6 +8,7 @@ import { StudyDeleteButton } from "@/components/dashboard/StudyDeleteButton";
 import { StudyDownloadButton } from "@/components/dashboard/StudyDownloadButton";
 import { StudyProcessButton } from "@/components/dashboard/StudyProcessButton";
 import { StudyStatusBadge } from "@/components/dashboard/StudyStatusBadge";
+import { AnalysisResult } from "@/components/studies/AnalysisResult";
 
 export default async function EstudioDetailPage({
   params,
@@ -28,6 +31,20 @@ export default async function EstudioDetailPage({
     } catch {
       // La tabla puede no existir aún o haber un error transitorio.
       // Se muestra el fallback sin romper la página.
+    }
+  }
+
+  // Obtener análisis IA almacenado (sin volver a llamar a Gemini).
+  let analysis: StudyAnalysis | null = null;
+  if (study.status === "processed") {
+    try {
+      const row = await getStudyAnalysis(id);
+      if (row?.analysis) {
+        analysis = parseStoredAnalysis(row.analysis);
+      }
+    } catch {
+      // La tabla puede no existir aún o haber un error transitorio.
+      // Se muestra la página sin análisis sin romper.
     }
   }
 
@@ -117,6 +134,22 @@ export default async function EstudioDetailPage({
         <div className="mt-6 rounded-xl border border-yellow-400/40 bg-yellow-50 p-4 text-[14px] leading-[1.6] text-yellow-900">
           Se está procesando el documento. Esta operación suele tardar unos
           segundos.
+        </div>
+      )}
+      {study.status === "processed" && (
+        <div className="mt-6">
+          {analysis ? (
+            <AnalysisResult analysis={analysis} />
+          ) : (
+            <div className="rounded-xl border border-ink-700/10 bg-white p-6 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
+              <h2 className="text-[15px] font-medium text-foreground">
+                Análisis de IA
+              </h2>
+              <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
+                Este estudio todavía no tiene un análisis generado.
+              </p>
+            </div>
+          )}
         </div>
       )}
       {study.status === "processed" && extraction && (
