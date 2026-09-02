@@ -8,6 +8,7 @@ import { StudyDeleteButton } from "@/components/dashboard/StudyDeleteButton";
 import { StudyDownloadButton } from "@/components/dashboard/StudyDownloadButton";
 import { StudyProcessButton } from "@/components/dashboard/StudyProcessButton";
 import { StudyStatusBadge } from "@/components/dashboard/StudyStatusBadge";
+import { AnalyzeStudyButton } from "@/components/studies/AnalyzeStudyButton";
 import { AnalysisResult } from "@/components/studies/AnalysisResult";
 
 export default async function EstudioDetailPage({
@@ -139,7 +140,12 @@ export default async function EstudioDetailPage({
       {study.status === "processed" && (
         <div className="mt-6">
           {analysis ? (
-            <AnalysisResult analysis={analysis} />
+            <>
+              <AnalysisResult analysis={analysis} />
+              <div className="mt-4">
+                <AnalyzeStudyButton studyId={study.id} hasAnalysis />
+              </div>
+            </>
           ) : (
             <div className="rounded-xl border border-ink-700/10 bg-white p-6 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
               <h2 className="text-[15px] font-medium text-foreground">
@@ -148,6 +154,9 @@ export default async function EstudioDetailPage({
               <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
                 Este estudio todavía no tiene un análisis generado.
               </p>
+              <div className="mt-4">
+                <AnalyzeStudyButton studyId={study.id} hasAnalysis={false} />
+              </div>
             </div>
           )}
         </div>

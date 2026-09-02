@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { processStudy } from "@/lib/studies/processing";
+import { analyzeStudy, AnalysisError } from "@/lib/analysis/analyze-study";
 import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, ALLOWED_STUDY_TYPES, type StudyType } from "@/lib/studies-utils";
 
 async function assertAuthenticated(supabase: Awaited<ReturnType<typeof createClient>>) {
@@ -294,4 +295,39 @@ export async function upsertStudyAnalysis(
   }
 
   return data as StudyAnalysisRow;
+}
+
+// ── analyzeStudy (manual) ───────────────────────────────────────
+
+export type AnalyzeStudyResult =
+  | { success: true; analysis: Record<string, unknown> }
+  | { success: false; error: string };
+
+/**
+ * Ejecuta manualmente el análisis de IA sobre un estudio ya procesado.
+ *
+ * Reutiliza el pipeline existente `analyzeStudy(studyId)` que ya maneja:
+ * - autenticación + ownership
+ * - verificación de estado `processed`
+ * - obtención de extracción
+ * - llamada a Gemini + validación Zod
+ * - persistencia idempotente (upsert por study_id)
+ *
+ * Devuelve éxito con el análisis generado, o error con mensaje controlado.
+ */
+export async function requestStudyAnalysis(
+  studyId: string
+): Promise<AnalyzeStudyResult> {
+  try {
+    const analysis = await analyzeStudy(studyId);
+    revalidatePath(`/dashboard/estudios/${studyId}`);
+    revalidatePath("/dashboard/estudios");
+    return { success: true, analysis: analysis as Record<string, unknown> };
+  } catch (err) {
+    if (err instanceof AnalysisError) {
+      return { success: false, error: err.message };
+    }
+    console.error("[nuvio:requestStudyAnalysis] Unexpected error:", err);
+    return { success: false, error: "No pudimos analizar este estudio." };
+  }
 }
