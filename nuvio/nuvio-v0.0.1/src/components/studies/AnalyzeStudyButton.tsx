@@ -51,7 +51,7 @@ export function AnalyzeStudyButton({
         type="button"
         disabled={isPending}
         onClick={handleSubmit}
-        className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-[14px] font-medium text-ocean transition-colors hover:bg-ocean-tint disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isPending ? (
           <>
@@ -84,7 +84,7 @@ export function AnalyzeStudyButton({
       </button>
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-[13px] leading-[1.5] text-red-700">
+        <p className="rounded-lg bg-danger-tint px-3 py-2 text-[13px] leading-[1.5] text-danger-strong">
           {error}
         </p>
       )}

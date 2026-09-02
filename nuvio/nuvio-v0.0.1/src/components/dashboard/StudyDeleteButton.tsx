@@ -17,7 +17,7 @@ export function StudyDeleteButton({
       <button
         type="button"
         onClick={() => setShowConfirm(true)}
-        className="rounded-lg px-4 py-2.5 text-[14px] font-medium text-red-700 transition-colors hover:bg-red-50"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-danger/30 px-4 py-2.5 text-[14px] font-medium text-danger transition-colors hover:bg-danger-tint"
       >
         Eliminar
       </button>
@@ -31,7 +31,7 @@ export function StudyDeleteButton({
           aria-label="Confirmar eliminación"
         >
           <div
-            className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl"
+            className="w-full max-w-sm rounded-xl bg-surface p-6 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="text-[15px] font-medium text-foreground">
@@ -63,7 +63,7 @@ export function StudyDeleteButton({
                 <input type="hidden" name="studyId" value={studyId} />
                 <button
                   type="submit"
-                  className="rounded-lg bg-red-600 px-4 py-2 text-[14px] font-medium text-white transition-colors hover:bg-red-700"
+                  className="rounded-lg bg-danger px-4 py-2 text-[14px] font-medium text-white transition-colors hover:bg-danger-strong"
                 >
                   Eliminar
                 </button>

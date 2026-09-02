@@ -156,10 +156,10 @@ export function StudyPipelineController({
   if (phase === "failed") return null; // La página muestra el error + retry manual.
 
   return (
-    <div className="rounded-xl border border-ink-700/10 bg-white p-6 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
+    <div className="rounded-xl border border-border bg-surface p-5">
       <div className="flex items-center gap-3">
         <svg
-          className="h-5 w-5 animate-spin text-primary-600"
+          className="h-5 w-5 animate-spin text-ocean"
           viewBox="0 0 24 24"
           fill="none"
         >

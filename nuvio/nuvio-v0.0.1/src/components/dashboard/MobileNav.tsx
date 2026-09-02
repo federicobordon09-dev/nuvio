@@ -65,9 +65,9 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
           />
           <div
             id="mobile-nav-panel"
-            className="absolute inset-y-0 left-0 flex w-72 flex-col border-r border-ink-700/10 bg-white shadow-xl"
+            className="absolute inset-y-0 left-0 flex w-72 flex-col border-r border-border bg-surface shadow-xl"
           >
-            <div className="flex items-center justify-between border-b border-ink-700/10 px-5 py-4">
+            <div className="flex items-center justify-between border-b border-border px-5 py-4">
               <span className="text-[15px] font-medium text-foreground">Nuvio</span>
               <button
                 onClick={() => setOpen(false)}
@@ -92,11 +92,11 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
                         aria-current={active ? "page" : undefined}
                         className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors duration-150 ${
                           active
-                            ? "bg-primary-50 text-primary-700"
+                            ? "bg-ocean-tint text-ocean-dark"
                             : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                         }`}
                       >
-                        <span className={active ? "text-primary-600" : "text-muted-foreground"}>
+                        <span className={active ? "text-ocean" : "text-muted-foreground"}>
                           {item.icon}
                         </span>
                         {item.label}
@@ -107,7 +107,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
               </ul>
             </nav>
 
-            <div className="border-t border-ink-700/10 px-3 py-4">
+            <div className="border-t border-border px-3 py-4">
               {userName && (
                 <div className="mb-3 px-3 flex items-center gap-3">
                   {userAvatar ? (
@@ -118,7 +118,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
                       className="h-8 w-8 rounded-full"
                     />
                   ) : (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-[13px] font-medium text-primary-700">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ocean-tint text-[13px] font-medium text-ocean-dark">
                       {userName.charAt(0).toUpperCase()}
                     </div>
                   )}

@@ -297,12 +297,12 @@ describe("getStudyStage", () => {
   it("getStudyStageStyles devuelve clases de color consistentes", () => {
     const ready = getStudyStageStyles("processed", "completed");
     const failed = getStudyStageStyles("processed", "failed");
-    assert.ok(ready.includes("green"));
-    assert.ok(failed.includes("red"));
+    assert.ok(ready.includes("success"));
+    assert.ok(failed.includes("danger"));
   });
 
   it("getStudyStageDotStyle devuelve el dot del stage", () => {
-    assert.ok(getStudyStageDotStyle("processed", "completed").includes("green"));
+    assert.ok(getStudyStageDotStyle("processed", "completed").includes("success"));
   });
 });
 

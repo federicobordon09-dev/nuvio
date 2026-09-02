@@ -20,7 +20,7 @@ interface DashboardCardProps {
  */
 export function DashboardCard({
   icon,
-  iconTone = "bg-primary-50 text-primary-600",
+  iconTone = "bg-ocean-tint text-ocean",
   title,
   description,
   footer,
@@ -48,15 +48,15 @@ export function DashboardCard({
   );
 
   const classes =
-    "block h-full rounded-xl border border-ink-700/10 bg-white p-5 shadow-[0_1px_2px_rgba(11,20,38,0.04)] transition-all duration-200";
+    "block h-full rounded-xl border border-border bg-surface p-5 transition-all duration-200";
 
   if (href) {
     return (
       <Link
         href={href}
-        className={`${classes} group hover:border-ink-700/15 hover:shadow-[0_2px_8px_rgba(11,20,38,0.06)]`}
+        className={`${classes} group hover:border-ocean/20 hover:bg-ocean-tint/20`}
       >
-        <h3 className="text-[15px] font-medium text-foreground transition-colors group-hover:text-primary-600">
+        <h3 className="text-[15px] font-medium text-foreground transition-colors group-hover:text-ocean">
           {title}
         </h3>
         {description && (

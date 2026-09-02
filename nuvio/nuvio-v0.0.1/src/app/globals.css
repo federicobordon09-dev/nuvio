@@ -1,66 +1,86 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #ffffff;
-  --color-foreground: var(--ink-950);
-  --color-muted: #f8fafc;
-  --color-muted-foreground: #64748b;
-  --color-border: var(--ink-800);
-  --color-primary: var(--ink-950);
+  --color-background: #FFFEF9;
+  --color-foreground: #1C2530;
+  --color-muted: #F8F3F0;
+  --color-muted-foreground: #5C6773;
+  --color-border: #E7E1DB;
+  --color-primary: #0B5497;
   --color-primary-foreground: #ffffff;
-  --color-accent: var(--primary-600);
-  --color-accent-light: var(--primary-50);
+  --color-accent: #0B5497;
+  --color-accent-light: #E6EEF6;
   --color-accent-foreground: #ffffff;
-  --color-surface: #ffffff;
-  --color-surface-elevated: #ffffff;
+  --color-surface: #FFFEF9;
+  --color-surface-elevated: #FFFFFF;
 
-  /* Ink — reemplaza negro puro */
-  --ink-950: #0B1426;
-  --ink-900: #111D35;
-  --ink-800: #1A2744;
-  --ink-700: #243352;
-  --ink-600: #334766;
-  --color-ink-950: #0B1426;
-  --color-ink-900: #111D35;
-  --color-ink-800: #1A2744;
-  --color-ink-700: #243352;
-  --color-ink-600: #334766;
+  /* Ocean — color de marca */
+  --ocean: #0B5497;
+  --ocean-dark: #083B6B;
+  --ocean-tint: #E6EEF6;
 
-  /* Primary — azul del logo */
-  --primary-50: #EFF6FF;
-  --primary-100: #DBEAFE;
-  --primary-200: #BFDBFE;
-  --primary-400: #60A5FA;
-  --primary-500: #3B82F6;
-  --primary-600: #2563EB;
-  --primary-700: #1D4ED8;
-  --primary-800: #1E40AF;
-  --primary-900: #1E3A8A;
-  --color-primary-50: #EFF6FF;
-  --color-primary-100: #DBEAFE;
-  --color-primary-200: #BFDBFE;
-  --color-primary-400: #60A5FA;
-  --color-primary-500: #3B82F6;
-  --color-primary-600: #2563EB;
-  --color-primary-700: #1D4ED8;
-  --color-primary-800: #1E40AF;
-  --color-primary-900: #1E3A8A;
+  --color-ocean: #0B5497;
+  --color-ocean-dark: #083B6B;
+  --color-ocean-tint: #E6EEF6;
 
-  /* Cyan — mitad clara del degradé */
-  --cyan-400: #22D3EE;
-  --cyan-500: #06B6D4;
-  --cyan-600: #0891B2;
-  --color-cyan-400: #22D3EE;
-  --color-cyan-500: #06B6D4;
-  --color-cyan-600: #0891B2;
+  /* Primary scale — derivado de Ocean */
+  --primary-50: #E6EEF6;
+  --primary-100: #CDDEF0;
+  --primary-200: #A3C4E3;
+  --primary-400: #3E82C4;
+  --primary-500: #1B6BB0;
+  --primary-600: #0B5497;
+  --primary-700: #083B6B;
+  --primary-800: #062A4D;
+  --primary-900: #041D36;
+  --color-primary-50: #E6EEF6;
+  --color-primary-100: #CDDEF0;
+  --color-primary-200: #A3C4E3;
+  --color-primary-400: #3E82C4;
+  --color-primary-500: #1B6BB0;
+  --color-primary-600: #0B5497;
+  --color-primary-700: #083B6B;
+  --color-primary-800: #062A4D;
+  --color-primary-900: #041D36;
 
-  /* Status — valores exactos de la spec */
-  --status-normal: var(--cyan-600);
-  --status-normal-bg: #E0F7FA;
-  --status-elevated: #EF4444;
-  --status-elevated-bg: #FEE2E2;
-  --status-warning: #F59E0B;
-  --status-warning-bg: #FEF3C7;
+  /* Ink — paleta neutra cálida */
+  --ink-950: #1C2530;
+  --ink-900: #242E38;
+  --ink-800: #2A3440;
+  --ink-700: #3A4553;
+  --ink-600: #5C6773;
+  --color-ink-950: #1C2530;
+  --color-ink-900: #242E38;
+  --color-ink-800: #2A3440;
+  --color-ink-700: #3A4553;
+  --color-ink-600: #5C6773;
+
+  /* Status */
+  --success: #1F8A5F;
+  --success-tint: #E4F1EB;
+  --success-strong: #166A48;
+  --color-success: #1F8A5F;
+  --color-success-tint: #E4F1EB;
+  --color-success-strong: #166A48;
+
+  --warning: #B7791F;
+  --warning-tint: #F6EBD7;
+  --warning-strong: #8A5B15;
+  --color-warning: #B7791F;
+  --color-warning-tint: #F6EBD7;
+  --color-warning-strong: #8A5B15;
+
+  --danger: #C0392B;
+  --danger-tint: #F6E4E1;
+  --danger-strong: #932B1F;
+  --color-danger: #C0392B;
+  --color-danger-tint: #F6E4E1;
+  --color-danger-strong: #932B1F;
+
+  --info: #0B5497;
+  --info-tint: #E6EEF6;
+  --color-info: #0B5497;
+  --color-info-tint: #E6EEF6;
 
   /* Degradé de marca — uso restringido */
   --gradient-brand: linear-gradient(135deg, #22D3EE, #3B82F6, #2563EB);
@@ -82,11 +102,11 @@ body {
 }
 
 ::selection {
-  background: rgba(6, 182, 212, 0.15);
+  background: rgba(11, 84, 151, 0.12);
 }
 
 :focus-visible {
-  outline: 2px solid var(--primary-500);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
   border-radius: 4px;
 }

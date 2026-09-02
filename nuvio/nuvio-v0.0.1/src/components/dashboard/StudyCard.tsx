@@ -24,7 +24,7 @@ interface StudyCardProps {
  */
 export function StudyCard({ study, showDelete = true }: StudyCardProps) {
   return (
-    <div className="rounded-xl border border-ink-700/10 bg-white p-5 shadow-[0_1px_2px_rgba(11,20,38,0.04)] transition-colors hover:border-primary-300 hover:bg-primary-50/30">
+    <div className="rounded-xl border border-border bg-surface p-5 transition-colors hover:border-ocean/20 hover:bg-ocean-tint/20">
       <div className="flex items-start justify-between gap-4">
         <Link
           href={`/dashboard/estudios/${study.id}`}

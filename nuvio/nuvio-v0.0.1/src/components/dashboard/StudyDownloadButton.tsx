@@ -25,11 +25,11 @@ export function StudyDownloadButton({ studyId }: { studyId: string }) {
       <button
         onClick={handleDownload}
         disabled={loading}
-        className="rounded-lg bg-primary-600 px-4 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-primary-700 disabled:opacity-50"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-primary-700 disabled:opacity-50"
       >
         {loading ? "Generando enlace…" : "Descargar"}
       </button>
-      {error && <p className="text-[12px] text-red-600">{error}</p>}
+      {error && <p className="text-[12px] text-danger">{error}</p>}
     </div>
   );
 }

@@ -13,7 +13,7 @@ interface EmptyStateProps {
  */
 export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
-    <div className="rounded-xl border border-ink-700/10 bg-white p-8 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
+    <div className="rounded-xl border border-border bg-surface p-8">
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted/50 text-muted-foreground">
           {icon}

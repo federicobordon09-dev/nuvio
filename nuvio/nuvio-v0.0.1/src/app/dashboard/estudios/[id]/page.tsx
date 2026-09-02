@@ -11,6 +11,7 @@ import { StudyProcessButton } from "@/components/dashboard/StudyProcessButton";
 import { StudyStatusBadge } from "@/components/dashboard/StudyStatusBadge";
 import { AnalyzeStudyButton } from "@/components/studies/AnalyzeStudyButton";
 import { AnalysisResult } from "@/components/studies/AnalysisResult";
+import { StudyExtraction } from "@/components/studies/StudyExtraction";
 import { StudyPipelineController } from "@/components/studies/StudyPipelineController";
 import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
 
@@ -59,6 +60,12 @@ export default async function EstudioDetailPage({
     }
   }
 
+  // ── Contenido de la columna principal ─────────────────────────
+  const showProcessButton =
+    study.status === "uploaded" ||
+    study.status === "processing" ||
+    study.status === "error";
+
   return (
     <div>
       <Breadcrumbs
@@ -73,144 +80,152 @@ export default async function EstudioDetailPage({
         description="Información detallada del estudio seleccionado."
       />
 
-      <div className="rounded-xl border border-ink-700/10 bg-white p-6 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
-        <dl className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <div>
-            <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-              Tipo
-            </dt>
-            <dd className="mt-1 text-[15px] text-foreground">
-              {getStudyTypeLabel(study.study_type)}
-            </dd>
-          </div>
-
-          <div>
-            <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-              Fecha de subida
-            </dt>
-            <dd className="mt-1 text-[15px] text-foreground">
-              {new Date(study.created_at).toLocaleDateString("es-AR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </dd>
-          </div>
-
-          <div>
-            <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-              Tamaño
-            </dt>
-            <dd className="mt-1 text-[15px] text-foreground">
-              {formatFileSize(study.file_size)}
-            </dd>
-          </div>
-
-          <div>
-            <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-              Tipo de archivo
-            </dt>
-            <dd className="mt-1 text-[15px] text-foreground">
-              {study.mime_type}
-            </dd>
-          </div>
-
-          <div className="sm:col-span-2">
-            <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-              Estado
-            </dt>
-            <dd className="mt-1 text-[15px] text-foreground">
-              <StudyStatusBadge
-                status={study.status}
-                analysisStatus={study.analysis_status}
-              />
-            </dd>
-          </div>
-        </dl>
-      </div>
-
-      {study.status === "uploaded" && (
-        <div className="mt-6 rounded-xl border border-cyan-400/40 bg-cyan-50 p-4 text-[14px] leading-[1.6] text-cyan-900">
-          El documento está pendiente de procesamiento. Iniciá el procesamiento
-          para extraer su contenido.
-        </div>
-      )}
-      {study.status === "processing" && (
-        <div className="mt-6 rounded-xl border border-yellow-400/40 bg-yellow-50 p-4 text-[14px] leading-[1.6] text-yellow-900">
-          Se está procesando el documento. Esta operación suele tardar unos
-          segundos.
-        </div>
-      )}
-      {study.status === "processed" && (
-        <div className="mt-6">
-          {analysis ? (
-            <>
-              <AnalysisResult analysis={analysis} />
-              <div className="mt-4">
-                <AnalyzeStudyButton studyId={study.id} hasAnalysis />
-              </div>
-            </>
-          ) : study.analysis_status === "failed" ? (
-            <div className="rounded-xl border border-ink-700/10 bg-white p-6 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
-              <h2 className="text-[15px] font-medium text-foreground">
-                Análisis de IA
-              </h2>
-              <p className="mt-2 text-[14px] leading-[1.6] text-red-600">
-                {getAnalysisErrorMessage(study.analysis_error ?? "gemini_failed")}
-              </p>
-              <div className="mt-4">
-                <AnalyzeStudyButton studyId={study.id} hasAnalysis={false} />
-              </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px] lg:items-start">
+        {/* ── Columna principal (ancho) ─────────────────────── */}
+        <div className="min-w-0 space-y-6">
+          {study.status === "uploaded" && (
+            <div className="rounded-xl border border-ocean/20 bg-ocean-tint p-4 text-[14px] leading-[1.6] text-ocean-dark">
+              El documento está pendiente de procesamiento. Iniciá el
+              procesamiento para extraer su contenido.
             </div>
-          ) : (
-            <StudyPipelineController
-              studyId={study.id}
-              status={study.status}
-              analysisStatus={study.analysis_status ?? "pending"}
-              hasAnalysis={false}
-            />
+          )}
+          {study.status === "processing" && (
+            <div className="rounded-xl border border-ocean/20 bg-ocean-tint p-4 text-[14px] leading-[1.6] text-ocean-dark">
+              Se está procesando el documento. Esta operación suele tardar unos
+              segundos.
+            </div>
+          )}
+          {study.status === "error" && (
+            <div className="rounded-xl border border-danger/30 bg-danger-tint p-4 text-[14px] leading-[1.6] text-danger-strong">
+              {getProcessingErrorLabel(study.processing_error)}
+            </div>
+          )}
+
+          {study.status === "processed" && (
+            <>
+              {analysis ? (
+                <>
+                  <AnalysisResult analysis={analysis} />
+                  <div className="flex">
+                    <AnalyzeStudyButton studyId={study.id} hasAnalysis />
+                  </div>
+                </>
+              ) : study.analysis_status === "failed" ? (
+                <div className="rounded-xl border border-border bg-surface p-5">
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-danger" />
+                    <h2 className="text-[15px] font-medium text-foreground">
+                      Análisis de IA
+                    </h2>
+                  </div>
+                  <p className="text-[14px] leading-[1.6] text-danger-strong">
+                    {getAnalysisErrorMessage(study.analysis_error ?? "gemini_failed")}
+                  </p>
+                  <div className="mt-4">
+                    <AnalyzeStudyButton studyId={study.id} hasAnalysis={false} />
+                  </div>
+                </div>
+              ) : (
+                <StudyPipelineController
+                  studyId={study.id}
+                  status={study.status}
+                  analysisStatus={study.analysis_status ?? "pending"}
+                  hasAnalysis={false}
+                />
+              )}
+            </>
+          )}
+
+          {study.status === "processed" && !extraction && (
+            <div className="rounded-xl border border-success/30 bg-success-tint p-4 text-[14px] leading-[1.6] text-success-strong">
+              El documento fue procesado correctamente, pero el contenido
+              extraído todavía no está disponible.
+            </div>
           )}
         </div>
-      )}
-      {study.status === "processed" && extraction && (
-        <div className="mt-6 rounded-xl border border-ink-700/10 bg-white shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
-          <div className="border-b border-ink-700/10 px-6 py-4">
-            <h2 className="text-[15px] font-medium text-foreground">
-              Contenido extraído
-            </h2>
-            {extraction.page_count != null && (
-              <p className="mt-0.5 text-[12px] text-muted-foreground">
-                Extraído del documento original · {extraction.page_count} página{extraction.page_count !== 1 ? "s" : ""}
-              </p>
-            )}
-          </div>
-          <div className="max-h-[600px] overflow-y-auto px-6 py-4">
-            <pre className="whitespace-pre-wrap break-words font-sans text-[14px] leading-[1.6] text-foreground">
-              {extraction.extracted_text}
-            </pre>
-          </div>
-        </div>
-      )}
-      {study.status === "processed" && !extraction && (
-        <div className="mt-6 rounded-xl border border-green-400/40 bg-green-50 p-4 text-[14px] leading-[1.6] text-green-900">
-          El documento fue procesado correctamente, pero el contenido extraído
-          todavía no está disponible.
-        </div>
-      )}
-      {study.status === "error" && (
-        <div className="mt-6 rounded-xl border border-red-400/40 bg-red-50 p-4 text-[14px] leading-[1.6] text-red-900">
-          {getProcessingErrorLabel(study.processing_error)}
-        </div>
-      )}
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
-        {(study.status === "uploaded" ||
-          study.status === "processing" ||
-          study.status === "error") && <StudyProcessButton studyId={study.id} />}
-        <StudyDownloadButton studyId={study.id} />
-        <StudyDeleteButton studyId={study.id} studyName={study.file_name} />
+        {/* ── Columna secundaria (300px) ────────────────────── */}
+        <aside className="space-y-6">
+          {/* Metadata */}
+          <section
+            aria-label="Metadatos del estudio"
+            className="rounded-xl border border-border bg-surface p-5"
+          >
+            <dl className="space-y-4">
+              <div>
+                <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Tipo
+                </dt>
+                <dd className="mt-1 text-[14px] font-medium text-foreground">
+                  {getStudyTypeLabel(study.study_type)}
+                </dd>
+              </div>
+
+              <div>
+                <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Fecha de subida
+                </dt>
+                <dd className="mt-1 text-[14px] text-foreground">
+                  {new Date(study.created_at).toLocaleDateString("es-AR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </dd>
+              </div>
+
+              <div>
+                <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Tamaño
+                </dt>
+                <dd className="mt-1 text-[14px] text-foreground">
+                  {formatFileSize(study.file_size)}
+                </dd>
+              </div>
+
+              <div>
+                <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Tipo de archivo
+                </dt>
+                <dd className="mt-1 font-mono text-[13px] text-foreground">
+                  {study.mime_type}
+                </dd>
+              </div>
+
+              <div>
+                <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Estado
+                </dt>
+                <dd className="mt-1 text-[14px] text-foreground">
+                  <StudyStatusBadge
+                    status={study.status}
+                    analysisStatus={study.analysis_status}
+                  />
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          {/* Acciones */}
+          <section
+            aria-label="Acciones"
+            className="flex flex-col gap-3"
+          >
+            <StudyDownloadButton studyId={study.id} />
+            {showProcessButton && <StudyProcessButton studyId={study.id} />}
+            <StudyDeleteButton studyId={study.id} studyName={study.file_name} />
+          </section>
+
+          {/* Contenido extraído (colapsado) */}
+          {study.status === "processed" && extraction && (
+            <StudyExtraction
+              text={extraction.extracted_text}
+              pageCount={extraction.page_count}
+            />
+          )}
+        </aside>
       </div>
     </div>
   );

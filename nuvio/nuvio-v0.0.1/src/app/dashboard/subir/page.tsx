@@ -56,7 +56,7 @@ export default function SubirPage() {
       </div>
 
       {error && (
-        <div className="mb-6 rounded-xl border border-red-400/50 bg-red-50 p-4 text-[14px] text-red-800">
+        <div className="mb-6 rounded-xl border border-danger/30 bg-danger-tint p-4 text-[14px] text-danger-strong">
           {error}
         </div>
       )}
@@ -68,9 +68,9 @@ export default function SubirPage() {
         className="space-y-6"
       >
         {/* File input */}
-        <div className="rounded-xl border-2 border-dashed border-ink-700/20 bg-white p-8 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
+        <div className="rounded-xl border-2 border-dashed border-border bg-surface p-8">
           <div className="flex flex-col items-center justify-center text-center">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-ocean-tint text-ocean">
               <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
               </svg>
@@ -124,7 +124,7 @@ export default function SubirPage() {
             name="studyType"
             value={studyType}
             onChange={(e) => setStudyType(e.target.value as StudyType)}
-            className="w-full rounded-lg border border-ink-700/20 bg-white px-3 py-2.5 text-[14px] text-foreground transition-colors focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+            className="w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-[14px] text-foreground transition-colors focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean-tint"
           >
             {ALLOWED_STUDY_TYPES.map((type) => (
               <option key={type} value={type}>

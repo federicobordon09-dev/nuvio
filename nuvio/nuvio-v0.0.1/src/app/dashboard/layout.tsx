@@ -25,9 +25,9 @@ export default async function DashboardLayout({
   const userAvatar = user?.user_metadata?.avatar_url;
 
   return (
-    <div className="min-h-screen bg-muted/20">
+    <div className="min-h-screen bg-background">
       {/* Mobile header */}
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-ink-700/10 bg-white/80 px-4 backdrop-blur-xl lg:hidden">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-surface/80 px-4 backdrop-blur-xl lg:hidden">
         <Link href="/dashboard" className="flex items-center" aria-label="Nuvio">
           <Image
             src="/nuvio_logo.png"
@@ -43,7 +43,7 @@ export default async function DashboardLayout({
 
       <div className="flex">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-ink-700/10 lg:bg-white">
+        <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-border lg:bg-muted">
           <div className="flex h-full flex-col">
             <div className="flex h-16 items-center px-5">
               <Link href="/dashboard" className="flex items-center" aria-label="Nuvio">
@@ -62,7 +62,7 @@ export default async function DashboardLayout({
               <DashboardNav />
             </div>
 
-            <div className="border-t border-ink-700/10 px-3 py-4">
+            <div className="border-t border-border px-3 py-4">
               <div className="flex items-center gap-3 px-3 mb-3">
                 {userAvatar ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -72,7 +72,7 @@ export default async function DashboardLayout({
                     className="h-8 w-8 rounded-full"
                   />
                 ) : (
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-[13px] font-medium text-primary-700">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ocean-tint text-[13px] font-medium text-ocean-dark">
                     {userName.charAt(0).toUpperCase()}
                   </div>
                 )}
