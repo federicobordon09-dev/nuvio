@@ -1,0 +1,5 @@
+# El repo de Nuvio solo debe contener el proyecto Nuvio.
+# Proyectos independientes que viven en el mismo workspace pero
+# pertenecen a sus propios repositorios.
+portfolio/
+claudio/
