@@ -228,6 +228,57 @@ export function getStudyStageDotStyle(
   return STUDY_STAGE_STYLES[stage].dot;
 }
 
+// ── Dashboard stats ────────────────────────────────────────────
+
+export type StudyStats = {
+  total: number;
+  ready: number; // procesado + análisis completado
+  in_progress: number; // procesando documento o analizando con IA
+  pending: number; // pendiente de procesamiento o de análisis
+  errors: number; // error de procesamiento o de análisis
+};
+
+/**
+ * Agrupa estudios por stage combinado (documento + análisis) para
+ * el resumen del dashboard. Lógica pura y testeable.
+ */
+export function computeStudyStats(
+  rows: Array<{ status: string; analysis_status?: string | null }>
+): StudyStats {
+  const stats: StudyStats = {
+    total: rows.length,
+    ready: 0,
+    in_progress: 0,
+    pending: 0,
+    errors: 0,
+  };
+
+  for (const row of rows) {
+    const stage = getStudyStage(row.status, row.analysis_status ?? undefined);
+    switch (stage) {
+      case "ready":
+        stats.ready++;
+        break;
+      case "processing":
+      case "analyzing":
+        stats.in_progress++;
+        break;
+      case "pending_processing":
+      case "pending_analysis":
+        stats.pending++;
+        break;
+      case "error_processing":
+      case "error_analysis":
+        stats.errors++;
+        break;
+      default:
+        break;
+    }
+  }
+
+  return stats;
+}
+
 // ── Analysis errors ─────────────────────────────────────────────
 
 export const ANALYSIS_ERRORS = [

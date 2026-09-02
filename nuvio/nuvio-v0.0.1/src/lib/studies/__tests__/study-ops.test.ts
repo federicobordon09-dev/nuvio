@@ -12,6 +12,7 @@ import {
   getStudyStageStyles,
   getStudyStageDotStyle,
   getAnalysisStatusLabel,
+  computeStudyStats,
 } from "../../studies-utils.ts";
 
 // ── Fake de Supabase ─────────────────────────────────────────────
@@ -317,5 +318,60 @@ describe("getAnalysisStatusLabel", () => {
 
   it("devuelve Desconocido para un estado inválido", () => {
     assert.equal(getAnalysisStatusLabel("weird"), "Desconocido");
+  });
+});
+
+// ── computeStudyStats ───────────────────────────────────────────
+
+describe("computeStudyStats", () => {
+  it("devuelve ceros cuando no hay estudios", () => {
+    assert.deepEqual(computeStudyStats([]), {
+      total: 0,
+      ready: 0,
+      in_progress: 0,
+      pending: 0,
+      errors: 0,
+    });
+  });
+
+  it("agrupa cada stage combinado en su bucket", () => {
+    const stats = computeStudyStats([
+      { status: "processed", analysis_status: "completed" }, // ready
+      { status: "processed", analysis_status: "processing" }, // in_progress
+      { status: "processing", analysis_status: "pending" }, // in_progress
+      { status: "uploaded" }, // pending
+      { status: "processed", analysis_status: "pending" }, // pending
+      { status: "error", analysis_status: "pending" }, // errors
+      { status: "processed", analysis_status: "failed" }, // errors
+    ]);
+
+    assert.deepEqual(stats, {
+      total: 7,
+      ready: 1,
+      in_progress: 2,
+      pending: 2,
+      errors: 2,
+    });
+  });
+
+  it("trata analysis_status nulo como pendiente de análisis", () => {
+    const stats = computeStudyStats([
+      { status: "processed", analysis_status: null },
+    ]);
+    assert.equal(stats.pending, 1);
+    assert.equal(stats.ready, 0);
+  });
+
+  it("ignora estados desconocidos", () => {
+    const stats = computeStudyStats([
+      { status: "otro", analysis_status: "otro" },
+    ]);
+    assert.deepEqual(stats, {
+      total: 1,
+      ready: 0,
+      in_progress: 0,
+      pending: 0,
+      errors: 0,
+    });
   });
 });

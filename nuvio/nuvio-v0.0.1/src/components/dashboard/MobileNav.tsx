@@ -1,66 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/lib/actions/auth";
-
-const navItems = [
-  {
-    label: "Inicio",
-    href: "/dashboard",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-      </svg>
-    ),
-  },
-  {
-    label: "Mis estudios",
-    href: "/dashboard/estudios",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Subir estudio",
-    href: "/dashboard/subir",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-      </svg>
-    ),
-  },
-  {
-    label: "Comparar",
-    href: "/dashboard/comparar",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-      </svg>
-    ),
-  },
-  {
-    label: "Chat IA",
-    href: "/dashboard/chat",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Perfil",
-    href: "/dashboard/perfil",
-    icon: (
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-      </svg>
-    ),
-  },
-];
+import { navItems, isActivePath } from "./nav-items";
 
 interface MobileNavProps {
   userName?: string;
@@ -71,18 +15,30 @@ interface MobileNavProps {
 export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
-  function isActive(href: string) {
-    if (href === "/dashboard") return pathname === "/dashboard";
-    return pathname.startsWith(href);
-  }
+  // Cierra el menú al cambiar de ruta y al pulsar Escape.
+  useEffect(() => {
+    if (!open) return;
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   return (
     <div className="lg:hidden">
       <button
-        onClick={() => setOpen(!open)}
+        ref={toggleRef}
+        onClick={() => setOpen((v) => !v)}
         className="flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
         aria-expanded={open}
+        aria-controls="mobile-nav-panel"
         aria-label={open ? "Cerrar menú" : "Abrir menú"}
       >
         {open ? (
@@ -97,91 +53,97 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
       </button>
 
       {open && (
-        <>
+        <div
+          className="fixed inset-0 z-50 lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menú de navegación"
+        >
           <div
-            className="fixed inset-0 z-40 bg-ink-950/20 backdrop-blur-sm lg:hidden"
+            className="absolute inset-0 bg-ink-950/20 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 z-50 w-72 border-r border-ink-700/10 bg-white shadow-xl lg:hidden">
-            <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-ink-700/10 px-5 py-4">
-                <span className="text-[15px] font-medium text-foreground">Nuvio</span>
+          <div
+            id="mobile-nav-panel"
+            className="absolute inset-y-0 left-0 flex w-72 flex-col border-r border-ink-700/10 bg-white shadow-xl"
+          >
+            <div className="flex items-center justify-between border-b border-ink-700/10 px-5 py-4">
+              <span className="text-[15px] font-medium text-foreground">Nuvio</span>
+              <button
+                onClick={() => setOpen(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted/50"
+                aria-label="Cerrar menú"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto px-3 py-4">
+              <ul className="flex flex-col gap-1">
+                {navItems.map((item) => {
+                  const active = isActivePath(pathname, item.href);
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        aria-current={active ? "page" : undefined}
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors duration-150 ${
+                          active
+                            ? "bg-primary-50 text-primary-700"
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        }`}
+                      >
+                        <span className={active ? "text-primary-600" : "text-muted-foreground"}>
+                          {item.icon}
+                        </span>
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+
+            <div className="border-t border-ink-700/10 px-3 py-4">
+              {userName && (
+                <div className="mb-3 px-3 flex items-center gap-3">
+                  {userAvatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={userAvatar}
+                      alt=""
+                      className="h-8 w-8 rounded-full"
+                    />
+                  ) : (
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-[13px] font-medium text-primary-700">
+                      {userName.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-medium text-foreground truncate">{userName}</p>
+                    {userEmail && (
+                      <p className="text-[12px] text-muted-foreground truncate">{userEmail}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              <form action={signOut}>
                 <button
-                  onClick={() => setOpen(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted/50"
-                  aria-label="Cerrar menú"
+                  type="submit"
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium text-muted-foreground transition-colors duration-150 hover:bg-muted/50 hover:text-foreground"
                 >
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
                   </svg>
+                  Cerrar sesión
                 </button>
-              </div>
-
-              <nav className="flex-1 overflow-y-auto px-3 py-4">
-                <ul className="flex flex-col gap-1">
-                  {navItems.map((item) => {
-                    const active = isActive(item.href);
-                    return (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          onClick={() => setOpen(false)}
-                          aria-current={active ? "page" : undefined}
-                          className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors duration-150 ${
-                            active
-                              ? "bg-primary-50 text-primary-700"
-                              : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                          }`}
-                        >
-                          <span className={active ? "text-primary-600" : "text-muted-foreground"}>
-                            {item.icon}
-                          </span>
-                          {item.label}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </nav>
-
-              <div className="border-t border-ink-700/10 px-3 py-4">
-                {userName && (
-                  <div className="mb-3 px-3 flex items-center gap-3">
-                    {userAvatar ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={userAvatar}
-                        alt=""
-                        className="h-8 w-8 rounded-full"
-                      />
-                    ) : (
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-[13px] font-medium text-primary-700">
-                        {userName.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-medium text-foreground truncate">{userName}</p>
-                      {userEmail && (
-                        <p className="text-[12px] text-muted-foreground truncate">{userEmail}</p>
-                      )}
-                    </div>
-                  </div>
-                )}
-                <form action={signOut}>
-                  <button
-                    type="submit"
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium text-muted-foreground transition-colors duration-150 hover:bg-muted/50 hover:text-foreground"
-                  >
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
-                    </svg>
-                    Cerrar sesión
-                  </button>
-                </form>
-              </div>
+              </form>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

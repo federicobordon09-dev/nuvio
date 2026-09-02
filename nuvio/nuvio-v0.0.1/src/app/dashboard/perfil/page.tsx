@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { PageHeader } from "@/components/dashboard/PageHeader";
 
 export default async function PerfilPage() {
   const supabase = await createClient();
@@ -10,14 +11,7 @@ export default async function PerfilPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-[24px] font-medium tracking-[-0.02em] text-foreground">
-          Perfil
-        </h1>
-        <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
-          Tu información de cuenta.
-        </p>
-      </div>
+      <PageHeader title="Perfil" description="Tu información de cuenta." />
 
       <div className="rounded-xl border border-ink-700/10 bg-white p-6 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
         <div className="flex items-center gap-4">

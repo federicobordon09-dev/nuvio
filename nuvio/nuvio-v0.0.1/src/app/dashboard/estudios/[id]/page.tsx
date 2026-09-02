@@ -3,7 +3,8 @@ import type { StudyAnalysis } from "@/lib/analysis/schema";
 import { parseStoredAnalysis } from "@/lib/analysis/stored";
 import { formatFileSize, getProcessingErrorLabel, getStudyTypeLabel } from "@/lib/studies-utils";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { PageHeader } from "@/components/dashboard/PageHeader";
+import { Breadcrumbs } from "@/components/dashboard/Breadcrumbs";
 import { StudyDeleteButton } from "@/components/dashboard/StudyDeleteButton";
 import { StudyDownloadButton } from "@/components/dashboard/StudyDownloadButton";
 import { StudyProcessButton } from "@/components/dashboard/StudyProcessButton";
@@ -60,24 +61,17 @@ export default async function EstudioDetailPage({
 
   return (
     <div>
-      <Link
-        href="/dashboard/estudios"
-        className="mb-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-        </svg>
-        Volver a mis estudios
-      </Link>
+      <Breadcrumbs
+        items={[
+          { label: "Mis estudios", href: "/dashboard/estudios" },
+          { label: study.file_name },
+        ]}
+      />
 
-      <div className="mb-8">
-        <h1 className="text-[24px] font-medium tracking-[-0.02em] text-foreground">
-          {study.file_name}
-        </h1>
-        <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
-          Información detallada del estudio seleccionado.
-        </p>
-      </div>
+      <PageHeader
+        title={study.file_name}
+        description="Información detallada del estudio seleccionado."
+      />
 
       <div className="rounded-xl border border-ink-700/10 bg-white p-6 shadow-[0_1px_2px_rgba(11,20,38,0.04)]">
         <dl className="grid grid-cols-1 gap-5 sm:grid-cols-2">

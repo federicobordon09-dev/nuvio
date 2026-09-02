@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { processStudy } from "@/lib/studies/processing";
 import { analyzeStudy, AnalysisError } from "@/lib/analysis/analyze-study";
 import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
-import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, ALLOWED_STUDY_TYPES, type StudyType } from "@/lib/studies-utils";
+import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, ALLOWED_STUDY_TYPES, type StudyType, computeStudyStats, type StudyStats } from "@/lib/studies-utils";
 import { deleteStudyCore, countStudiesCore } from "@/lib/studies/study-ops";
 
 async function assertAuthenticated(supabase: Awaited<ReturnType<typeof createClient>>) {
@@ -193,6 +193,28 @@ export async function getStudyCount(): Promise<number> {
   const supabase = await createClient();
   const user = await assertAuthenticated(supabase);
   return countStudiesCore(supabase, user.id);
+}
+
+/**
+ * Resumen de estudios del usuario por stage combinado (documento + análisis).
+ * Se usa en el dashboard para mostrar los conteos reales por estado.
+ */
+export async function getStudyStats(): Promise<StudyStats> {
+  const supabase = await createClient();
+  const user = await assertAuthenticated(supabase);
+
+  const { data, error } = await supabase
+    .from("studies")
+    .select("status, analysis_status")
+    .eq("user_id", user.id);
+
+  if (error) {
+    throw new Error(`Error al cargar el resumen de estudios: ${error.message}`);
+  }
+
+  return computeStudyStats(
+    (data ?? []) as Array<{ status: string; analysis_status: string | null }>
+  );
 }
 
 export async function deleteStudyAction(formData: FormData) {
