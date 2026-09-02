@@ -7,9 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --test src/lib/analysis/__tests__/schema.test.ts"
+    "test": "node --experimental-strip-types --test src/lib/analysis/__tests__/*.test.ts"
   },
   "dependencies": {
+    "@google/genai": "^2.20.0",
     "@supabase/ssr": "^0.12.5",
     "@supabase/supabase-js": "^2.112.4",
     "mupdf": "^1.28.0",

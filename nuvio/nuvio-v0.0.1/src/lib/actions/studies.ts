@@ -237,3 +237,40 @@ export async function processStudyAction(formData: FormData) {
   revalidatePath(`/dashboard/estudios/${studyId}`);
   redirect(`/dashboard/estudios/${studyId}`);
 }
+
+/**
+ * TEMPORAL — Fase 4.2.2 verificación real de Gemini.
+ * Eliminar después de la prueba.
+ */
+export async function _testGeminiIntegration() {
+  const supabase = await createClient();
+  await assertAuthenticated(supabase);
+
+  const { analyzeStudyText } = await import("@/lib/analysis/gemini");
+
+  const SYNTHETIC_TEXT = `Paciente ficticio de 45 años.
+Glucosa: 123 mg/dL. Rango de referencia: 70-110 mg/dL.
+Hemoglobina: 14.2 g/dL. Rango de referencia: 13.0-17.0 g/dL.
+Colesterol total: 190 mg/dL. Rango de referencia: menor a 200 mg/dL.`;
+
+  const start = Date.now();
+  const analysis = await analyzeStudyText(SYNTHETIC_TEXT);
+  const elapsedMs = Date.now() - start;
+
+  return {
+    ok: true,
+    elapsedMs,
+    summary: analysis.summary,
+    documentType: analysis.document_type,
+    findingsCount: analysis.key_findings.length,
+    findings: analysis.key_findings.map((f) => ({
+      title: f.title,
+      value: f.value,
+      status: f.status,
+    })),
+    observationsCount: analysis.observations.length,
+    warningsCount: analysis.warnings.length,
+    recommendationsCount: analysis.recommendations.length,
+    limitationsCount: analysis.limitations.length,
+  };
+}
