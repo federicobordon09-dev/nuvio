@@ -237,3 +237,61 @@ export async function processStudyAction(formData: FormData) {
   revalidatePath(`/dashboard/estudios/${studyId}`);
   redirect(`/dashboard/estudios/${studyId}`);
 }
+
+// ── study_analyses ────────────────────────────────────────────
+
+export type StudyAnalysisRow = {
+  id: string;
+  study_id: string;
+  user_id: string;
+  analysis: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+};
+
+export async function getStudyAnalysis(
+  studyId: string
+): Promise<StudyAnalysisRow | null> {
+  const supabase = await createClient();
+  const user = await assertAuthenticated(supabase);
+
+  const { data, error } = await supabase
+    .from("study_analyses")
+    .select("id, study_id, user_id, analysis, created_at, updated_at")
+    .eq("study_id", studyId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error("Error al cargar el análisis del estudio.");
+  }
+
+  return data as StudyAnalysisRow | null;
+}
+
+export async function upsertStudyAnalysis(
+  studyId: string,
+  analysis: Record<string, unknown>
+): Promise<StudyAnalysisRow> {
+  const supabase = await createClient();
+  const user = await assertAuthenticated(supabase);
+
+  const { data, error } = await supabase
+    .from("study_analyses")
+    .upsert(
+      {
+        study_id: studyId,
+        user_id: user.id,
+        analysis,
+      },
+      { onConflict: "study_id" }
+    )
+    .select("id, study_id, user_id, analysis, created_at, updated_at")
+    .single();
+
+  if (error) {
+    throw new Error("Error al guardar el análisis del estudio.");
+  }
+
+  return data as StudyAnalysisRow;
+}
