@@ -105,6 +105,73 @@ function AnalysisFindings({
   );
 }
 
+// ── Measurements ─────────────────────────────────────────────
+
+const MEASUREMENT_STATUS_LABELS: Record<string, string> = {
+  within_range: "Dentro del rango",
+  above_range: "Por encima del rango",
+  below_range: "Por debajo del rango",
+  abnormal: "Anormal",
+  unknown: "Sin determinar",
+  no_reference: "Sin referencia",
+};
+
+function MeasurementsSection({
+  measurements,
+}: {
+  measurements: StudyAnalysis["measurements"];
+}) {
+  if (measurements.length === 0) return null;
+
+  return (
+    <section aria-label="Mediciones">
+      <div className="mb-3 flex items-baseline justify-between gap-2">
+        <h3 className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground">
+          Mediciones
+        </h3>
+        <span className="text-[12px] text-muted-foreground">
+          {measurements.length} medición
+          {measurements.length !== 1 ? "es" : ""}
+        </span>
+      </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {measurements.map((m, i) => (
+          <div
+            key={i}
+            className="flex flex-col gap-1 rounded-xl border border-border bg-surface p-4"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h4 className="min-w-0 text-[14px] font-medium leading-snug text-foreground">
+                {m.name}
+              </h4>
+              {m.status && (
+                <span className="rounded-full bg-ocean-tint px-2.5 py-0.5 text-[12px] font-medium text-ocean-dark">
+                  {MEASUREMENT_STATUS_LABELS[m.status] ?? m.status}
+                </span>
+              )}
+            </div>
+            {m.value && (
+              <p className="font-mono text-[20px] font-medium leading-none tracking-tight text-foreground">
+                {m.value}
+                {m.unit && (
+                  <span className="ml-1.5 font-sans text-[12px] font-normal text-muted-foreground">
+                    {m.unit}
+                  </span>
+                )}
+              </p>
+            )}
+            {m.reference_range && (
+              <p className="text-[12px] text-muted-foreground">
+                Ref. {m.reference_range}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 // ── Disclaimer ───────────────────────────────────────────────
 
 function AnalysisDisclaimer() {
@@ -134,6 +201,9 @@ export function AnalysisResult({
 
       {/* Key findings — grid compacto */}
       <AnalysisFindings findings={analysis.key_findings} />
+
+      {/* Measurements — valores numéricos */}
+      <MeasurementsSection measurements={analysis.measurements} />
 
       {/* Observations */}
       <AnalysisSection title="Observaciones" items={analysis.observations} />

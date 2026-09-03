@@ -105,6 +105,20 @@ Reglas obligatorias:
 - No diagnosticues. No prescribas tratamientos. No indiques cambios de medicación.
 - No presentes conclusiones clínicas como certezas cuando el documento no las sustenta.
 
+Separación entre hallazgos y mediciones:
+- key_findings son observaciones clínicas relevantes (p. ej. "opacidad en lóbulo superior", "ritmo irregular"). No incluyen valor numérico.
+- measurements son valores numéricos/mediciones explícitos del documento (p. ej. Hemoglobina 13.2 g/dL). Solo incluí mediciones que aparezcan explícitamente.
+
+Reglas para measurements:
+- Solo incluí una medición si el valor aparece explícitamente en el documento. No inventes valores.
+- Si aparece el valor pero no la unidad → omití unit (no pongas null ni inventes).
+- Si aparece el valor y el rango → conservalos fielmente.
+- Si aparece el valor pero no el rango → omití reference_range.
+- Si no podés determinar el status con seguridad → omitilo. No lo inventes.
+- status solo puede ser: within_range, above_range, below_range, abnormal, unknown, no_reference.
+- Si el documento no contiene mediciones numéricas → measurements debe ser un array vacío [].
+- Nunca combines un valor en key_findings; los valores van en measurements.
+
 Clasificación del tipo de estudio (study_type):
 - Usá exclusivamente uno de estos códigos: blood_test, MRI, CT, ECG, epicrisis, medical_report, other.
 - blood_test: análisis de sangre, hemograma, laboratorio, bioquímica.
@@ -138,45 +152,69 @@ const ANALYSIS_RESPONSE_SCHEMA = {
     },
     key_findings: {
       type: "array" as const,
-      description: "Valores o hallazgos relevantes encontrados.",
+      description:
+        "Observaciones clínicas relevantes (sin valor numérico). Ej: 'opacidad en lóbulo superior', 'ritmo irregular'.",
       items: {
         type: "object" as const,
         properties: {
           title: {
             type: "string" as const,
-            description: "Nombre del hallazgo o valor.",
-          },
-          value: {
-            type: "string" as const,
-            description: "Valor encontrado en el documento.",
-          },
-          unit: {
-            type: ["string", "null"] as const,
-            description: "Unidad de medida, o null si no aplica.",
-          },
-          reference_range: {
-            type: ["string", "null"] as const,
-            description: "Rango de referencia, o null si no está disponible.",
-          },
-          status: {
-            type: "string" as const,
-            enum: ["normal", "high", "low", "abnormal", "unknown"] as const,
-            description:
-              "Estado del valor respecto al rango de referencia.",
+            description: "Nombre del hallazgo clínico.",
           },
           explanation: {
             type: "string" as const,
             description: "Explicación del hallazgo.",
           },
+          importance: {
+            type: "string" as const,
+            enum: ["normal", "high", "low", "abnormal", "unknown"] as const,
+            description:
+              "Importancia clínica del hallazgo. Omitir si no se puede determinar.",
+          },
         },
-        required: [
-          "title",
-          "value",
-          "unit",
-          "reference_range",
-          "status",
-          "explanation",
-        ] as const,
+        required: ["title", "explanation"] as const,
+      },
+    },
+    measurements: {
+      type: "array" as const,
+      description:
+        "Valores numéricos/mediciones explícitos del documento. Solo si aparecen en el texto. Si no hay mediciones, array vacío [].",
+      items: {
+        type: "object" as const,
+        properties: {
+          name: {
+            type: "string" as const,
+            description: "Nombre de la medición o analito.",
+          },
+          value: {
+            type: "string" as const,
+            description: "Valor numérico explícito del documento.",
+          },
+          unit: {
+            type: ["string", "null"] as const,
+            description:
+              "Unidad de medida, o null/omitir si no está en el documento.",
+          },
+          reference_range: {
+            type: ["string", "null"] as const,
+            description:
+              "Rango de referencia, o null/omitir si no está disponible.",
+          },
+          status: {
+            type: "string" as const,
+            enum: [
+              "within_range",
+              "above_range",
+              "below_range",
+              "abnormal",
+              "unknown",
+              "no_reference",
+            ] as const,
+            description:
+              "Estado de la medición respecto al rango. Omitir si no se puede determinar.",
+          },
+        },
+        required: ["name", "value"] as const,
       },
     },
     observations: {
@@ -206,6 +244,7 @@ const ANALYSIS_RESPONSE_SCHEMA = {
     "document_type",
     "study_type",
     "key_findings",
+    "measurements",
     "observations",
     "warnings",
     "recommendations",

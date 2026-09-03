@@ -27,23 +27,45 @@ describe("Prueba real contra Gemini (texto sintético)", { skip: !process.env.GE
     assert.equal(typeof analysis.document_type, "string");
     assert.ok(analysis.document_type.length > 0);
 
-    // Verificar que tiene key_findings
+    // Verificar que tiene key_findings (hallazgos clínicos)
     assert.ok(Array.isArray(analysis.key_findings));
     assert.ok(analysis.key_findings.length > 0);
 
-    // Verificar cada finding
+    // Verificar cada hallazgo (nuevo formato: title, explanation, importance)
     for (const finding of analysis.key_findings) {
       assert.equal(typeof finding.title, "string");
       assert.ok(finding.title.length > 0);
-      assert.equal(typeof finding.value, "string");
-      assert.ok(finding.value.length > 0);
       assert.equal(typeof finding.explanation, "string");
       assert.ok(finding.explanation.length > 0);
-      assert.ok(
-        ["normal", "high", "low", "abnormal", "unknown"].includes(
-          finding.status
-        )
-      );
+      if (finding.importance !== undefined) {
+        assert.ok(
+          ["normal", "high", "low", "abnormal", "unknown"].includes(
+            finding.importance
+          )
+        );
+      }
+    }
+
+    // Verificar measurements (valores numéricos)
+    assert.ok(Array.isArray(analysis.measurements));
+    assert.ok(analysis.measurements.length > 0);
+    for (const m of analysis.measurements) {
+      assert.equal(typeof m.name, "string");
+      assert.ok(m.name.length > 0);
+      assert.equal(typeof m.value, "string");
+      assert.ok(m.value.length > 0);
+      if (m.status !== undefined) {
+        assert.ok(
+          [
+            "within_range",
+            "above_range",
+            "below_range",
+            "abnormal",
+            "unknown",
+            "no_reference",
+          ].includes(m.status)
+        );
+      }
     }
 
     // Verificar arrays
@@ -52,18 +74,18 @@ describe("Prueba real contra Gemini (texto sintético)", { skip: !process.env.GE
     assert.ok(Array.isArray(analysis.recommendations));
     assert.ok(Array.isArray(analysis.limitations));
 
-    // Verificar que la glucosa fue detectada como high (123 > 110)
-    const glucose = analysis.key_findings.find(
-      (f) => f.title.toLowerCase().includes("glucosa")
+    // Verificar que la glucosa fue detectada como above_range (123 > 110)
+    const glucose = analysis.measurements.find(
+      (m) => m.name.toLowerCase().includes("glucosa")
     );
-    assert.ok(glucose, "Debería encontrar un hallazgo de glucosa");
-    assert.equal(glucose.status, "high");
+    assert.ok(glucose, "Debería encontrar una medición de glucosa");
+    assert.equal(glucose.status, "above_range");
 
-    // Verificar que la hemoglobina fue detectada como normal
-    const hemoglobin = analysis.key_findings.find(
-      (f) => f.title.toLowerCase().includes("hemoglobina")
+    // Verificar que la hemoglobina fue detectada como within_range
+    const hemoglobin = analysis.measurements.find(
+      (m) => m.name.toLowerCase().includes("hemoglobina")
     );
-    assert.ok(hemoglobin, "Debería encontrar un hallazgo de hemoglobina");
-    assert.equal(hemoglobin.status, "normal");
+    assert.ok(hemoglobin, "Debería encontrar una medición de hemoglobina");
+    assert.equal(hemoglobin.status, "within_range");
   });
 });

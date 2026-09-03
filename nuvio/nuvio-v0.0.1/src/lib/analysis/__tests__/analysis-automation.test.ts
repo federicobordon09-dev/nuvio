@@ -122,18 +122,25 @@ function createFakeSupabase(initial: FakeInit) {
 const USER_ID = "user-1";
 const STUDY_ID = "study-1";
 
+// Análisis con el NUEVO schema (key_findings simplificado + measurements)
 const VALID_ANALYSIS = {
   summary: "Análisis de sangre con glucosa elevada.",
   document_type: "Análisis de sangre",
   study_type: "blood_test",
   key_findings: [
     {
-      title: "Glucosa",
+      title: "Glucosa elevada",
+      explanation: "La glucosa se encuentra por encima del rango de referencia habitual.",
+      importance: "high",
+    },
+  ],
+  measurements: [
+    {
+      name: "Glucosa",
       value: "123",
       unit: "mg/dL",
-      reference_range: "70-110 mg/dL",
-      status: "high",
-      explanation: "Por encima del rango.",
+      reference_range: "70-110",
+      status: "above_range",
     },
   ],
   observations: ["Glucosa elevada."],

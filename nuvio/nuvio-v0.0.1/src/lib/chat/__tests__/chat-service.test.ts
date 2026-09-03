@@ -10,6 +10,7 @@ import {
 import { GeminiError } from "../../analysis/gemini.ts";
 import type { GeminiClient } from "../../analysis/gemini.ts";
 import type { ChatStudyContext } from "../study-context.ts";
+import type { StudyAnalysis } from "../../analysis/schema.ts";
 
 // ── Stub controlable del cliente Gemini (misma técnica que F4) ──
 type MockBehavior = { responseText?: string; error?: unknown };
@@ -26,29 +27,38 @@ function makeClient(): GeminiClient {
   };
 }
 
+// Análisis con el NUEVO schema (key_findings simplificado + measurements)
+const VALID_ANALYSIS: StudyAnalysis = {
+  summary: "Glucosa elevada, resto normal.",
+  document_type: "Análisis de sangre",
+  study_type: "blood_test",
+  key_findings: [
+    {
+      title: "Glucosa elevada",
+      explanation: "La glucosa se encuentra por encima del rango de referencia habitual.",
+      importance: "high",
+    },
+  ],
+  measurements: [
+    {
+      name: "Glucosa",
+      value: "123",
+      unit: "mg/dL",
+      reference_range: "70-110",
+      status: "above_range",
+    },
+  ],
+  observations: [],
+  warnings: ["Requiere atención médica."],
+  recommendations: ["Consultar con un profesional de la salud."],
+  limitations: ["Sin historia clínica previa."],
+};
+
 const CONTEXT: ChatStudyContext = {
   studyId: "s1",
   fileName: "analisis.pdf",
   studyType: "blood_test",
-  analysis: {
-    summary: "Glucosa elevada, resto normal.",
-    document_type: "Análisis de sangre",
-    study_type: "blood_test",
-    key_findings: [
-      {
-        title: "Glucosa",
-        value: "123",
-        unit: "mg/dL",
-        reference_range: "70-110 mg/dL",
-        status: "high",
-        explanation: "Por encima del rango.",
-      },
-    ],
-    observations: [],
-    warnings: [],
-    recommendations: [],
-    limitations: [],
-  },
+  analysis: VALID_ANALYSIS,
   extractedText: "Glucosa: 123 mg/dL",
 };
 
@@ -63,13 +73,14 @@ describe("formatContextForPrompt", () => {
     assert.equal(formatContextForPrompt([]), "");
   });
 
-  it("con contexto → incluye nombre, tipo, resumen, hallazgo y texto", () => {
+  it("con contexto → incluye nombre, tipo, resumen, hallazgos, mediciones y texto", () => {
     const out = formatContextForPrompt([CONTEXT]);
     assert.ok(out.includes("analisis.pdf"));
     assert.ok(out.includes("blood_test"));
     assert.ok(out.includes("Glucosa elevada, resto normal."));
-    assert.ok(out.includes("Glucosa: 123 mg/dL"));
-    assert.ok(out.includes("Glucosa: 123 mg/dL (rango: 70-110 mg/dL) — Por encima del rango."));
+    assert.ok(out.includes("Glucosa: 123"));
+    assert.ok(out.includes("Hallazgos clave"));
+    assert.ok(out.includes("Mediciones"));
   });
 
   it("múltiples estudios → separa por bloques", () => {
@@ -102,7 +113,8 @@ describe("generateChatReplyWithClient", () => {
     currentBehavior = { responseText: "" };
     await assert.rejects(
       () => generateChatReplyWithClient(makeClient(), OPTS),
-      (err: unknown) => err instanceof GeminiError && err.type === "gemini_invalid_response"
+      (err: unknown) =>
+        err instanceof GeminiError && err.type === "gemini_invalid_response"
     );
   });
 

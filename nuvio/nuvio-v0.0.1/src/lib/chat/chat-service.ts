@@ -64,9 +64,13 @@ export function formatContextForPrompt(contexts: ChatStudyContext[]): string {
 
   const parts = contexts.map((c, i) => {
     const findings = c.analysis.key_findings
-      .map((f) => {
-        const ref = f.reference_range ? ` (rango: ${f.reference_range})` : "";
-        return `- ${f.title}: ${f.value}${f.unit ? ` ${f.unit}` : ""}${ref} — ${f.explanation}`;
+      .map((f) => `- ${f.title}${f.explanation ? `: ${f.explanation}` : ""}`)
+      .join("\n");
+
+    const measurements = c.analysis.measurements
+      .map((m) => {
+        const ref = m.reference_range ? ` (rango: ${m.reference_range})` : "";
+        return `- ${m.name}: ${m.value ?? "n/d"}${m.unit ? ` ${m.unit}` : ""}${ref}`;
       })
       .join("\n");
 
@@ -75,6 +79,7 @@ export function formatContextForPrompt(contexts: ChatStudyContext[]): string {
       `Tipo: ${c.studyType ?? "No clasificado"}`,
       `Resumen del análisis: ${c.analysis.summary}`,
       `Hallazgos clave:\n${findings || "Sin hallazgos listados."}`,
+      `Mediciones:\n${measurements || "Sin mediciones listadas."}`,
       `Contenido del documento:\n${c.extractedText || "(sin texto extraído)"}`,
     ].join("\n");
   });

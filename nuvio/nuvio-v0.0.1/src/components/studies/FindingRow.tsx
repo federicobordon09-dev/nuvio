@@ -43,11 +43,12 @@ function FindingStatusBadge({ status }: { status: FindingStatus }) {
 }
 
 /**
- * Fila de hallazgo en el panel de resultados.
+ * Fila de hallazgo clínico en el panel de resultados.
  *
- * Compacta: título + badge, valor en mono, rango de referencia, y una
- * explicación de 1–2 líneas que se expande individualmente ("Ver más") sin
- * agrandar todo el grid. Funciona con 2, 8 o 20+ hallazgos.
+ * Representa una observación clínica (sin valor numérico). Muestra el
+ * título, un badge opcional de importancia, y una explicación que se
+ * expande individualmente ("Ver más"). Los valores numéricos/mediciones
+ * se representan por separado en la sección de measurements.
  */
 export function FindingRow({
   finding,
@@ -62,23 +63,10 @@ export function FindingRow({
         <h4 className="min-w-0 text-[14px] font-medium leading-snug text-foreground">
           {finding.title}
         </h4>
-        <FindingStatusBadge status={finding.status} />
-      </div>
-
-      <p className="font-mono text-[22px] font-medium leading-none tracking-tight text-foreground">
-        {finding.value}
-        {finding.unit && (
-          <span className="ml-1.5 font-sans text-[12px] font-normal text-muted-foreground">
-            {finding.unit}
-          </span>
+        {finding.importance && (
+          <FindingStatusBadge status={finding.importance} />
         )}
-      </p>
-
-      {finding.reference_range && (
-        <p className="text-[12px] text-muted-foreground">
-          Ref. {finding.reference_range}
-        </p>
-      )}
+      </div>
 
       {finding.explanation && (
         <div className="mt-auto pt-1">

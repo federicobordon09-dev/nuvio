@@ -41,12 +41,18 @@ const MOCK_VALID_RESPONSE = JSON.stringify({
   study_type: "blood_test",
   key_findings: [
     {
-      title: "Glucosa",
+      title: "Glucosa elevada",
+      explanation: "La glucosa se encuentra por encima del rango de referencia habitual.",
+      importance: "high",
+    },
+  ],
+  measurements: [
+    {
+      name: "Glucosa",
       value: "123",
       unit: "mg/dL",
-      reference_range: "70-110 mg/dL",
-      status: "high",
-      explanation: "Por encima del rango.",
+      reference_range: "70-110",
+      status: "above_range",
     },
   ],
   observations: ["Glucosa elevada."],

@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { parseStudyAnalysis, safeParseStudyAnalysis } from "../schema.ts";
+import { parseStudyAnalysis, safeParseStudyAnalysis, normalizeLegacyAnalysis } from "../schema.ts";
 
 const VALID_ANALYSIS = {
   summary: "Análisis de sangre completo con valores generales dentro de parámetros normales.",
@@ -8,12 +8,18 @@ const VALID_ANALYSIS = {
   study_type: "blood_test",
   key_findings: [
     {
-      title: "Glucosa",
+      title: "Glucosa en rango",
+      explanation: "Glucosa dentro del rango normal.",
+      importance: "normal" as const,
+    },
+  ],
+  measurements: [
+    {
+      name: "Glucosa",
       value: "95",
       unit: "mg/dL",
       reference_range: "70-110",
-      status: "normal" as const,
-      explanation: "Glucosa dentro del rango normal.",
+      status: "within_range" as const,
     },
   ],
   observations: ["Se observan valores dentro de parámetros normales."],
@@ -22,14 +28,16 @@ const VALID_ANALYSIS = {
   limitations: ["No se dispone de historia clínica previa."],
 };
 
-// ── 10 casos solicitados ──────────────────────────────────────
+// ── Tests del schema nuevo ──────────────────────────────────────
 
-describe("10 casos de validación", () => {
+describe("Schema nuevo — análisis válido", () => {
   it("1. objeto válido completo → aceptado", () => {
     const result = parseStudyAnalysis(VALID_ANALYSIS);
     assert.equal(result.summary, VALID_ANALYSIS.summary);
     assert.equal(result.key_findings.length, 1);
-    assert.equal(result.key_findings[0].status, "normal");
+    assert.equal(result.key_findings[0].importance, "normal");
+    assert.equal(result.measurements.length, 1);
+    assert.equal(result.measurements[0].status, "within_range");
   });
 
   it("2. falta summary → rechazado", () => {
@@ -38,32 +46,28 @@ describe("10 casos de validación", () => {
     assert.equal(result.success, false);
   });
 
-  it("3. status fuera del enum → rechazado", () => {
+  it("3. importance fuera del enum → rechazado", () => {
     const invalid = {
       ...VALID_ANALYSIS,
-      key_findings: [{ ...VALID_ANALYSIS.key_findings[0], status: "critical" }],
+      key_findings: [{ ...VALID_ANALYSIS.key_findings[0], importance: "critical" }],
     };
     const result = safeParseStudyAnalysis(invalid);
     assert.equal(result.success, false);
   });
 
-  it("4. unit: null y reference_range: null → aceptado", () => {
+  it("4. measurement sin unit → aceptado", () => {
     const withNulls = {
       ...VALID_ANALYSIS,
-      key_findings: [
+      measurements: [
         {
-          title: "Hemoglobina",
+          name: "Hemoglobina",
           value: "14.2",
-          unit: null,
-          reference_range: null,
-          status: "normal" as const,
-          explanation: "Valor normal.",
         },
       ],
     };
     const result = parseStudyAnalysis(withNulls);
-    assert.equal(result.key_findings[0].unit, null);
-    assert.equal(result.key_findings[0].reference_range, null);
+    assert.equal(result.measurements.length, 1);
+    assert.equal(result.measurements[0].unit, undefined);
   });
 
   it("5. arrays vacíos → aceptado", () => {
@@ -72,6 +76,7 @@ describe("10 casos de validación", () => {
       document_type: "Informe médico",
       study_type: "medical_report",
       key_findings: [],
+      measurements: [],
       observations: [],
       warnings: [],
       recommendations: [],
@@ -79,6 +84,7 @@ describe("10 casos de validación", () => {
     };
     const result = parseStudyAnalysis(empty);
     assert.equal(result.key_findings.length, 0);
+    assert.equal(result.measurements.length, 0);
     assert.equal(result.warnings.length, 0);
   });
 
@@ -94,10 +100,6 @@ describe("10 casos de validación", () => {
       key_findings: [
         {
           title: "Glucosa",
-          value: "95",
-          unit: "mg/dL",
-          reference_range: "70-110",
-          status: "normal",
         },
       ],
     };
@@ -105,22 +107,18 @@ describe("10 casos de validación", () => {
     assert.equal(result.success, false);
   });
 
-  it("8. status: unknown → aceptado", () => {
+  it("8. measurement status: unknown → aceptado", () => {
     const withUnknown = {
       ...VALID_ANALYSIS,
-      key_findings: [
+      measurements: [
         {
-          title: "Observación",
-          value: "Detalle mencionado",
-          unit: null,
-          reference_range: null,
+          name: "Observación",
           status: "unknown" as const,
-          explanation: "Sin referencia disponible.",
         },
       ],
     };
     const result = parseStudyAnalysis(withUnknown);
-    assert.equal(result.key_findings[0].status, "unknown");
+    assert.equal(result.measurements[0].status, "unknown");
   });
 
   it("9. objeto vacío {} → rechazado", () => {
@@ -144,10 +142,10 @@ describe("10 casos de validación", () => {
     assert.equal(result.success, false);
   });
 
-  it("13. study_type faltante → rechazado", () => {
-    const { study_type: _removed, ...noStudyType } = VALID_ANALYSIS;
-    const result = safeParseStudyAnalysis(noStudyType);
-    assert.equal(result.success, false);
+  it("13. study_type null → aceptado (pre-análisis)", () => {
+    const withNullStudyType = { ...VALID_ANALYSIS, study_type: null };
+    const result = parseStudyAnalysis(withNullStudyType);
+    assert.equal(result.study_type, null);
   });
 
   it("14. study_type 'other' → aceptado", () => {
@@ -156,30 +154,211 @@ describe("10 casos de validación", () => {
   });
 });
 
-// ── Verificación de helpers ────────────────────────────────────
+describe("Measurements — tests específicos", () => {
+  it("measurement completo con todos los campos", () => {
+    const result = parseStudyAnalysis({
+      ...VALID_ANALYSIS,
+      measurements: [
+        {
+          name: "Hemoglobina",
+          value: "13.2",
+          unit: "g/dL",
+          reference_range: "12-16",
+          status: "within_range",
+        },
+      ],
+    });
+    assert.equal(result.measurements[0].name, "Hemoglobina");
+    assert.equal(result.measurements[0].value, "13.2");
+    assert.equal(result.measurements[0].unit, "g/dL");
+    assert.equal(result.measurements[0].reference_range, "12-16");
+    assert.equal(result.measurements[0].status, "within_range");
+  });
 
-describe("parseStudyAnalysis", () => {
-  it("objeto válido → devuelve el objeto tipado", () => {
+  it("measurement sin unit", () => {
+    const result = parseStudyAnalysis({
+      ...VALID_ANALYSIS,
+      measurements: [{ name: "Glasgow", value: "15" }],
+    });
+    assert.equal(result.measurements[0].unit, undefined);
+  });
+
+  it("measurement sin reference_range", () => {
+    const result = parseStudyAnalysis({
+      ...VALID_ANALYSIS,
+      measurements: [{ name: "Glasgow", value: "15" }],
+    });
+    assert.equal(result.measurements[0].reference_range, undefined);
+  });
+
+  it("measurement sin status", () => {
+    const result = parseStudyAnalysis({
+      ...VALID_ANALYSIS,
+      measurements: [{ name: "Glasgow", value: "15" }],
+    });
+    assert.equal(result.measurements[0].status, undefined);
+  });
+
+  it("documento sin measurements → defaulta a []", () => {
+    const noMeasurements = {
+      summary: "Informe de imágenes.",
+      document_type: "RMN",
+      study_type: "MRI",
+      key_findings: [],
+      observations: [],
+      warnings: [],
+      recommendations: [],
+      limitations: [],
+    };
+    const result = parseStudyAnalysis(noMeasurements);
+    assert.deepEqual(result.measurements, []);
+  });
+
+  it("measurements vacío → aceptado", () => {
+    const result = parseStudyAnalysis({
+      ...VALID_ANALYSIS,
+      measurements: [],
+    });
+    assert.equal(result.measurements.length, 0);
+  });
+});
+
+describe("Key findings — tests del nuevo formato", () => {
+  it("finding simplificado con importance", () => {
+    const result = parseStudyAnalysis({
+      ...VALID_ANALYSIS,
+      key_findings: [
+        {
+          title: "Opacidad en lóbulo superior",
+          explanation: "Se observa una opacidad que requiere evaluación.",
+          importance: "high",
+        },
+      ],
+    });
+    assert.equal(result.key_findings[0].importance, "high");
+  });
+
+  it("finding sin importance → aceptado", () => {
+    const result = parseStudyAnalysis({
+      ...VALID_ANALYSIS,
+      key_findings: [
+        {
+          title: "Observación general",
+          explanation: "Detalle mencionado en el informe.",
+        },
+      ],
+    });
+    assert.equal(result.key_findings[0].importance, undefined);
+  });
+});
+
+describe("Legacy normalization", () => {
+  it("15. análisis legacy con value/status → se normaliza", () => {
+    const legacy = {
+      summary: "Análisis de sangre.",
+      document_type: "Análisis de sangre",
+      study_type: "blood_test",
+      key_findings: [
+        {
+          title: "Glucosa",
+          value: "123",
+          unit: "mg/dL",
+          reference_range: "70-110",
+          status: "high",
+          explanation: "Por encima del rango.",
+        },
+      ],
+      observations: ["Glucosa elevada."],
+      warnings: ["Requiere atención."],
+      recommendations: ["Consultar."],
+      limitations: ["Sin contexto previo."],
+    };
+    const result = parseStudyAnalysis(legacy);
+    assert.ok(result);
+    assert.equal(result.measurements.length, 1);
+    assert.equal(result.measurements[0].name, "Glucosa");
+    assert.equal(result.measurements[0].value, "123");
+    assert.equal(result.measurements[0].status, "above_range");
+    // El hallazgo también se extrae
+    assert.ok(result.key_findings.length >= 1);
+  });
+
+  it("normalización de status legacy correcto", () => {
+    const normalResult = normalizeLegacyAnalysis({
+      key_findings: [{ title: "A", value: "1", status: "normal", explanation: "B" }],
+    });
+    assert.ok(normalResult && typeof normalResult === "object");
+    const m = (normalResult as Record<string, unknown>).measurements as Array<{ status: string }>;
+    assert.equal(m[0].status, "within_range");
+  });
+
+  it("normalización de 'high' → 'above_range'", () => {
+    const r = normalizeLegacyAnalysis({
+      key_findings: [{ title: "A", value: "1", status: "high", explanation: "B" }],
+    });
+    const m = (r as Record<string, unknown>).measurements as Array<{ status: string }>;
+    assert.equal(m[0].status, "above_range");
+  });
+
+  it("normalización de 'low' → 'below_range'", () => {
+    const r = normalizeLegacyAnalysis({
+      key_findings: [{ title: "A", value: "1", status: "low", explanation: "B" }],
+    });
+    const m = (r as Record<string, unknown>).measurements as Array<{ status: string }>;
+    assert.equal(m[0].status, "below_range");
+  });
+
+  it("normalización de 'abnormal' → 'abnormal'", () => {
+    const r = normalizeLegacyAnalysis({
+      key_findings: [{ title: "A", value: "1", status: "abnormal", explanation: "B" }],
+    });
+    const m = (r as Record<string, unknown>).measurements as Array<{ status: string }>;
+    assert.equal(m[0].status, "abnormal");
+  });
+
+  it("normalización de 'unknown' → 'unknown'", () => {
+    const r = normalizeLegacyAnalysis({
+      key_findings: [{ title: "A", value: "1", status: "unknown", explanation: "B" }],
+    });
+    const m = (r as Record<string, unknown>).measurements as Array<{ status: string }>;
+    assert.equal(m[0].status, "unknown");
+  });
+
+  it("formato nuevo (con measurements) → normalizeLegacyAnalysis retorna null", () => {
+    const result = normalizeLegacyAnalysis(VALID_ANALYSIS);
+    assert.equal(result, null);
+  });
+
+  it("objeto vacío → normalizeLegacyAnalysis retorna null", () => {
+    assert.equal(normalizeLegacyAnalysis({}), null);
+  });
+
+  it("null → normalizeLegacyAnalysis retorna null", () => {
+    assert.equal(normalizeLegacyAnalysis(null), null);
+  });
+});
+
+describe("Helper functions", () => {
+  it("parseStudyAnalysis", () => {
     const result = parseStudyAnalysis(VALID_ANALYSIS);
     assert.equal(typeof result.summary, "string");
     assert.ok(Array.isArray(result.key_findings));
+    assert.ok(Array.isArray(result.measurements));
   });
 
-  it("objeto inválido → lanza ZodError", () => {
+  it("parseStudyAnalysis — objeto inválido → lanza ZodError", () => {
     assert.throws(
       () => parseStudyAnalysis({}),
       (err: unknown) => err instanceof Error && err.name === "ZodError"
     );
   });
-});
 
-describe("safeParseStudyAnalysis", () => {
-  it("objeto válido → success: true", () => {
+  it("safeParseStudyAnalysis", () => {
     const result = safeParseStudyAnalysis(VALID_ANALYSIS);
     assert.equal(result.success, true);
   });
 
-  it("objeto inválido → success: false con error", () => {
+  it("safeParseStudyAnalysis — objeto inválido → success: false con error", () => {
     const result = safeParseStudyAnalysis({ invalid: true });
     assert.equal(result.success, false);
     if (!result.success) {

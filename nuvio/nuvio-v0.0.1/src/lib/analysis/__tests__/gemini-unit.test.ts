@@ -9,6 +9,7 @@ import { parseStudyAnalysis, safeParseStudyAnalysis } from "../schema.ts";
  * de entrada y la validación post-Gemini usando el schema existente.
  */
 
+// Respuesta simulada con el NUEVO schema (key_findings simplificado + measurements)
 const MOCK_GEMINI_RESPONSE = {
   summary:
     "Análisis de sangre con glucosa elevada y hemoglobina dentro de parámetros normales.",
@@ -16,21 +17,30 @@ const MOCK_GEMINI_RESPONSE = {
   study_type: "blood_test",
   key_findings: [
     {
-      title: "Glucosa",
-      value: "123",
-      unit: "mg/dL",
-      reference_range: "70-110 mg/dL",
-      status: "high",
-      explanation:
-        "Glucosa por encima del rango de referencia. Puede indicar hiperglucemia.",
+      title: "Glucosa elevada",
+      explanation: "La glucosa se encuentra por encima del rango de referencia habitual.",
+      importance: "high",
     },
     {
-      title: "Hemoglobina",
+      title: "Hemoglobina normal",
+      explanation: "Hemoglobina dentro del rango normal.",
+      importance: "normal",
+    },
+  ],
+  measurements: [
+    {
+      name: "Glucosa",
+      value: "123",
+      unit: "mg/dL",
+      reference_range: "70-110",
+      status: "above_range",
+    },
+    {
+      name: "Hemoglobina",
       value: "14.2",
       unit: "g/dL",
-      reference_range: "13.0-17.0 g/dL",
-      status: "normal",
-      explanation: "Hemoglobina dentro del rango normal.",
+      reference_range: "13.0-17.0",
+      status: "within_range",
     },
   ],
   observations: [
@@ -112,12 +122,17 @@ describe("Validación de entrada (sin llamar a Gemini)", () => {
 });
 
 describe("Parsing de respuesta simulada de Gemini", () => {
-  it("respuesta JSON válida → parseStudyAnalysis la acepta", () => {
+  it("respuesta JSON válida (nuevo schema) → parseStudyAnalysis la acepta", () => {
     const analysis = parseStudyAnalysis(MOCK_GEMINI_RESPONSE);
     assert.equal(analysis.summary, MOCK_GEMINI_RESPONSE.summary);
     assert.equal(analysis.key_findings.length, 2);
-    assert.equal(analysis.key_findings[0].status, "high");
-    assert.equal(analysis.key_findings[1].status, "normal");
+    assert.equal(analysis.key_findings[0].title, "Glucosa elevada");
+    assert.equal(analysis.key_findings[0].importance, "high");
+    assert.equal(analysis.measurements.length, 2);
+    assert.equal(analysis.measurements[0].name, "Glucosa");
+    assert.equal(analysis.measurements[0].status, "above_range");
+    assert.equal(analysis.measurements[1].name, "Hemoglobina");
+    assert.equal(analysis.measurements[1].status, "within_range");
   });
 
   it("respuesta JSON inválida → error controlado", () => {
@@ -132,6 +147,7 @@ describe("Parsing de respuesta simulada de Gemini", () => {
       summary: "Test",
       document_type: "Test",
       key_findings: "not an array",
+      measurements: [],
       observations: [],
       warnings: [],
       recommendations: [],
@@ -156,5 +172,12 @@ describe("Parsing de respuesta simulada de Gemini", () => {
       () => JSON.parse("not json"),
       (err: unknown) => err instanceof SyntaxError
     );
+  });
+
+  it("nuevo formato (con measurements) → no normaliza legacy", () => {
+    const normalized = parseStudyAnalysis(MOCK_GEMINI_RESPONSE);
+    // Verifica que no se dupliquen ni se pierdan datos
+    assert.equal(normalized.key_findings.length, 2);
+    assert.equal(normalized.measurements.length, 2);
   });
 });

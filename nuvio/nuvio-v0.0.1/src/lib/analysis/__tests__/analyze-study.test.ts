@@ -70,19 +70,25 @@ describe("Validación de texto de entrada", () => {
   });
 });
 
-describe("Validación de respuesta Gemini (schema)", () => {
+describe("Validación de respuesta Gemini (nuevo schema con measurements)", () => {
   const VALID = {
     summary: "Análisis de sangre con glucosa elevada.",
     document_type: "Análisis de sangre",
     study_type: "blood_test",
     key_findings: [
       {
-        title: "Glucosa",
+        title: "Glucosa elevada",
+        explanation: "La glucosa se encuentra por encima del rango de referencia habitual.",
+        importance: "high",
+      },
+    ],
+    measurements: [
+      {
+        name: "Glucosa",
         value: "123",
         unit: "mg/dL",
-        reference_range: "70-110 mg/dL",
-        status: "high" as const,
-        explanation: "Por encima del rango.",
+        reference_range: "70-110",
+        status: "above_range",
       },
     ],
     observations: ["Glucosa elevada."],
@@ -91,11 +97,15 @@ describe("Validación de respuesta Gemini (schema)", () => {
     limitations: ["Sin historia clínica previa."],
   };
 
-  it("respuesta válida → StudyAnalysis", () => {
+  it("respuesta válida (nuevo schema) → StudyAnalysis", () => {
     const result = parseStudyAnalysis(VALID);
     assert.equal(result.summary, VALID.summary);
     assert.equal(result.key_findings.length, 1);
-    assert.equal(result.key_findings[0].status, "high");
+    assert.equal(result.key_findings[0].title, "Glucosa elevada");
+    assert.equal(result.key_findings[0].importance, "high");
+    assert.equal(result.measurements.length, 1);
+    assert.equal(result.measurements[0].name, "Glucosa");
+    assert.equal(result.measurements[0].status, "above_range");
   });
 
   it("respuesta incompleta → ZodError", () => {
@@ -105,16 +115,52 @@ describe("Validación de respuesta Gemini (schema)", () => {
     );
   });
 
-  it("status inválido → rechazado", () => {
+  it("importance inválido → rechazado", () => {
     const invalid = {
       ...VALID,
-      key_findings: [{ ...VALID.key_findings[0], status: "critical" }],
+      key_findings: [{ ...VALID.key_findings[0], importance: "critical" }],
+    };
+    assert.equal(safeParseStudyAnalysis(invalid).success, false);
+  });
+
+  it("status de measurement inválido → rechazado", () => {
+    const invalid = {
+      ...VALID,
+      measurements: [
+        { name: "Glucosa", value: "123", status: "within_range" },
+        { name: "Colesterol", value: "200", status: "critical" },
+      ],
     };
     assert.equal(safeParseStudyAnalysis(invalid).success, false);
   });
 
   it("JSON.parse con string inválido → SyntaxError", () => {
     assert.throws(() => JSON.parse("not json"), SyntaxError);
+  });
+
+  it("status legacy 'normal' → se normaliza a 'within_range'", () => {
+    const legacy = {
+      summary: "Análisis de sangre.",
+      document_type: "Análisis de sangre",
+      study_type: "blood_test",
+      key_findings: [
+        {
+          title: "Glucosa",
+          value: "95",
+          unit: "mg/dL",
+          reference_range: "70-110",
+          status: "normal",
+          explanation: "Glucosa normal.",
+        },
+      ],
+      observations: [],
+      warnings: [],
+      recommendations: [],
+      limitations: [],
+    };
+    const result = parseStudyAnalysis(legacy);
+    assert.equal(result.measurements.length, 1);
+    assert.equal(result.measurements[0].status, "within_range");
   });
 });
 
