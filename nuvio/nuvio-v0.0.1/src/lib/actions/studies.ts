@@ -8,7 +8,7 @@ import { analyzeStudy, AnalysisError } from "@/lib/analysis/analyze-study";
 import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
 import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, type StudyType, computeStudyStats, type StudyStats } from "@/lib/studies-utils";
 import { deleteStudyCore, countStudiesCore } from "@/lib/studies/study-ops";
-import { cleanupEmptyConversationsCore } from "@/lib/chat/chat-db";
+import { findConversationsForStudyCore, cleanupConversationsForDeletedStudyCore } from "@/lib/chat/chat-db";
 
 async function assertAuthenticated(supabase: Awaited<ReturnType<typeof createClient>>) {
   const { data: { user } } = await supabase.auth.getUser();
@@ -174,15 +174,33 @@ export async function getSignedUrl(studyId: string) {
 export async function deleteStudy(studyId: string) {
   const supabase = await createClient();
   const user = await assertAuthenticated(supabase);
+
+  // 1. Identificar conversaciones que tienen este estudio como contexto.
+  //    Debe hacerse ANTES de deleteStudyCore (CASCADE elimina los chat_contexts).
+  let affectedConversationIds: string[] = [];
+  try {
+    affectedConversationIds = await findConversationsForStudyCore(
+      supabase,
+      user.id,
+      studyId
+    );
+  } catch {
+    // Si falla la búsqueda, continuamos con la eliminación del estudio.
+  }
+
   await deleteStudyCore(studyId, { supabase });
 
-  // Limpiar conversaciones que quedaron vacías (0 contextos + 0 mensajes)
-  // después de que CASCADE eliminó los chat_contexts del estudio borrado.
-  try {
-    await cleanupEmptyConversationsCore(supabase, user.id);
-  } catch {
-    // La limpieza no es crítica: si falla, la conversación queda vacía pero
-    // no rota. No bloqueamos el borrado del estudio.
+  // 2. Limpiar conversaciones que quedaron sin ningún contexto válido.
+  if (affectedConversationIds.length > 0) {
+    try {
+      await cleanupConversationsForDeletedStudyCore(
+        supabase,
+        user.id,
+        affectedConversationIds
+      );
+    } catch {
+      // La limpieza es best-effort: si falla, no bloqueamos el borrado del estudio.
+    }
   }
 
   revalidatePath("/dashboard/estudios");

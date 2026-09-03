@@ -263,53 +263,72 @@ export async function setContextCore(
 // ── Limpieza post-borrado de estudio ──────────────────────────
 
 /**
- * Elimina conversaciones que quedaron vacías después de borrar un estudio.
- *
- * Regla: si una conversación tiene 0 contextos Y 0 mensajes → se elimina.
- * Conversaciones con mensajes se preservan aunque pierdan todos los contextos.
- *
- * Llamar después de `deleteStudyCore` (que CASCADE elimina los chat_contexts
- * del estudio borrado).
+ * Identifica conversaciones del usuario que tienen un chat_context
+ * apuntando al estudio indicado. Llamar ANTES de `deleteStudyCore`
+ * (el CASCADE eliminará estos contextos).
  */
-export async function cleanupEmptyConversationsCore(
+export async function findConversationsForStudyCore(
   supabase: Supabase,
-  userId: string
-): Promise<number> {
-  // 1. Conversaciones del usuario.
-  const { data: conversations } = await supabase
-    .from("chat_conversations")
-    .select("*")
+  userId: string,
+  studyId: string
+): Promise<string[]> {
+  const { data, error } = await supabase
+    .from("chat_contexts")
+    .select("conversation_id")
+    .eq("study_id", studyId)
     .eq("user_id", userId);
 
-  if (!conversations?.length) return 0;
+  if (error) {
+    throw new ChatError("db_error", "Error al buscar conversaciones afectadas.");
+  }
+
+  if (!data?.length) return [];
+
+  // Deduplicar (constraints únicas, pero defensivo).
+  return [...new Set(data.map((c) => c.conversation_id as string))];
+}
+
+/**
+ * Elimina conversaciones del usuario que ya no tienen ningún estudio
+ * válido asociado (0 contextos tras el CASCADE).
+ *
+ * - Si la conversación tiene AL menos un contexto → preservar.
+ * - Si tiene 0 contextos → eliminar (messages se borran por CASCADE).
+ *
+ * Llamar DESPUÉS de `deleteStudyCore`.
+ *
+ * @param conversationIds IDs de conversaciones que estaban asociadas al
+ *   estudio eliminado (obtenidos con `findConversationsForStudyCore`).
+ */
+export async function cleanupConversationsForDeletedStudyCore(
+  supabase: Supabase,
+  userId: string,
+  conversationIds: string[]
+): Promise<number> {
+  if (conversationIds.length === 0) return 0;
 
   const toDelete: string[] = [];
 
-  for (const conv of conversations) {
-    // 2. Contextos restantes de esta conversación.
-    const { data: contexts } = await supabase
+  for (const convId of conversationIds) {
+    // Verificar si quedan OTROS contextos válidos en esta conversación.
+    const { data: remainingContexts } = await supabase
       .from("chat_contexts")
       .select("id")
-      .eq("conversation_id", conv.id)
+      .eq("conversation_id", convId)
       .eq("user_id", userId);
 
-    if (contexts?.length) continue; // Aún tiene estudios → preservar.
-
-    // 3. Sin contextos → ¿tiene mensajes?
-    const { data: messages } = await supabase
-      .from("chat_messages")
-      .select("id")
-      .eq("conversation_id", conv.id)
-      .eq("user_id", userId);
-
-    if (!messages?.length) {
-      toDelete.push(conv.id);
+    // Si NO quedan contextos → la conversación ya no tiene estudios asociados.
+    // Debe eliminarse (messages se borran por CASCADE).
+    if (!remainingContexts?.length) {
+      toDelete.push(convId);
     }
+    // Si quedan contextos → la conversación sigue teniendo estudios, se preserva.
   }
 
   if (toDelete.length === 0) return 0;
 
-  // 4. Eliminar conversaciones vacías (0 contextos + 0 mensajes).
+  // Eliminar conversaciones que quedaron sin ningún contexto.
+  // ON DELETE CASCADE en chat_messages y chat_contexts limpia todo.
   for (const convId of toDelete) {
     const { error } = await supabase
       .from("chat_conversations")
@@ -320,7 +339,7 @@ export async function cleanupEmptyConversationsCore(
     if (error) {
       throw new ChatError(
         "db_error",
-        "No pudimos limpiar conversaciones vacías."
+        "No pudimos limpiar conversaciones asociadas al estudio eliminado."
       );
     }
   }
