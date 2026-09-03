@@ -87,8 +87,8 @@ describe("Constantes de error", () => {
     assert.ok(ANALYSIS_GENERIC_ERROR.length > 0);
   });
 
-  it("ANALYSIS_ERROR_MESSAGES tiene exactamente 13 entradas", () => {
-    assert.equal(Object.keys(ANALYSIS_ERROR_MESSAGES).length, 13);
+  it("ANALYSIS_ERROR_MESSAGES tiene exactamente 14 entradas", () => {
+    assert.equal(Object.keys(ANALYSIS_ERROR_MESSAGES).length, 14);
   });
 
   it("todas las claves de ANALYSIS_ERROR_MESSAGES son strings no vacíos", () => {

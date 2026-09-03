@@ -1,5 +1,5 @@
 import type { createClient } from "@/lib/supabase/server";
-import { analyzeStudyText, GeminiError } from "./gemini.ts";
+import { analyzeStudyText, GeminiError, type GeminiErrorType } from "./gemini.ts";
 import type { StudyAnalysis } from "./schema.ts";
 
 type Supabase = Awaited<ReturnType<typeof createClient>>;
@@ -25,6 +25,95 @@ export class AnalysisError extends Error {
     this.name = "AnalysisError";
     this.code = code;
   }
+}
+
+// ── Retry para errores transitorios de Gemini ────────────────────
+
+/**
+ * Errores de Gemini que justifican un reintento automático.
+ *
+ * - `gemini_timeout`: la request excedió el timeout (puede ser saturación).
+ * - `gemini_network`: errores de red transitorios (ECONNRESET, ECONNREFUSED, etc.).
+ * - `gemini_api_error` con HTTP 503: servicio temporalmente no disponible (alta demanda).
+ * - `gemini_api_error` con HTTP 429: rate limit excedido.
+ *
+ * NO se reintentan:
+ * - `gemini_invalid_response`: error de schema/JSON (permanente).
+ * - `gemini_api_error` con 400/401/403/404: errores permanentes del cliente.
+ */
+const RETRYABLE_ERROR_TYPES: Set<GeminiErrorType> = new Set([
+  "gemini_timeout",
+  "gemini_network",
+]);
+
+const RETRYABLE_HTTP_STATUSES: Set<number> = new Set([429, 503]);
+
+export function isTransientGeminiError(err: unknown): boolean {
+  if (!(err instanceof GeminiError)) return false;
+
+  // Timeout y red siempre son transitorios.
+  if (RETRYABLE_ERROR_TYPES.has(err.type)) return true;
+
+  // Para errores de API, inspeccionar el status HTTP del error original.
+  if (err.type === "gemini_api_error" && err.cause instanceof Error) {
+    const cause = err.cause;
+    if ("status" in cause && typeof cause.status === "number") {
+      return RETRYABLE_HTTP_STATUSES.has(cause.status);
+    }
+  }
+
+  return false;
+}
+
+/** Delay base en ms para el primer reintento. */
+const BASE_DELAY_MS = 1_000;
+/** Número máximo de intentos (1 inicial + reintentos). */
+const MAX_ATTEMPTS = 3;
+
+/**
+ * Envuelve una función de análisis con retry para errores transitorios.
+ *
+ * Exponential backoff con jitter: delay = min(base * 2^attempt, 8000) + jitter.
+ * - Intento 1: ~1-2s de delay (si falla)
+ * - Intento 2: ~2-4s de delay (si falla)
+ * - Intento 3: falla definitiva
+ *
+ * No reintent errores permanentes (schema, auth, validación).
+ */
+export async function withRetry<T>(
+  fn: () => Promise<T>,
+  opts?: { maxAttempts?: number }
+): Promise<T> {
+  const maxAttempts = opts?.maxAttempts ?? MAX_ATTEMPTS;
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastError = err;
+
+      if (attempt >= maxAttempts || !isTransientGeminiError(err)) {
+        throw err;
+      }
+
+      // Exponential backoff con jitter: base * 2^(attempt-1) + random(0, base)
+      const delay = Math.min(
+        BASE_DELAY_MS * Math.pow(2, attempt - 1),
+        8_000
+      );
+      const jitter = Math.random() * BASE_DELAY_MS;
+      const waitMs = Math.round(delay + jitter);
+
+      console.warn(
+        `[nuvio:analyze-study] Transient error on attempt ${attempt}/${maxAttempts}, retrying in ${waitMs}ms: ${(err as Error).message}`
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, waitMs));
+    }
+  }
+
+  throw lastError;
 }
 
 // ── Núcleo testable (deps inyectadas) ─────────────────────────
@@ -140,10 +229,12 @@ export async function analyzeStudyWithDeps(
     );
   }
 
-  // ── Paso E: llamar a Gemini ─────────────────────────────────
+  // ── Paso E: llamar a Gemini (con retry para errores transitorios) ──
   let analysis: StudyAnalysis;
   try {
-    analysis = await analyzeText(targetExtraction.extracted_text);
+    analysis = await withRetry(() =>
+      analyzeText(targetExtraction.extracted_text)
+    );
   } catch (err) {
     // Marcar como fallido sin persistir análisis inválido.
     const code =

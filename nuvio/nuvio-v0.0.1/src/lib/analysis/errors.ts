@@ -35,6 +35,9 @@ export const ANALYSIS_ERROR_MESSAGES: Record<string, string> = {
     "El análisis se generó pero no se pudo guardar. Intentá de nuevo.",
   analysis_in_progress:
     "El análisis ya está en curso. Esperá unos segundos.",
+  /** Errores transitorios que el sistema reintenta automáticamente. */
+  gemini_transient:
+    "El servicio de IA está temporalmente no disponible por alta demanda. Reintentando automáticamente…",
 };
 
 export function getAnalysisErrorMessage(code: string): string {
