@@ -78,6 +78,33 @@ export async function getConversationCore(
   return data as ChatConversation;
 }
 
+/**
+ * Obtiene una conversación del usuario o devuelve `null` si no existe
+ * o no le pertenece.
+ *
+ * Una conversación inexistente y una de otro usuario producen el mismo
+ * resultado (`null`) para no filtrar información sobre la existencia de
+ * la conversación (anti existence-oracle): la ownership se verifica dentro
+ * de `getConversationCore` filtrando por `user_id`.
+ *
+ * Los errores que NO son `not_found` (p.ej. fallos de red/BD) se propagan
+ * sin ocultarse, para no enmascarar problemas reales.
+ */
+export async function resolveConversationCore(
+  supabase: Supabase,
+  userId: string,
+  conversationId: string
+): Promise<ChatConversation | null> {
+  try {
+    return await getConversationCore(supabase, userId, conversationId);
+  } catch (err) {
+    if (err instanceof ChatError && err.code === "not_found") {
+      return null;
+    }
+    throw err;
+  }
+}
+
 export async function createConversationCore(
   supabase: Supabase,
   userId: string,

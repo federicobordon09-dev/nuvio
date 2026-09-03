@@ -10,6 +10,7 @@ import {
   createConversationCore,
   deleteConversationCore,
   getConversationCore,
+  resolveConversationCore,
   listConversationsCore,
   listMessagesCore,
   renameConversationCore,
@@ -70,7 +71,24 @@ export async function getChatData(conversationId?: string) {
     return { conversation: null, messages: [], conversations, selectableStudies, contextStudyIds: [] };
   }
 
-  const conversation = await getConversationCore(supabase, user.id, conversationId);
+  // Una conversación inexistente o de otro usuario se resuelve igual a `null`
+  // (sin filtrar existencia) para que la página redirija limpiamente en vez
+  // de terminar en un HTTP 500.
+  const conversation = await resolveConversationCore(
+    supabase,
+    user.id,
+    conversationId
+  );
+  if (!conversation) {
+    return {
+      conversation: null,
+      messages: [],
+      conversations,
+      selectableStudies,
+      contextStudyIds: [],
+    };
+  }
+
   const [messages, contextLinks] = await Promise.all([
     listMessagesCore(supabase, user.id, conversationId),
     getContextCore(supabase, user.id, conversationId),

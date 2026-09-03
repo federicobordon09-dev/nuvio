@@ -7,6 +7,7 @@ import { processStudy } from "@/lib/studies/processing";
 import { analyzeStudy, AnalysisError } from "@/lib/analysis/analyze-study";
 import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
 import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, type StudyType, computeStudyStats, type StudyStats } from "@/lib/studies-utils";
+import { sanitizeStorageFileName } from "@/lib/studies/sanitize-file-name";
 import { deleteStudyCore, countStudiesCore } from "@/lib/studies/study-ops";
 import { findConversationsForStudyCore, cleanupConversationsForDeletedStudyCore } from "@/lib/chat/chat-db";
 
@@ -106,8 +107,12 @@ export async function uploadStudy(formData: FormData) {
   }
 
   const studyId = crypto.randomUUID();
+  // Nombre original para mostrar en la app (DB).
   const fileName = file.name;
-  const filePath = `${user.id}/${studyId}/${fileName}`;
+  // Nombre sanitizado para el path de Storage: impide path traversal y
+  // caracteres/estructuras inesperadas dentro del segmento filename.
+  const safeFileName = sanitizeStorageFileName(fileName);
+  const filePath = `${user.id}/${studyId}/${safeFileName}`;
 
   const { error: uploadError } = await supabase.storage
     .from("medical-studies")
