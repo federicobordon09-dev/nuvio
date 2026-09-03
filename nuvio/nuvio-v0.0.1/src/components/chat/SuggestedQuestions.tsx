@@ -5,6 +5,8 @@ import { getSuggestedQuestions } from "@/lib/chat/suggested-questions";
 interface SuggestedQuestionsProps {
   /** Tipo de estudio del contexto principal; define las preguntas. */
   studyType?: string | null;
+  /** Preguntas a mostrar. Si se provee, se usa en lugar de getSuggestedQuestions. */
+  questions?: string[];
   /** Se llama con la pregunta elegida; reutiliza el flujo de envío existente. */
   onSelect: (question: string) => void;
   /** Variante compacta (chips) para el chat ya activo. */
@@ -22,12 +24,15 @@ interface SuggestedQuestionsProps {
  */
 export function SuggestedQuestions({
   studyType,
+  questions: questionsProp,
   onSelect,
   compact = false,
   title = "¿Qué querés saber sobre este estudio?",
   subtitle = "Podés elegir una pregunta o escribir la tuya.",
 }: SuggestedQuestionsProps) {
-  const questions = getSuggestedQuestions(studyType);
+  const questions = questionsProp ?? getSuggestedQuestions(studyType);
+
+  if (questions.length === 0) return null;
 
   if (compact) {
     return (

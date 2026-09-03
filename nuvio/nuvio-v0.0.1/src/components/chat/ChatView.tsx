@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { sendMessageAction, setContextAction } from "@/lib/actions/chat";
 import type { ChatMessage, SelectableStudy } from "@/lib/chat/schema";
+import { useSuggestedQuestions } from "@/lib/chat/use-suggested-questions";
 import { ContextPicker } from "./ContextPicker";
 import { NewConversationStudyPicker } from "./NewConversationStudyPicker";
 import { SelectedStudyBanner } from "./SelectedStudyBanner";
@@ -66,6 +67,12 @@ export function ChatView({
       ?.study_type;
   }, [selectedStudyIds, selectableStudies]);
 
+  // ── Preguntas sugeridas (rotación) ────────────────────────────
+  const { visible: visibleQuestions, markUsed } = useSuggestedQuestions(
+    primaryStudyType,
+    messages
+  );
+
   // ── Persistir contexto (reutiliza la action existente) ────────
   async function persistContext(nextIds: string[]) {
     setContextError(null);
@@ -104,6 +111,9 @@ export function ChatView({
   async function handleSend(rawContent?: string) {
     const content = (rawContent ?? input).trim();
     if (!content || sending) return;
+
+    // Marcar pregunta sugerida como usada antes de enviar.
+    if (rawContent !== undefined) markUsed(rawContent);
 
     if (rawContent === undefined) setInput("");
 
@@ -198,6 +208,7 @@ export function ChatView({
             />
             <SuggestedQuestions
               studyType={primaryStudyType}
+              questions={visibleQuestions}
               onSelect={handleSend}
             />
           </>
@@ -240,6 +251,7 @@ export function ChatView({
       {phase === "chat" && (
         <SuggestedQuestions
           studyType={primaryStudyType}
+          questions={visibleQuestions}
           onSelect={handleSend}
           compact
         />
