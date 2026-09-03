@@ -38,6 +38,7 @@ function makeClient(): GeminiClient {
 const MOCK_VALID_RESPONSE = JSON.stringify({
   summary: "Análisis de sangre con glucosa elevada.",
   document_type: "Análisis de sangre",
+  study_type: "blood_test",
   key_findings: [
     {
       title: "Glucosa",

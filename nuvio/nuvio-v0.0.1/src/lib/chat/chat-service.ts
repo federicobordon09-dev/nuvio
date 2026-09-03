@@ -72,7 +72,7 @@ export function formatContextForPrompt(contexts: ChatStudyContext[]): string {
 
     return [
       `### Estudio ${i + 1}: ${c.fileName}`,
-      `Tipo: ${c.studyType}`,
+      `Tipo: ${c.studyType ?? "No clasificado"}`,
       `Resumen del análisis: ${c.analysis.summary}`,
       `Hallazgos clave:\n${findings || "Sin hallazgos listados."}`,
       `Contenido del documento:\n${c.extractedText || "(sin texto extraído)"}`,

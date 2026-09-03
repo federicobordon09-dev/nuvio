@@ -33,7 +33,7 @@ export const MAX_CONTEXT_EXTRACTION_CHARS = 20_000;
 export interface ChatStudyContext {
   studyId: string;
   fileName: string;
-  studyType: string;
+  studyType: StudyType | null;
   analysis: StudyAnalysis;
   extractedText: string;
 }

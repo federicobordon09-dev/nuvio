@@ -14,6 +14,7 @@ import { safeParseStudyAnalysis } from "../schema.ts";
 const VALID_ANALYSIS = {
   summary: "Análisis de sangre con valores dentro de parámetros normales.",
   document_type: "Análisis de sangre",
+  study_type: "blood_test",
   key_findings: [
     {
       title: "Glucosa",

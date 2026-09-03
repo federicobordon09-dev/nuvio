@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { processStudy } from "@/lib/studies/processing";
 import { analyzeStudy, AnalysisError } from "@/lib/analysis/analyze-study";
 import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
-import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, ALLOWED_STUDY_TYPES, type StudyType, computeStudyStats, type StudyStats } from "@/lib/studies-utils";
+import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, type StudyType, computeStudyStats, type StudyStats } from "@/lib/studies-utils";
 import { deleteStudyCore, countStudiesCore } from "@/lib/studies/study-ops";
 
 async function assertAuthenticated(supabase: Awaited<ReturnType<typeof createClient>>) {
@@ -38,7 +38,7 @@ export async function listStudies() {
     file_path: string;
     file_size: number;
     mime_type: string;
-    study_type: StudyType;
+    study_type: StudyType | null;
     status: string;
     processing_error: string | null;
     analysis_status: string;
@@ -89,7 +89,6 @@ export async function uploadStudy(formData: FormData) {
   const user = await assertAuthenticated(supabase);
 
   const file = formData.get("file") as File | null;
-  const studyType = formData.get("studyType") as string;
 
   if (!file || file.size === 0) {
     throw new Error("Debés seleccionar un archivo.");
@@ -103,10 +102,6 @@ export async function uploadStudy(formData: FormData) {
 
   if (file.size > MAX_FILE_SIZE) {
     throw new Error(`El archivo supera el tamaño máximo de ${MAX_FILE_SIZE / (1024 * 1024)} MB.`);
-  }
-
-  if (!(ALLOWED_STUDY_TYPES as readonly string[]).includes(studyType)) {
-    throw new Error("Tipo de estudio no válido.");
   }
 
   const studyId = crypto.randomUUID();
@@ -132,7 +127,7 @@ export async function uploadStudy(formData: FormData) {
     file_path: filePath,
     file_size: file.size,
     mime_type: file.type,
-    study_type: studyType,
+    study_type: null,
     status: "uploaded",
   });
 

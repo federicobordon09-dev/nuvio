@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatFileSize, getStudyTypeLabel } from "@/lib/studies-utils";
+import { formatFileSize, getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import type { StudyType } from "@/lib/studies-utils";
 import { StudyStatusBadge } from "./StudyStatusBadge";
 import { StudyDeleteButton } from "./StudyDeleteButton";
@@ -8,7 +8,7 @@ interface StudyCardProps {
   study: {
     id: string;
     file_name: string;
-    study_type: StudyType;
+    study_type: StudyType | null;
     status: string;
     analysis_status: string;
     file_size: number;
@@ -34,7 +34,7 @@ export function StudyCard({ study, showDelete = true }: StudyCardProps) {
             {study.file_name}
           </p>
           <p className="mt-1 text-[13px] text-muted-foreground">
-            {getStudyTypeLabel(study.study_type)}
+            {getStudyTypeLabelNullable(study.study_type)}
           </p>
           <div className="mt-2">
             <StudyStatusBadge

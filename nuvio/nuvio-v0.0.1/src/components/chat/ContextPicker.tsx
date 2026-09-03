@@ -1,6 +1,6 @@
 "use client";
 
-import { getStudyTypeLabel, type StudyType } from "@/lib/studies-utils";
+import { getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import type { SelectableStudy } from "@/lib/chat/schema";
 
 interface ContextPickerProps {
@@ -58,7 +58,7 @@ export function ContextPicker({
                 />
                 <span className="max-w-[160px] truncate">{study.file_name}</span>
                 <span className="text-muted-foreground/70">
-                  {getStudyTypeLabel(study.study_type as StudyType)}
+                  {getStudyTypeLabelNullable(study.study_type)}
                 </span>
               </label>
             );

@@ -194,10 +194,14 @@ export async function analyzeStudyWithDeps(
     );
   }
 
-  // ── Paso G: marcar completado ───────────────────────────────
+  // ── Paso G: marcar completado + persistir study_type ──────────
   await supabase
     .from("studies")
-    .update({ analysis_status: "completed", analysis_error: null })
+    .update({
+      analysis_status: "completed",
+      analysis_error: null,
+      study_type: analysis.study_type,
+    })
     .eq("id", studyId)
     .eq("user_id", user.id);
 

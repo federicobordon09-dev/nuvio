@@ -33,6 +33,18 @@ export function getStudyTypeLabel(type: StudyType): string {
   return STUDY_TYPE_LABELS[type];
 }
 
+/**
+ * Versión null-safe de getStudyTypeLabel.
+ * Si el tipo es null o no está en el mapping, devuelve "Pendiente de análisis".
+ * Se usa en la UI cuando el estudio aún no fue analizado por IA.
+ */
+export function getStudyTypeLabelNullable(
+  type: StudyType | null | undefined
+): string {
+  if (!type) return "Pendiente de análisis";
+  return STUDY_TYPE_LABELS[type] ?? "Pendiente de análisis";
+}
+
 export const STUDY_STATUSES = [
   "uploaded",
   "processing",

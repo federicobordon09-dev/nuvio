@@ -1,6 +1,6 @@
 "use client";
 
-import { getStudyTypeLabel, type StudyType } from "@/lib/studies-utils";
+import { getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import { formatStudyDate } from "@/lib/chat/dates";
 import type { SelectableStudy } from "@/lib/chat/schema";
 
@@ -52,7 +52,7 @@ export function SelectedStudyBanner({
 
       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
         {selected.map((study) => {
-          const label = getStudyTypeLabel(study.study_type as StudyType);
+          const label = getStudyTypeLabelNullable(study.study_type);
           const date = formatStudyDate(study.created_at ?? undefined);
           return (
             <span

@@ -74,6 +74,7 @@ describe("Validación de respuesta Gemini (schema)", () => {
   const VALID = {
     summary: "Análisis de sangre con glucosa elevada.",
     document_type: "Análisis de sangre",
+    study_type: "blood_test",
     key_findings: [
       {
         title: "Glucosa",

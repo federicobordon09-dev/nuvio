@@ -5,6 +5,7 @@ import { parseStudyAnalysis, safeParseStudyAnalysis } from "../schema.ts";
 const VALID_ANALYSIS = {
   summary: "Análisis de sangre completo con valores generales dentro de parámetros normales.",
   document_type: "Análisis de sangre",
+  study_type: "blood_test",
   key_findings: [
     {
       title: "Glucosa",
@@ -69,6 +70,7 @@ describe("10 casos de validación", () => {
     const empty = {
       summary: "Documento procesado.",
       document_type: "Informe médico",
+      study_type: "medical_report",
       key_findings: [],
       observations: [],
       warnings: [],
@@ -129,6 +131,28 @@ describe("10 casos de validación", () => {
   it("10. null → rechazado", () => {
     const result = safeParseStudyAnalysis(null);
     assert.equal(result.success, false);
+  });
+
+  it("11. study_type válido (blood_test) → aceptado", () => {
+    const result = parseStudyAnalysis(VALID_ANALYSIS);
+    assert.equal(result.study_type, "blood_test");
+  });
+
+  it("12. study_type fuera del enum → rechazado", () => {
+    const invalid = { ...VALID_ANALYSIS, study_type: "x_ray" };
+    const result = safeParseStudyAnalysis(invalid);
+    assert.equal(result.success, false);
+  });
+
+  it("13. study_type faltante → rechazado", () => {
+    const { study_type: _removed, ...noStudyType } = VALID_ANALYSIS;
+    const result = safeParseStudyAnalysis(noStudyType);
+    assert.equal(result.success, false);
+  });
+
+  it("14. study_type 'other' → aceptado", () => {
+    const result = parseStudyAnalysis({ ...VALID_ANALYSIS, study_type: "other" });
+    assert.equal(result.study_type, "other");
   });
 });
 

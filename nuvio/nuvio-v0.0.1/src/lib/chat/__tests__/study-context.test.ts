@@ -39,6 +39,7 @@ const ANALYSIS_ROW = {
   analysis: {
     summary: "Glucosa elevada.",
     document_type: "Análisis de sangre",
+    study_type: "blood_test",
     key_findings: [
       {
         title: "Glucosa",
@@ -228,5 +229,23 @@ describe("getConversationTitleFromStudyCore", () => {
     });
     const title = await getConversationTitleFromStudyCore(fake as never, USER_ID, "s1");
     assert.equal(title, null);
+  });
+
+  it("devuelve null cuando study_type es null (no analizado aún)", async () => {
+    const fake = createFakeSupabase({
+      user: { id: USER_ID },
+      tables: { studies: [{ ...READY_STUDY, study_type: null }] },
+    });
+    const title = await getConversationTitleFromStudyCore(fake as never, USER_ID, "s1");
+    assert.equal(title, null);
+  });
+
+  it("devuelve 'Otro' cuando study_type es 'other'", async () => {
+    const fake = createFakeSupabase({
+      user: { id: USER_ID },
+      tables: { studies: [{ ...READY_STUDY, study_type: "other" }] },
+    });
+    const title = await getConversationTitleFromStudyCore(fake as never, USER_ID, "s1");
+    assert.equal(title, "Otro");
   });
 });

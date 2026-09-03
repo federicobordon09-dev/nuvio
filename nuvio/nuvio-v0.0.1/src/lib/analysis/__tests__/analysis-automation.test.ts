@@ -125,6 +125,7 @@ const STUDY_ID = "study-1";
 const VALID_ANALYSIS = {
   summary: "Análisis de sangre con glucosa elevada.",
   document_type: "Análisis de sangre",
+  study_type: "blood_test",
   key_findings: [
     {
       title: "Glucosa",
@@ -215,6 +216,7 @@ describe("Pipeline automático: analyzeStudyWithDeps", () => {
     assert.equal(h.upsertCalls(), 1);
     assert.equal(h.supabase.getState().studies.analysis_status, "completed");
     assert.equal(h.supabase.getState().studies.analysis_error, null);
+    assert.equal(h.supabase.getState().studies.study_type, "blood_test");
   });
 
   it("2. estudio NO procesado → no dispara (study_not_ready)", async () => {
@@ -442,6 +444,26 @@ describe("Pipeline automático: analyzeStudyWithDeps", () => {
 
     // Se registra el código del último error para la UI (mensaje amigable).
     assert.equal(h.supabase.getState().studies.analysis_error, "gemini_timeout");
+  });
+
+  it("14b. Gemini falla → study_type NO se persiste", async () => {
+    const h = makeDeps({
+      user: { id: USER_ID },
+      study: makeStudy({ study_type: null }),
+      extraction: makeExtraction(),
+    });
+    h.setGemini(async () => {
+      throw new GeminiError("gemini_timeout", "timeout");
+    });
+
+    await assert.rejects(
+      analyzeStudyWithDeps(STUDY_ID, h.deps),
+      (err) => {
+        assertAnalysisError(err, "gemini_timeout");
+        return true;
+      }
+    );
+    assert.equal(h.supabase.getState().studies.study_type, null);
   });
 
   it("15. retry posterior (tras 'failed') vuelve a intentar y completa", async () => {

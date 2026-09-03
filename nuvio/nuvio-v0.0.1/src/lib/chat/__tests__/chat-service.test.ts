@@ -33,6 +33,7 @@ const CONTEXT: ChatStudyContext = {
   analysis: {
     summary: "Glucosa elevada, resto normal.",
     document_type: "Análisis de sangre",
+    study_type: "blood_test",
     key_findings: [
       {
         title: "Glucosa",

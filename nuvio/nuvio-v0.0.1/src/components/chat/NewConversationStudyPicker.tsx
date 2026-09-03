@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { getStudyTypeLabel, type StudyType } from "@/lib/studies-utils";
+import { getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import { formatStudyDate } from "@/lib/chat/dates";
 import type { SelectableStudy } from "@/lib/chat/schema";
 
@@ -64,8 +64,8 @@ export function NewConversationStudyPicker({
           {studies.map((study) => {
             const checked = selectedIds.includes(study.id);
             const date = formatStudyDate(study.created_at ?? undefined);
-            const typeLabel = getStudyTypeLabel(
-              study.study_type as StudyType
+            const typeLabel = getStudyTypeLabelNullable(
+              study.study_type
             );
 
             return (

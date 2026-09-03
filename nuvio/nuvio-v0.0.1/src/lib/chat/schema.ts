@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { StudyType } from "@/lib/studies-utils";
 
 /**
  * Fase 7.2 — Contrato de datos del Chat IA.
@@ -94,7 +95,7 @@ export interface ChatContext {
 export interface SelectableStudy {
   id: string;
   file_name: string;
-  study_type: string;
+  study_type: StudyType | null;
   status: string;
   analysis_status: string;
   /** Fecha de carga del estudio, para mostrarla en las tarjetas (opcional). */

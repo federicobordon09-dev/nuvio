@@ -1,7 +1,7 @@
 import { getStudy, getStudyExtraction, getStudyAnalysis } from "@/lib/actions/studies";
 import type { StudyAnalysis } from "@/lib/analysis/schema";
 import { parseStoredAnalysis } from "@/lib/analysis/stored";
-import { formatFileSize, getProcessingErrorLabel, getStudyTypeLabel } from "@/lib/studies-utils";
+import { formatFileSize, getProcessingErrorLabel, getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Breadcrumbs } from "@/components/dashboard/Breadcrumbs";
@@ -157,7 +157,7 @@ export default async function EstudioDetailPage({
                   Tipo
                 </dt>
                 <dd className="mt-1 text-[14px] font-medium text-foreground">
-                  {getStudyTypeLabel(study.study_type)}
+                  {getStudyTypeLabelNullable(study.study_type)}
                 </dd>
               </div>
 

@@ -14,6 +14,19 @@ import { z } from "zod";
  * - Nuvio explica información médica; no reemplaza a un profesional.
  */
 
+/** Valores internos de clasificación de tipo de estudio. */
+const STUDY_TYPE_VALUES = [
+  "blood_test",
+  "MRI",
+  "CT",
+  "ECG",
+  "epicrisis",
+  "medical_report",
+  "other",
+] as const;
+
+export const StudyTypeSchema = z.enum(STUDY_TYPE_VALUES);
+
 export const FindingStatusSchema = z.enum([
   "normal",
   "high",
@@ -38,6 +51,7 @@ export type KeyFinding = z.infer<typeof KeyFindingSchema>;
 export const StudyAnalysisSchema = z.object({
   summary: z.string().min(1),
   document_type: z.string().min(1),
+  study_type: StudyTypeSchema,
   key_findings: z.array(KeyFindingSchema),
   observations: z.array(z.string()),
   warnings: z.array(z.string()),

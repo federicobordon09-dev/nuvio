@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { uploadStudy } from "@/lib/actions/studies";
-import { ALLOWED_STUDY_TYPES, MAX_FILE_SIZE, formatFileSize, getStudyTypeLabel, type StudyType } from "@/lib/studies-utils";
+import { MAX_FILE_SIZE, formatFileSize } from "@/lib/studies-utils";
 
 const MIME_LABELS: Record<string, string> = {
   "application/pdf": "PDF",
@@ -13,7 +13,6 @@ const MIME_LABELS: Record<string, string> = {
 
 export default function SubirPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [studyType, setStudyType] = useState<StudyType>("blood_test");
   const [error, setError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -26,7 +25,6 @@ export default function SubirPage() {
   function handleCancel() {
     setFile(null);
     setError(null);
-    setStudyType("blood_test");
     if (formRef.current) formRef.current.reset();
   }
 
@@ -51,7 +49,7 @@ export default function SubirPage() {
           Subir estudio
         </h1>
         <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
-          Subí un documento médico para que Nuvio lo analice.
+          Subí un documento médico para que Nuvio lo analice y clasifique automáticamente.
         </p>
       </div>
 
@@ -112,26 +110,6 @@ export default function SubirPage() {
               {file ? "Cambiar archivo" : "Seleccionar archivo"}
             </label>
           </div>
-        </div>
-
-        {/* Study type */}
-        <div className="space-y-2">
-          <label htmlFor="studyType" className="block text-[14px] font-medium text-foreground">
-            Tipo de estudio
-          </label>
-          <select
-            id="studyType"
-            name="studyType"
-            value={studyType}
-            onChange={(e) => setStudyType(e.target.value as StudyType)}
-            className="w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-[14px] text-foreground transition-colors focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean-tint"
-          >
-            {ALLOWED_STUDY_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {getStudyTypeLabel(type)}
-              </option>
-            ))}
-          </select>
         </div>
 
         {/* Actions */}

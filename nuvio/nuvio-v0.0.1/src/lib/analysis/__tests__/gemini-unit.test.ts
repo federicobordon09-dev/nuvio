@@ -13,6 +13,7 @@ const MOCK_GEMINI_RESPONSE = {
   summary:
     "Análisis de sangre con glucosa elevada y hemoglobina dentro de parámetros normales.",
   document_type: "Análisis de sangre",
+  study_type: "blood_test",
   key_findings: [
     {
       title: "Glucosa",
