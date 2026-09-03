@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 import { listStudies } from "@/lib/actions/studies";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { StudyCard } from "@/components/dashboard/StudyCard";
@@ -7,10 +8,19 @@ import { EmptyState } from "@/components/dashboard/EmptyState";
 export const dynamic = "force-dynamic";
 
 export default async function EstudiosPage() {
+  // Verificar auth ANTES del try/catch para que redirect() no sea atrapado.
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    const { redirect } = await import("next/navigation");
+    redirect("/auth/login");
+  }
+
   let studies: NonNullable<Awaited<ReturnType<typeof listStudies>>>;
   try {
     studies = await listStudies();
-  } catch {
+  } catch (err) {
+    console.error("[nuvio:estudios] Error cargando estudios:", err);
     studies = [];
   }
 

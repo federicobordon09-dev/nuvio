@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 import { getStudyStats, listStudies } from "@/lib/actions/studies";
 import type { StudyStats } from "@/lib/studies-utils";
 import { PageHeader } from "@/components/dashboard/PageHeader";
@@ -95,14 +96,24 @@ const quickActions = [
 ];
 
 export default async function DashboardPage() {
+  // Verificar auth ANTES del try/catch para que redirect() no sea atrapado.
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    const { redirect } = await import("next/navigation");
+    redirect("/auth/login");
+  }
+
   let stats: StudyStats = { total: 0, ready: 0, in_progress: 0, pending: 0, errors: 0 };
   let studies: Awaited<ReturnType<typeof listStudies>> = [];
   try {
     const [s, list] = await Promise.all([getStudyStats(), listStudies()]);
     stats = s;
     studies = list;
-  } catch {
-    // Estados vacíos seguros ante errores transitorios.
+  } catch (err) {
+    // Solo tratar errores transitorios de red. Errores de autenticación ya
+    // se manejan arriba con redirect().
+    console.error("[nuvio:dashboard] Error cargando datos:", err);
   }
 
   const recent = studies.slice(0, RECENT_LIMIT);

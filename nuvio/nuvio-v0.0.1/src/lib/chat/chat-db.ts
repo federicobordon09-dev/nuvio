@@ -259,3 +259,71 @@ export async function setContextCore(
     throw new ChatError("db_error", "No pudimos guardar el contexto.");
   }
 }
+
+// ── Limpieza post-borrado de estudio ──────────────────────────
+
+/**
+ * Elimina conversaciones que quedaron vacías después de borrar un estudio.
+ *
+ * Regla: si una conversación tiene 0 contextos Y 0 mensajes → se elimina.
+ * Conversaciones con mensajes se preservan aunque pierdan todos los contextos.
+ *
+ * Llamar después de `deleteStudyCore` (que CASCADE elimina los chat_contexts
+ * del estudio borrado).
+ */
+export async function cleanupEmptyConversationsCore(
+  supabase: Supabase,
+  userId: string
+): Promise<number> {
+  // 1. Conversaciones del usuario.
+  const { data: conversations } = await supabase
+    .from("chat_conversations")
+    .select("*")
+    .eq("user_id", userId);
+
+  if (!conversations?.length) return 0;
+
+  const toDelete: string[] = [];
+
+  for (const conv of conversations) {
+    // 2. Contextos restantes de esta conversación.
+    const { data: contexts } = await supabase
+      .from("chat_contexts")
+      .select("id")
+      .eq("conversation_id", conv.id)
+      .eq("user_id", userId);
+
+    if (contexts?.length) continue; // Aún tiene estudios → preservar.
+
+    // 3. Sin contextos → ¿tiene mensajes?
+    const { data: messages } = await supabase
+      .from("chat_messages")
+      .select("id")
+      .eq("conversation_id", conv.id)
+      .eq("user_id", userId);
+
+    if (!messages?.length) {
+      toDelete.push(conv.id);
+    }
+  }
+
+  if (toDelete.length === 0) return 0;
+
+  // 4. Eliminar conversaciones vacías (0 contextos + 0 mensajes).
+  for (const convId of toDelete) {
+    const { error } = await supabase
+      .from("chat_conversations")
+      .delete()
+      .eq("id", convId)
+      .eq("user_id", userId);
+
+    if (error) {
+      throw new ChatError(
+        "db_error",
+        "No pudimos limpiar conversaciones vacías."
+      );
+    }
+  }
+
+  return toDelete.length;
+}

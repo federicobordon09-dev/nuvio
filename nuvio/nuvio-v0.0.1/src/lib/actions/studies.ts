@@ -8,6 +8,7 @@ import { analyzeStudy, AnalysisError } from "@/lib/analysis/analyze-study";
 import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
 import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, type StudyType, computeStudyStats, type StudyStats } from "@/lib/studies-utils";
 import { deleteStudyCore, countStudiesCore } from "@/lib/studies/study-ops";
+import { cleanupEmptyConversationsCore } from "@/lib/chat/chat-db";
 
 async function assertAuthenticated(supabase: Awaited<ReturnType<typeof createClient>>) {
   const { data: { user } } = await supabase.auth.getUser();
@@ -172,11 +173,21 @@ export async function getSignedUrl(studyId: string) {
 
 export async function deleteStudy(studyId: string) {
   const supabase = await createClient();
-  await assertAuthenticated(supabase);
+  const user = await assertAuthenticated(supabase);
   await deleteStudyCore(studyId, { supabase });
+
+  // Limpiar conversaciones que quedaron vacías (0 contextos + 0 mensajes)
+  // después de que CASCADE eliminó los chat_contexts del estudio borrado.
+  try {
+    await cleanupEmptyConversationsCore(supabase, user.id);
+  } catch {
+    // La limpieza no es crítica: si falla, la conversación queda vacía pero
+    // no rota. No bloqueamos el borrado del estudio.
+  }
 
   revalidatePath("/dashboard/estudios");
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/chat");
   redirect("/dashboard/estudios");
 }
 
