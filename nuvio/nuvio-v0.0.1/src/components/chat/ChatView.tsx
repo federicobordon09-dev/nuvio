@@ -172,9 +172,12 @@ export function ChatView({
       )}
 
       {/* Área principal — contenido según fase */}
+      {/* Único contenedor con scroll: min-h-0 le permite encogerse por debajo
+          de su contenido para que las respuestas largas se lean con scroll
+          vertical propio, con header e input siempre visibles. */}
       <div
         ref={scrollRef}
-        className="flex-1 overflow-y-auto"
+        className="min-h-0 flex-1 overflow-y-auto"
         aria-live="polite"
       >
         {phase === "pick-study" && (

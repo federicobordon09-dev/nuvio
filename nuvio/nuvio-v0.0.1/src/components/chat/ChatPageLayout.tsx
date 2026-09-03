@@ -42,7 +42,7 @@ export function ChatPageLayout({
       </aside>
 
       {/* Panel principal */}
-      <div className="relative flex min-w-0 flex-col">
+      <div className="relative flex min-h-0 min-w-0 flex-col">
         {/* Toggle mobile */}
         <button
           onClick={() => setMobileOpen((v) => !v)}
