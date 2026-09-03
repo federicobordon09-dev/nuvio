@@ -28,11 +28,11 @@ La plataforma debe ayudar a responder preguntas como:
 # Stack tecnológico
 
 * **Framework:** Next.js 16.3.3 (App Router, src directory)
-* **Frontend:** React, TypeScript, Tailwind CSS
+* **Frontend:** React 19, TypeScript, Tailwind CSS
 * **Backend:** Server Actions, Route Handlers
 * **Auth:** Supabase Auth (Google OAuth + PKCE)
 * **Base de datos:** Supabase (PostgreSQL + RLS)
-* **Storage:** Supabase Storage (archivos PDF)
+* **Storage:** Supabase Storage (archivos PDF privados)
 * **Extracción de texto:** MuPDF WASM (`mupdf@1.28.0`)
 * **IA:** Google Gemini (`gemini-3-flash-preview` via `@google/genai@2.20.0`)
 * **Validación:** Zod (`zod@4.5.4`)
@@ -72,7 +72,6 @@ La plataforma debe ayudar a responder preguntas como:
 - `src/lib/analysis/schema.ts`: `StudyAnalysisSchema`, `KeyFindingSchema`, `FindingStatusSchema`
 - Tipos: `StudyAnalysis`, `KeyFinding`, `FindingStatus`
 - Helpers: `parseStudyAnalysis()`, `safeParseStudyAnalysis()`
-- 14 tests unitarios
 
 ### Fase 4.2.2 — Integración con Gemini
 - `src/lib/analysis/gemini.ts`: `analyzeStudyText(extractedText)`
@@ -80,7 +79,6 @@ La plataforma debe ayudar a responder preguntas como:
 - System prompt de Nuvio (explicación médica, sin diagnósticos)
 - Respuesta estructurada con `responseJsonSchema`
 - Timeout 30s, validación de entrada y salida
-- Prueba real verificada en Vercel
 
 ### Fase 4.2.3 — Persistencia del análisis
 - Tabla `study_analyses` (1:1 con `studies`, JSONB)
@@ -94,16 +92,68 @@ La plataforma debe ayudar a responder preguntas como:
 - Autenticación + ownership verification
 - Validación de estado del estudio (`processed` solamente)
 - `AnalysisError` con codes: `unauthenticated`, `study_not_found`, `study_not_ready`, `extraction_missing`, `extraction_empty`, `gemini_failed`, `persist_failed`
-- 11 tests unitarios adicionales
-- Prueba real en Vercel verificada (12.5s, 8 findings, Zod validó)
 
-## Fases pendientes
+### Fase 4.2.5 — Automatización del análisis
+- Análisis automático tras procesar un estudio
+- `analysis_status` en estudios: `pending`, `processing`, `completed`, `failed`
+- Pipeline automático con claim de estado y reintentos seguros (sin bucles infinitos)
 
-- **Fase 4.3** — UI de resultados del análisis (mostrar findings, warnings, etc.)
-- **Fase 4.4** — Automatizar análisis después del upload
-- **Fase 5** — Dashboard y navegación
-- **Fase 6** — Pulido visual, responsive, accesibilidad
-- **Fase 7** — Producción y optimización
+### Fase 4.2.6 — Análisis manual desde el detalle del estudio
+- Botón "Analizar" que dispara el análisis bajo demanda
+- Reanálisis manual permitido sobre estudios ya completados
+
+### Fase 4.3 — UI de resultados del análisis
+- Vista de resultados: resumen, hallazgos, observaciones, advertencias, recomendaciones, limitaciones y disclaimer
+- Hallazgos con badge de estado (Normal / Elevado / Bajo) y valores en `font-mono`
+- Explicaciones largas expandibles individualmente
+- Vista en panel de 2 columnas (desktop) con metadata, acciones y contenido extraído colapsable
+
+### Fase 4.4 — Automatización del análisis post-upload
+- El análisis se dispara automáticamente cuando un estudio queda procesado
+- Reintentos y manejo de errores sin afectar la disponibilidad del estudio
+
+### Fase 5 — Dashboard y navegación
+- Navegación compartida (DashboardNav / MobileNav)
+- Conteos reales por estado (listos, en proceso, pendientes, con errores)
+- Lista de estudios con acciones (ver, analizar, eliminar con confirmación)
+- Gestión de estudios: `delete`, conteo y estados combinados
+
+### Fase 6 — Rediseño visual Ocean / Ivory / Cream
+- Lenguaje visual completo según spec de marca: paleta Ocean / Ivory / Cream (cálida, no clínico-fría)
+- Tipografía Inter (UI) + IBM Plex Mono (datos clínicos)
+- Vista de estudio tipo panel de resultados en 2 columnas (desktop) y 1 columna (mobile)
+- Status semánticos (success / warning / danger / info) para badges y hallazgos
+- Cards/paneles con radio unificado, sin sombras grises genéricas
+
+### Fase 7 — Chat IA persistente
+- Conversaciones, mensajes y contexto de estudios persistidos en Supabase
+- Tablas `chat_conversations`, `chat_messages`, `chat_contexts` con RLS por usuario
+- `chat-service` con Gemini y ventana de historial acotada
+- Validación server-side de entrada (Zod) y ownership en cada operación
+- Acciones: `createConversationAction`, `sendMessageAction`, `setContextAction`, `deleteConversationAction`, `renameConversationAction`
+- Núcleo de datos testable con dependencias inyectadas (`chat-db.ts`, `study-context.ts`)
+
+### Fase 7.1 — UX guiada y accesible del Chat IA
+- Experiencia guiada para usuarios mayores / sin experiencia técnica
+- Máquina de estados derivada del contenido: `pick-study → suggest → chat`
+- Pantalla de bienvenida con CTA "Nueva conversación"
+- Selector de estudios con tarjetas grandes accesibles (`NewConversationStudyPicker`)
+- Banner "Estudio seleccionado" + preguntas sugeridas determinísticas por tipo de estudio
+- Preguntas sugeridas en versión grande (grid) y compacta (chips)
+- Accesibilidad: botones reales, `aria-pressed`, `aria-label`, focus-visible rings
+
+### Fase 7.2 — Correcciones de routing y scroll del Chat IA
+- **Routing persistente:** `/dashboard/chat` consulta las conversaciones persistidas en la base de datos: 0 conversaciones → pantalla inicial (Welcome); ≥1 → abre la más reciente viajando a `/dashboard/chat/[id]`
+- **Fuente de verdad:** la URL (`/dashboard/chat/[id]`) queda como fuente de verdad; un refresh (F5) mantiene abierta la misma conversación, recargando conversación, mensajes y contexto desde Supabase
+- **Historial de conversaciones:** sidebar con lista, resaltado de la activa, crear/eliminar/renombrar
+- **Scroll de mensajes largos:** el área de mensajes es el único contenedor con scroll vertical; header y composer quedan fijos en desktop, tablet y mobile
+- Helper puro `pickActiveConversationId` (derivado de la BD) que cubre 0/1/N conversaciones e IDs válidos/inválidos sin confiar en IDs de cliente
+
+## Mejoras futuras del Chat IA (no implementadas)
+
+1. **Nombre de conversación automático** — usar el tipo de análisis/estudio como nombre de la conversación en lugar de "Nueva conversación".
+2. **Preguntas sugeridas variadas** — mejorar/variar las preguntas sugeridas para evitar que siempre sean las mismas.
+3. **Indicadores visuales de estado** — agregar indicadores visuales de estado de conversación activa/inactiva.
 
 ---
 
@@ -116,12 +166,13 @@ src/
 │   │   ├── login/page.tsx          # Login con Google OAuth
 │   │   └── callback/route.ts       # Intercambia code por sesión (PKCE)
 │   ├── dashboard/
-│   │   ├── page.tsx                # Dashboard principal
+│   │   ├── page.tsx                # Dashboard principal (resumen por estado)
 │   │   ├── subir/page.tsx          # Subida de documentos
 │   │   ├── estudios/
 │   │   │   ├── page.tsx            # Lista de estudios
-│   │   │   └── [id]/page.tsx       # Detalle del estudio + texto extraído
-│   │   ├── chat/page.tsx           # Chat (futuro)
+│   │   │   └── [id]/page.tsx       # Detalle + resultados del análisis
+│   │   ├── chat/page.tsx           # Raíz del Chat IA (Welcome / redirige a la reciente)
+│   │   ├── chat/[id]/page.tsx      # Conversación activa (mensajes + contexto)
 │   │   ├── comparar/page.tsx       # Comparar estudios (futuro)
 │   │   └── perfil/page.tsx         # Perfil del usuario
 │   └── layout.tsx                  # Layout raíz
@@ -131,7 +182,8 @@ src/
 │   │   └── server.ts               # Helpers de servidor
 │   ├── actions/
 │   │   ├── auth.ts                 # Acciones de autenticación
-│   │   └── studies.ts              # Server actions de estudios
+│   │   ├── studies.ts              # Server actions de estudios
+│   │   └── chat.ts                 # Server actions del Chat IA
 │   ├── extraction/
 │   │   └── pdf.ts                  # Extracción con MuPDF WASM
 │   ├── analysis/
@@ -141,13 +193,33 @@ src/
 │   │   └── __tests__/              # Tests unitarios
 │   ├── studies/
 │   │   └── processing.ts           # Pipeline de procesamiento
+│   ├── chat/
+│   │   ├── schema.ts               # Contrato de datos del chat (Zod + tipos)
+│   │   ├── chat-db.ts              # Acceso a datos testable (conversaciones, mensajes, contexto)
+│   │   ├── chat-service.ts         # Generación de respuesta con Gemini
+│   │   ├── study-context.ts        # Carga de estudios de contexto seleccionables
+│   │   ├── active-conversation.ts  # Resolución de la conversación activa (routing)
+│   │   ├── suggested-questions.ts  # Preguntas sugeridas determinísticas por tipo
+│   │   ├── dates.ts                # Formato de fechas (es-AR)
+│   │   ├── errors.ts               # Mensajes de error del chat
+│   │   └── __tests__/              # Tests unitarios del chat
 │   ├── studies-utils.ts            # Tipos, labels, constantes
 │   └── auth/
 │       └── callbacks.ts            # Helpers de auth
 ├── components/
 │   ├── ui/                         # Componentes base (shadcn/ui)
 │   ├── auth/                       # Componentes de autenticación
-│   └── dashboard/                  # Componentes del dashboard
+│   ├── dashboard/                  # Componentes del dashboard (nav, cards)
+│   ├── studies/                    # Componentes de estudios (AnalysisResult, etc.)
+│   └── chat/                       # Componentes del Chat IA
+│       ├── ChatPageLayout.tsx      # Marco de dos paneles (sidebar + conversación)
+│       ├── ChatView.tsx            # Máquina de estados pick-study / suggest / chat
+│       ├── ChatWelcome.tsx         # Pantalla inicial (server component)
+│       ├── ConversationList.tsx    # Historial de conversaciones
+│       ├── NewConversationStudyPicker.tsx
+│       ├── SelectedStudyBanner.tsx
+│       ├── SuggestedQuestions.tsx
+│       └── ContextPicker.tsx       # Contexto de estudios (chips)
 ├── middleware.ts                    # Proxy/middleware de auth
 └── types/
     └── database.ts                 # Tipos de Supabase
@@ -169,6 +241,7 @@ src/
 | mime_type | text | Tipo MIME |
 | storage_path | text | Ruta en Supabase Storage |
 | status | text | uploaded / processing / processed / error / ocr_required |
+| analysis_status | text | pending / processing / completed / failed |
 | created_at | timestamptz | Fecha de creación |
 | updated_at | timestamptz | Última actualización (trigger) |
 
@@ -194,13 +267,42 @@ src/
 | created_at | timestamptz | Fecha de creación |
 | updated_at | timestamptz | Última actualización (trigger) |
 
+### `chat_conversations`
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| id | uuid PK | UUID único |
+| user_id | uuid FK | Propietario (→ auth.users) |
+| title | text | Título de la conversación |
+| created_at | timestamptz | Fecha de creación |
+| updated_at | timestamptz | Última actividad (trigger) |
+
+### `chat_messages`
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| id | uuid PK | UUID único |
+| conversation_id | uuid FK | Conversación (CASCADE) |
+| user_id | uuid FK | Propietario |
+| role | text | user / assistant |
+| content | text | Contenido del mensaje |
+| created_at | timestamptz | Fecha de creación |
+
+### `chat_contexts`
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| id | uuid PK | UUID único |
+| conversation_id | uuid FK | Conversación (CASCADE) |
+| study_id | uuid FK | Estudio usado como contexto |
+| user_id | uuid FK | Propietario |
+| created_at | timestamptz | Fecha de creación |
+
 ## Seguridad (RLS)
 
 - Cada tabla tiene RLS habilitado
 - Policies por usuario autenticado (`auth.uid()`)
-- INSERT verifica ownership del estudio asociado
+- INSERT verifica ownership del estudio/conversación asociado
 - SELECT, UPDATE, DELETE filtrados por `user_id`
 - No se usa `service_role` en la aplicación
+- **Chat:** nunca se confía en los IDs recibidos del cliente (conversación, estudio, contexto) para autorizar; cada query filtra por `user_id` del usuario autenticado y verifica ownership server-side antes de operar
 
 ---
 
@@ -222,6 +324,37 @@ analyzeStudy(studyId)
       │     └── onConflict: study_id (idempotente)
       └── Return StudyAnalysis
 ```
+
+---
+
+# Chat IA
+
+## Flujo guiado
+
+```text
+/dashboard/chat
+  0 conversaciones  ──►  Welcome (Chat IA sobre tus estudios)
+  1+ conversaciones ──►  redirige a /dashboard/chat/[id] (la más reciente)
+
+Nueva conversación ──► pick-study ──► suggest ──► chat
+```
+
+- **`pick-study`** — selector de estudios con tarjetas grandes (estado vacío enlaza a "Subir un estudio").
+- **`suggest`** — banner "Estudio seleccionado" + preguntas sugeridas determinísticas según tipo de estudio.
+- **`chat`** — mensajes con contexto (chips), sugerencias compactas e input.
+
+## Persistencia y routing
+
+- Las conversaciones, mensajes y contextos se persisten en Supabase.
+- La conversación activa se determina por la ruta `/dashboard/chat/[id]`, que carga conversación, mensajes, contexto e historial desde la base de datos.
+- Al refrescar (F5) se mantiene la conversación abierta; no depende de estado local.
+- `/dashboard/chat` consulta la base de datos: si hay conversaciones, abre la más reciente.
+
+## Scroll de mensajes
+
+- El área de mensajes es el único contenedor con scroll vertical (`min-h-0 flex-1 overflow-y-auto`).
+- Header y composer (input + enviar) permanecen fijos.
+- Funciona en desktop, tablet y mobile con respuestas cortas y largas.
 
 ---
 
@@ -249,7 +382,7 @@ pnpm build
 # Lint
 pnpm lint
 
-# Tests
+# Tests (186 tests, node:test)
 pnpm test
 
 # Deploy (automático tras push a main)
