@@ -145,8 +145,13 @@ export function ChatView({
   }
 
   // ── Render ────────────────────────────────────────────────────
+  // `min-h-0 flex-1` (no `h-full`): ChatView es un item del flex column del
+  // layout y debe poder encogerse por debajo de su contenido para que el área
+  // de mensajes reciba una altura acotada y haga scroll. Con `h-full` +
+  // `min-height: auto` la caja crecía con la respuesta larga y el contenedor
+  // con `overflow-hidden` recortaba el excedente (contenido inaccesible).
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex min-h-0 flex-1 flex-col">
       {/* Encabezado */}
       <div className="border-b border-border px-4 py-3">
         <h1 className="truncate text-[16px] font-medium text-foreground">

@@ -7,17 +7,32 @@ import type { ChatConversation } from "@/lib/chat/schema";
 interface ChatPageLayoutProps {
   conversations: ChatConversation[];
   children: React.ReactNode;
+  /** Si hay una conversación activa. Sin ella se omite el panel de historial. */
+  hasActiveConversation?: boolean;
 }
 
 /**
- * Marco de dos paneles del chat: lista de conversaciones (sidebar en desktop,
- * drawer en mobile) + panel principal. El alto se ajusta al viewport.
+ * Marco del chat. Con conversación activa usa dos paneles: lista de
+ * conversaciones (sidebar en desktop, drawer en mobile) + panel principal.
+ * Sin conversación activa (estado inicial), muestra solo el contenido
+ * centrado — la pantalla inicial — sin el panel de historial.
+ * El alto se ajusta al viewport.
  */
 export function ChatPageLayout({
   conversations,
   children,
+  hasActiveConversation = true,
 }: ChatPageLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Estado inicial: sin conversación activa → pantalla inicial sin historial.
+  if (!hasActiveConversation) {
+    return (
+      <div className="flex h-[calc(100vh-7rem)] min-h-[480px] overflow-hidden rounded-xl border border-border lg:h-[calc(100vh-6rem)]">
+        <div className="flex min-h-0 flex-1 flex-col">{children}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid h-[calc(100vh-7rem)] min-h-[480px] overflow-hidden rounded-xl border border-border lg:h-[calc(100vh-6rem)] lg:grid-cols-[280px_1fr]">

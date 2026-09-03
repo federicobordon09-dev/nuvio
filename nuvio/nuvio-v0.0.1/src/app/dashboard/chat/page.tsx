@@ -12,7 +12,7 @@ export default async function ChatPage() {
   const { conversations } = await getChatData();
 
   return (
-    <ChatPageLayout conversations={conversations}>
+    <ChatPageLayout conversations={conversations} hasActiveConversation={false}>
       <ChatWelcome />
     </ChatPageLayout>
   );
