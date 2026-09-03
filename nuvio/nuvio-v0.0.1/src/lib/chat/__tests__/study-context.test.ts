@@ -5,6 +5,7 @@ import {
   ChatError,
   listSelectableStudiesCore,
   assertStudyReadyCore,
+  getConversationTitleFromStudyCore,
   loadContextForPromptCore,
   MAX_CONTEXT_EXTRACTION_CHARS,
 } from "../study-context.ts";
@@ -181,5 +182,51 @@ describe("loadContextForPromptCore", () => {
     assert.equal(contexts.length, 1);
     assert.ok(contexts[0].extractedText.length <= MAX_CONTEXT_EXTRACTION_CHARS + 25);
     assert.ok(contexts[0].extractedText.includes("[contenido truncado]"));
+  });
+});
+
+// ── getConversationTitleFromStudyCore ─────────────────────────
+
+describe("getConversationTitleFromStudyCore", () => {
+  it("devuelve el label del study_type cuando el estudio es válido y propio", async () => {
+    const fake = createFakeSupabase({
+      user: { id: USER_ID },
+      tables: { studies: [READY_STUDY] }, // study_type: "blood_test"
+    });
+    const title = await getConversationTitleFromStudyCore(fake as never, USER_ID, "s1");
+    assert.equal(title, "Análisis de sangre");
+  });
+
+  it("devuelve el label correcto para otro tipo de estudio", async () => {
+    const fake = createFakeSupabase({
+      user: { id: USER_ID },
+      tables: { studies: [{ ...READY_STUDY, id: "s2", study_type: "MRI" }] },
+    });
+    const title = await getConversationTitleFromStudyCore(fake as never, USER_ID, "s2");
+    assert.equal(title, "Resonancia magnética");
+  });
+
+  it("devuelve null cuando el estudio no existe", async () => {
+    const fake = createFakeSupabase({ user: { id: USER_ID }, tables: {} });
+    const title = await getConversationTitleFromStudyCore(fake as never, USER_ID, "missing");
+    assert.equal(title, null);
+  });
+
+  it("devuelve null cuando el estudio pertenece a otro usuario (ownership)", async () => {
+    const fake = createFakeSupabase({
+      user: { id: USER_ID },
+      tables: { studies: [{ ...READY_STUDY, user_id: "user-2" }] },
+    });
+    const title = await getConversationTitleFromStudyCore(fake as never, USER_ID, "s1");
+    assert.equal(title, null);
+  });
+
+  it("devuelve null cuando study_type está vacío", async () => {
+    const fake = createFakeSupabase({
+      user: { id: USER_ID },
+      tables: { studies: [{ ...READY_STUDY, study_type: "" }] },
+    });
+    const title = await getConversationTitleFromStudyCore(fake as never, USER_ID, "s1");
+    assert.equal(title, null);
   });
 });

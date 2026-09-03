@@ -20,6 +20,7 @@ import {
 import {
   listSelectableStudiesCore,
   assertStudyReadyCore,
+  getConversationTitleFromStudyCore,
   loadContextForPromptCore,
 } from "@/lib/chat/study-context";
 import { generateChatReply } from "@/lib/chat/chat-service";
@@ -90,13 +91,68 @@ export async function createConversationAction(formData: FormData) {
   const supabase = await createClient();
   const user = await assertAuthenticated(supabase);
 
-  const rawTitle = formData.get("title");
-  const title =
-    typeof rawTitle === "string" && rawTitle.trim()
-      ? rawTitle.trim().slice(0, 120)
-      : "Nueva conversación";
+  // Título de la conversación. Si el cliente envía un `studyId`, el título se
+  // resuelve server-side desde `studies.study_type` (authoritativo) y se
+  // convierte con getStudyTypeLabel(). Si no hay estudio, se usa el fallback.
+  const studyId = formData.get("studyId");
+  let title = "Nueva conversación";
+  if (typeof studyId === "string" && studyId) {
+    title =
+      (await getConversationTitleFromStudyCore(supabase, user.id, studyId)) ??
+      title;
+  } else {
+    const rawTitle = formData.get("title");
+    title =
+      typeof rawTitle === "string" && rawTitle.trim()
+        ? rawTitle.trim().slice(0, 120)
+        : title;
+  }
 
   const conversation = await createConversationCore(supabase, user.id, title);
+  revalidatePath("/dashboard/chat");
+  redirect(`/dashboard/chat/${conversation.id}`);
+}
+
+/**
+ * Crea una conversación a partir de la selección de estudios del usuario
+ * (flujo guiado del Chat IA), usando el tipo del estudio principal como título.
+ *
+ * El cliente NO provee un título: el servidor resuelve `study_type` de cada
+ * estudio autorizado y lo convierte con `getStudyTypeLabel()`. Además vincula
+ * el contexto en la misma operación (sin una segunda capa de persistencia).
+ */
+export async function createConversationWithContextAction(formData: FormData) {
+  const supabase = await createClient();
+  const user = await assertAuthenticated(supabase);
+
+  const rawStudyIds = formData.getAll("studyId");
+  const studyIds = rawStudyIds
+    .filter((v): v is string => typeof v === "string" && v.length > 0)
+    .slice(0, MAX_CONTEXT_STUDIES);
+
+  // Verifica ownership + disponibilidad de cada estudio antes de vincularlo.
+  for (const studyId of studyIds) {
+    await assertStudyReadyCore(supabase, user.id, studyId);
+  }
+
+  // Título: tipo del primer estudio (autoritativo, server-side).
+  const primaryTitle =
+    studyIds.length > 0
+      ? await getConversationTitleFromStudyCore(
+          supabase,
+          user.id,
+          studyIds[0]
+        )
+      : null;
+  const title = primaryTitle ?? "Nueva conversación";
+
+  const conversation = await createConversationCore(supabase, user.id, title);
+
+  // Vincula el contexto en la misma operación.
+  if (studyIds.length > 0) {
+    await setContextCore(supabase, user.id, conversation.id, studyIds);
+  }
+
   revalidatePath("/dashboard/chat");
   redirect(`/dashboard/chat/${conversation.id}`);
 }

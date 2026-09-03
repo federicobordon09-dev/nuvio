@@ -1,4 +1,4 @@
-import { createConversationAction } from "@/lib/actions/chat";
+import Link from "next/link";
 
 /**
  * Estado 1 — Bienvenida del Chat IA (sin conversación activa).
@@ -7,7 +7,8 @@ import { createConversationAction } from "@/lib/actions/chat";
  * como elemento principal. No acepta entrada ni exige saber qué hacer después;
  * el onboarding continúa al crear la conversación. Lenguaje humano y guiado.
  *
- * Server component: la acción es una server action (sin estado cliente).
+ * Server component: el CTA navega al flujo guiado (selección de estudio) que
+ * crea la conversación con el título del tipo de estudio.
  */
 export function ChatWelcome() {
   return (
@@ -37,29 +38,27 @@ export function ChatWelcome() {
         Creá una conversación, seleccioná uno de tus estudios y hacé preguntas
         sobre tus resultados.
       </p>
-      <form action={createConversationAction} className="mt-7">
-        <button
-          type="submit"
-          className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-[15px] font-medium text-white transition-colors hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
-          aria-label="Crear nueva conversación"
+      <Link
+        href="/dashboard/chat?new=1"
+        className="mt-7 inline-flex items-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-[15px] font-medium text-white transition-colors hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
+        aria-label="Crear nueva conversación"
+      >
+        <svg
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          aria-hidden="true"
         >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          Nueva conversación
-        </button>
-      </form>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 4.5v15m7.5-7.5h-15"
+          />
+        </svg>
+        Nueva conversación
+      </Link>
     </div>
   );
 }

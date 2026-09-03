@@ -1,5 +1,5 @@
 import type { createClient } from "@/lib/supabase/server";
-import { getStudyStage } from "../studies-utils.ts";
+import { getStudyStage, getStudyTypeLabel, type StudyType } from "../studies-utils.ts";
 import { parseStoredAnalysis } from "../analysis/stored.ts";
 import type { StudyAnalysis } from "../analysis/schema.ts";
 import type { SelectableStudy } from "./schema.ts";
@@ -94,6 +94,34 @@ export async function assertStudyReadyCore(
       "El estudio todavía no está listo para usarse como contexto."
     );
   }
+}
+
+/**
+ * Devuelve el título "humano" de una conversación a partir del tipo de estudio
+ * autorizado del usuario.
+ *
+ * La fuente de verdad es `studies.study_type` (nunca un título provisto por el
+ * cliente). Retorna `null` si el estudio no existe, no pertenece al usuario, o
+ * no tiene un `study_type` válido (el llamador usa su fallback).
+ */
+export async function getConversationTitleFromStudyCore(
+  supabase: Supabase,
+  userId: string,
+  studyId: string
+): Promise<string | null> {
+  const { data, error } = await supabase
+    .from("studies")
+    .select("study_type")
+    .eq("id", studyId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error || !data) return null;
+
+  const type = data.study_type as StudyType;
+  if (!type) return null;
+
+  return getStudyTypeLabel(type);
 }
 
 /**

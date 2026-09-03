@@ -2,10 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  createConversationAction,
-  deleteConversationAction,
-} from "@/lib/actions/chat";
+import { deleteConversationAction } from "@/lib/actions/chat";
 import type { ChatConversation } from "@/lib/chat/schema";
 
 interface ConversationListProps {
@@ -13,8 +10,10 @@ interface ConversationListProps {
 }
 
 /**
- * Lista de conversaciones del usuario + botón "Nueva conversación".
+ * Lista de conversaciones del usuario + acceso a "Nueva conversación".
  * La conversación activa se resalta. Eliminar usa una action con redirect.
+ * "Nueva conversación" navega al flujo guiado (selección de estudio), que
+ * crea la conversación con el título derivado del tipo de estudio.
  */
 export function ConversationList({ conversations }: ConversationListProps) {
   const pathname = usePathname();
@@ -22,17 +21,15 @@ export function ConversationList({ conversations }: ConversationListProps) {
   return (
     <div className="flex h-full flex-col">
       <div className="border-b border-border px-3 py-3">
-        <form action={createConversationAction}>
-          <button
-            type="submit"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-3 py-2 text-[13px] font-medium text-white transition-colors hover:bg-primary-700"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Nueva conversación
-          </button>
-        </form>
+        <Link
+          href="/dashboard/chat?new=1"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-3 py-2 text-[13px] font-medium text-white transition-colors hover:bg-primary-700"
+        >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Nueva conversación
+        </Link>
       </div>
 
       <nav className="flex-1 overflow-y-auto p-2" aria-label="Conversaciones">
