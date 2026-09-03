@@ -48,7 +48,7 @@ export async function listSelectableStudiesCore(
 ): Promise<SelectableStudy[]> {
   const { data, error } = await supabase
     .from("studies")
-    .select("id, file_name, study_type, status, analysis_status")
+    .select("id, file_name, study_type, status, analysis_status, created_at")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 

@@ -97,4 +97,6 @@ export interface SelectableStudy {
   study_type: string;
   status: string;
   analysis_status: string;
+  /** Fecha de carga del estudio, para mostrarla en las tarjetas (opcional). */
+  created_at?: string | null;
 }

@@ -1,63 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import { setContextAction } from "@/lib/actions/chat";
 import { getStudyTypeLabel, type StudyType } from "@/lib/studies-utils";
 import type { SelectableStudy } from "@/lib/chat/schema";
 
 interface ContextPickerProps {
-  conversationId: string;
-  selectableStudies: SelectableStudy[];
-  initialContextStudyIds: string[];
+  /** Estudios del usuario listos para usar como contexto. */
+  studies: SelectableStudy[];
+  /** IDs de estudios seleccionados (estado controlado por el padre). */
+  selectedIds: string[];
+  /** Cambia la selección; el padre persiste vía setContextAction. */
+  onToggle: (studyId: string, checked: boolean) => void;
+  /** Error de persistencia mostrado al usuario (si el padre lo padece). */
+  error?: string | null;
 }
 
 /**
- * Selector de estudios de contexto de la conversación.
- * Muestra los estudios listos del usuario como chips conmutables.
- * Cada cambio se persiste vía server action (setContextAction).
+ * Selector de estudios de contexto de la conversación como chips conmutables.
+ * Es un componente controlado: el estado de selección y la persistencia viven
+ * en ChatView, que orquesta la experiencia guiada del chat.
  */
 export function ContextPicker({
-  conversationId,
-  selectableStudies,
-  initialContextStudyIds,
+  studies,
+  selectedIds,
+  onToggle,
+  error,
 }: ContextPickerProps) {
-  const [selected, setSelected] = useState<string[]>(initialContextStudyIds);
-  const [error, setError] = useState<string | null>(null);
-
-  async function toggle(studyId: string, checked: boolean) {
-    setError(null);
-    const next = checked
-      ? [...selected, studyId]
-      : selected.filter((id) => id !== studyId);
-    // Optimistic update; revert si falla.
-    const prev = selected;
-    setSelected(next);
-
-    const formData = new FormData();
-    formData.set("conversationId", conversationId);
-    for (const id of next) formData.append("studyId", id);
-
-    try {
-      await setContextAction(formData);
-    } catch {
-      setSelected(prev);
-      setError("No pudimos actualizar el contexto.");
-    }
-  }
-
   return (
     <div>
       <p className="mb-2 text-[12px] font-medium uppercase tracking-wide text-muted-foreground">
         Estudios de contexto
       </p>
-      {selectableStudies.length === 0 ? (
+      {studies.length === 0 ? (
         <p className="text-[13px] text-muted-foreground">
           No tenés estudios listos. Analizá un estudio para poder consultarlo acá.
         </p>
       ) : (
         <div className="flex flex-wrap gap-2">
-          {selectableStudies.map((study) => {
-            const checked = selected.includes(study.id);
+          {studies.map((study) => {
+            const checked = selectedIds.includes(study.id);
             return (
               <label
                 key={study.id}
@@ -71,7 +51,7 @@ export function ContextPicker({
                   type="checkbox"
                   className="sr-only"
                   checked={checked}
-                  onChange={(e) => toggle(study.id, e.target.checked)}
+                  onChange={(e) => onToggle(study.id, e.target.checked)}
                 />
                 <span
                   className={`h-1.5 w-1.5 rounded-full ${checked ? "bg-ocean" : "bg-muted-foreground/40"}`}
