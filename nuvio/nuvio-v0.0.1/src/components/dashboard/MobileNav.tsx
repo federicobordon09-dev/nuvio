@@ -99,7 +99,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
 
       {/* Overlay + drawer — siempre renderizado para permitir transiciones. */}
       <div
-        className={`fixed inset-0 z-50 lg:hidden ${
+        className={`fixed inset-0 z-50 h-dvh lg:hidden ${
           open ? "pointer-events-auto" : "pointer-events-none"
         }`}
         role="dialog"
