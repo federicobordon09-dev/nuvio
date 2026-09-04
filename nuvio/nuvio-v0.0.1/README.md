@@ -149,11 +149,48 @@ La plataforma debe ayudar a responder preguntas como:
 - **Scroll de mensajes largos:** el área de mensajes es el único contenedor con scroll vertical; header y composer quedan fijos en desktop, tablet y mobile
 - Helper puro `pickActiveConversationId` (derivado de la BD) que cubre 0/1/N conversaciones e IDs válidos/inválidos sin confiar en IDs de cliente
 
-## Mejoras futuras del Chat IA (no implementadas)
+### Fase 7.3 — Título de conversación desde el tipo de estudio
+- Al crear una conversación con contexto, el título se resuelve server-side desde `studies.study_type` del estudio seleccionado (`getConversationTitleFromStudyCore` + `getStudyTypeLabel`), nunca desde el cliente
+- Mantiene consistencia con la clasificación del estudio (hemograma, resonancia, epicrisis, etc.)
+- Fallback controlado a "Nueva conversación" cuando el estudio no tiene `study_type` o no pertenece al usuario
 
-1. **Nombre de conversación automático** — usar el tipo de análisis/estudio como nombre de la conversación en lugar de "Nueva conversación".
-2. **Preguntas sugeridas variadas** — mejorar/variar las preguntas sugeridas para evitar que siempre sean las mismas.
-3. **Indicadores visuales de estado** — agregar indicadores visuales de estado de conversación activa/inactiva.
+### Fase 7.4 — Preguntas sugeridas rotativas por tipo de estudio
+- Pool ampliado a 8–10 preguntas reales por tipo (`blood_test`, `MRI`, `CT`, `ECG`, `epicrisis`, `medical_report` + fallback genérico)
+- Hook `useSuggestedQuestions(studyType, messages)`: mantiene 4 preguntas visibles, dedup por preguntas ya usadas (reconstruido al refresh desde mensajes existentes), reemplaza automáticamente al consumir una sugerencia
+- Integración sin duplicar lógica: `SuggestedQuestions` consume `questions={visible}`; el componente es stateless
+
+### Fase 8.1 — Nuevo contrato estructurado de resultados médicos
+- Reemplazo del contrato legacy de resultados por un schema Zod estricto en `src/lib/analysis/schema.ts`
+- Separación explícita de `key_findings` (hallazgos cualitativos / por sistema) y `measurements` (parámetros cuantitativos con `value`, `unit`, `reference_range`, `status`)
+- Capas `AnalysisSection` / `MedicalDisclaimer` y normalización legacy compatible con persistencia existente en `study_analyses`
+- Inventarios `observations`, `warnings`, `recommendations`, `limitations` tipados y validados
+
+### Fase 8.2 — Rediseño modular de la pantalla de resultados
+- Componentes desacoplados: `StudyResultHeader`, `FindingsSection`, `FindingRow`, `MeasurementsSection`, `AnalysisSection`, `MedicalDisclaimer`, `AnalysisResult`
+- `AnalysisResult` como orquestador que compone las secciones sin lógica médica duplicada
+- Jerarquía visual consistente con Fase 6 (ocean / ivory / cream), tipografía y estados semánticos
+- Estados vacíos vacíos controlados por sección (no se renderizan secciones sin contenido por tipo de estudio + datos reales)
+
+### Fase 8.3 — Adaptación de presentación según tipo de estudio
+- Capa central de presentación `src/lib/analysis/result-presentation.ts`: orden de secciones, sección primaria y labels contextuales por `study_type`
+- 7 tipos cubiertos (`blood_test`, `MRI`, `CT`, `ECG`, `epicrisis`, `medical_report`, `other`) + fallback genérico para `null/undefined/desconocido`
+- Ejemplo: analítico con `measurements` primario ("Valores de tu estudio"), MRI/CT con `findings` primario, ECG con `measurements` → "Parámetros" sin primaria forzada, epicrisis con `recommendations` en posición prioritaria
+- Helpers `hasResultSectionContent()` / `getVisibleResultSections()` para filtrar secciones vacías sin crear componentes paralelos
+
+### Fase 8.4 — CTA contextual hacia Chat IA desde la pantalla de resultados
+- **Objetivo:** permitir explorar un estudio desde el resultado sin re-seleccionarlo a mano en el Chat.
+- **CTA principal del resultado:** "Preguntar sobre este estudio" (primario, visible tras el header) → crea una conversación con el `study_id` como contexto y redirige a `/dashboard/chat/[id]`.
+- **CTA por hallazgo:** "Preguntar sobre este hallazgo" (compacto, en `FindingRow`) → mismo estudio como contexto + sugerencia inicial "Quiero entender mejor este hallazgo: <título>.".
+- **CTA por medición:** "Preguntar sobre este valor" (compacto, en `MeasurementsSection`) → mismo estudio como contexto + sugerencia "Quiero entender mejor este valor: <nombre> = <valor> <unidad>.".
+- Helper puro `buildStudyChatPrompt(focus)` que solo refleja datos existentes (sin interpretación médica, sin diagnóstico, sin normalidad/gravedad); no usa ni modifica `status`/`reference_range`.
+- **Persistencia reutilizada:** `createConversationWithContextAction` verifica ownership + `study.stage === "ready"` server-side (`assertStudyReadyCore`); acepta `prompt` opcional y lo propaga como `?prompt=` a la URL de la conversación.
+- **Chat:** `chat/[id]/page.tsx` lee `?prompt=` y lo pasa a `ChatView.initialPrompt`; se muestra como primera sugerencia en la fase guiada (`suggest`) sin reemplazar `useSuggestedQuestions` / `SuggestedQuestions`.
+- No se crean tablas nuevas ni segundas estrategias de contexto; conversaciones multi-estudio, `?new=1`, `/dashboard/chat` y cleanup post-borrado permanecen intactos.
+
+## Mejoras futuras (no implementadas)
+
+1. **Indicadores visuales adicionales de estado** — estados activos/inactivos más visibles en conversaciones.
+2. **Comparador de estudios visual** — potenciar `/dashboard/comparar` más allá de contexto textual.
 
 ---
 
