@@ -26,6 +26,7 @@ import {
 } from "@/lib/chat/study-context";
 import { generateChatReply } from "@/lib/chat/chat-service";
 import { userMessageInputSchema, MAX_CONTEXT_STUDIES } from "@/lib/chat/schema";
+import { MAX_STUDY_CHAT_PROMPT_LENGTH } from "@/lib/chat/study-chat-cta";
 import { getChatErrorMessage } from "@/lib/chat/errors";
 import { GeminiError } from "@/lib/analysis/gemini";
 
@@ -138,6 +139,11 @@ export async function createConversationAction(formData: FormData) {
  * El cliente NO provee un título: el servidor resuelve `study_type` de cada
  * estudio autorizado y lo convierte con `getStudyTypeLabel()`. Además vincula
  * el contexto en la misma operación (sin una segunda capa de persistencia).
+ *
+ * Campo opcional `prompt`: una sugerencia/mensaje inicial contextual (p.ej.
+ * "Quiero entender mejor este hallazgo: X"). Se propaga a la URL de la
+ * conversación como `?prompt=` para que el Chat la muestre como sugerencia
+ * inicial. Es solo UX/contexto, nunca autorización.
  */
 export async function createConversationWithContextAction(formData: FormData) {
   const supabase = await createClient();
@@ -171,8 +177,16 @@ export async function createConversationWithContextAction(formData: FormData) {
     await setContextCore(supabase, user.id, conversation.id, studyIds);
   }
 
+  // Prompt contextual opcional (sugerencia inicial, recortado por seguridad).
+  const rawPrompt = formData.get("prompt");
+  const prompt =
+    typeof rawPrompt === "string" && rawPrompt.trim()
+      ? rawPrompt.trim().slice(0, MAX_STUDY_CHAT_PROMPT_LENGTH)
+      : undefined;
+
   revalidatePath("/dashboard/chat");
-  redirect(`/dashboard/chat/${conversation.id}`);
+  const suffix = prompt ? `?prompt=${encodeURIComponent(prompt)}` : "";
+  redirect(`/dashboard/chat/${conversation.id}${suffix}`);
 }
 
 export async function deleteConversationAction(formData: FormData) {

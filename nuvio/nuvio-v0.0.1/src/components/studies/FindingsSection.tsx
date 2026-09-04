@@ -9,6 +9,8 @@ interface FindingsSectionProps {
   title?: string;
   /** Marca la sección como primaria (jerarquía visual superior). */
   primary?: boolean;
+  /** ID del estudio, para el CTA contextual de cada hallazgo (Fase 8.4). */
+  studyId: string;
 }
 
 /**
@@ -19,6 +21,7 @@ export function FindingsSection({
   findings,
   title,
   primary,
+  studyId,
 }: FindingsSectionProps) {
   if (findings.length === 0) return null;
 
@@ -39,7 +42,11 @@ export function FindingsSection({
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {findings.map((finding, index) => (
-          <FindingRow key={finding.title || index} finding={finding} />
+          <FindingRow
+            key={finding.title || index}
+            finding={finding}
+            studyId={studyId}
+          />
         ))}
       </div>
     </section>

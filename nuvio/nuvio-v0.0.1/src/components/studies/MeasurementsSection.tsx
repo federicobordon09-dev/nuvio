@@ -1,6 +1,8 @@
 "use client";
 
 import type { Measurement, MeasurementStatus } from "@/lib/analysis/schema";
+import { StudyChatCta } from "@/components/chat/StudyChatCta";
+import { buildStudyChatPrompt } from "@/lib/chat/study-chat-cta";
 
 interface MeasurementsSectionProps {
   measurements: Measurement[];
@@ -8,6 +10,8 @@ interface MeasurementsSectionProps {
   title?: string;
   /** Marca la sección como primaria (jerarquía visual superior). */
   primary?: boolean;
+  /** ID del estudio, para el CTA contextual de cada medición (Fase 8.4). */
+  studyId: string;
 }
 
 const MEASUREMENT_STATUS_LABELS: Record<MeasurementStatus, string> = {
@@ -36,6 +40,7 @@ export function MeasurementsSection({
   measurements,
   title,
   primary,
+  studyId,
 }: MeasurementsSectionProps) {
   if (measurements.length === 0) return null;
 
@@ -92,6 +97,17 @@ export function MeasurementsSection({
                   Ref. {m.reference_range}
                 </p>
               )}
+
+              {/* CTA contextual: preguntar sobre este valor */}
+              <StudyChatCta
+                studyId={studyId}
+                label="Preguntar sobre este valor"
+                prompt={buildStudyChatPrompt({
+                  kind: "measurement",
+                  measurement: m,
+                })}
+                compact
+              />
             </article>
           );
         })}

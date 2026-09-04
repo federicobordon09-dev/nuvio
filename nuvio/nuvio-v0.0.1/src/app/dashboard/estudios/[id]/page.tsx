@@ -105,7 +105,7 @@ export default async function EstudioDetailPage({
             <>
               {analysis ? (
                 <>
-                  <AnalysisResult analysis={analysis} />
+                  <AnalysisResult analysis={analysis} studyId={study.id} />
                   <div className="flex">
                     <AnalyzeStudyButton studyId={study.id} hasAnalysis />
                   </div>

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import type { KeyFinding, FindingStatus } from "@/lib/analysis/schema";
+import { StudyChatCta } from "@/components/chat/StudyChatCta";
+import { buildStudyChatPrompt } from "@/lib/chat/study-chat-cta";
 
 // ── Status labels & colors (semánticos) ───────────────────────
 
@@ -52,8 +54,11 @@ function FindingStatusBadge({ status }: { status: FindingStatus }) {
  */
 export function FindingRow({
   finding,
+  studyId,
 }: {
   finding: KeyFinding;
+  /** ID del estudio, para el CTA contextual "Preguntar sobre este hallazgo". */
+  studyId: string;
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -87,6 +92,14 @@ export function FindingRow({
           </button>
         </div>
       )}
+
+      {/* CTA contextual: preguntar sobre este hallazgo */}
+      <StudyChatCta
+        studyId={studyId}
+        label="Preguntar sobre este hallazgo"
+        prompt={buildStudyChatPrompt({ kind: "finding", finding })}
+        compact
+      />
     </div>
   );
 }

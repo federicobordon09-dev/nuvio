@@ -15,6 +15,8 @@ interface ChatViewProps {
   initialMessages: ChatMessage[];
   selectableStudies: SelectableStudy[];
   contextStudyIds: string[];
+  /** Sugerencia/mensaje inicial contextual (Fase 8.4), propagada desde un CTA. */
+  initialPrompt?: string;
 }
 
 /**
@@ -35,6 +37,7 @@ export function ChatView({
   initialMessages,
   selectableStudies,
   contextStudyIds,
+  initialPrompt,
 }: ChatViewProps) {
   // ── Contexto (levantado del antiguo ContextPicker) ────────────
   const [selectedStudyIds, setSelectedStudyIds] =
@@ -72,6 +75,16 @@ export function ChatView({
     primaryStudyType,
     messages
   );
+
+  // Pregunta inicial contextual (desde un CTA de resultados): se muestra como
+  // sugerencia principal en la fase guiada, sin reemplazar el flujo existente.
+  const guidedQuestions = useMemo(() => {
+    if (!initialPrompt) return visibleQuestions;
+    return [
+      initialPrompt,
+      ...visibleQuestions.filter((q) => q !== initialPrompt),
+    ];
+  }, [initialPrompt, visibleQuestions]);
 
   // ── Persistir contexto (reutiliza la action existente) ────────
   async function persistContext(nextIds: string[]) {
@@ -208,7 +221,7 @@ export function ChatView({
             />
             <SuggestedQuestions
               studyType={primaryStudyType}
-              questions={visibleQuestions}
+              questions={guidedQuestions}
               onSelect={handleSend}
             />
           </>

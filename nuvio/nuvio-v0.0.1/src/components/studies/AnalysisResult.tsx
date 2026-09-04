@@ -3,6 +3,8 @@ import {
   getStudyResultPresentation,
   getVisibleResultSections,
 } from "@/lib/analysis/result-presentation";
+import { StudyChatCta } from "@/components/chat/StudyChatCta";
+import { buildStudyChatPrompt } from "@/lib/chat/study-chat-cta";
 import { StudyResultHeader } from "./StudyResultHeader";
 import { FindingsSection } from "./FindingsSection";
 import { MeasurementsSection } from "./MeasurementsSection";
@@ -16,8 +18,11 @@ import { MedicalDisclaimer } from "./MedicalDisclaimer";
  */
 export function AnalysisResult({
   analysis,
+  studyId,
 }: {
   analysis: StudyAnalysis;
+  /** ID del estudio, para los CTAs contextuales hacia el Chat IA (Fase 8.4). */
+  studyId: string;
 }) {
   const presentation = getStudyResultPresentation(analysis.study_type);
   const visibleSections = getVisibleResultSections(analysis);
@@ -36,6 +41,14 @@ export function AnalysisResult({
         analysisStatus="completed"
       />
 
+      {/* CTA principal: abrir Chat IA contextualizado con este estudio */}
+      <StudyChatCta
+        studyId={studyId}
+        label="Preguntar sobre este estudio"
+        prompt={buildStudyChatPrompt({ kind: "study" })}
+        primary
+      />
+
       {/* Secciones dinámicas según tipo de estudio */}
       {visibleSections.map((section) => {
         const primary = isPrimary(section);
@@ -49,6 +62,7 @@ export function AnalysisResult({
                 findings={analysis.key_findings}
                 title={label}
                 primary={primary}
+                studyId={studyId}
               />
             );
           case "measurements":
@@ -58,6 +72,7 @@ export function AnalysisResult({
                 measurements={analysis.measurements}
                 title={label}
                 primary={primary}
+                studyId={studyId}
               />
             );
           case "observations":
