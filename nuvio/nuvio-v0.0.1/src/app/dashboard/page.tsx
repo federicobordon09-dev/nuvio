@@ -97,6 +97,8 @@ const quickActions = [
 
 export default async function DashboardPage() {
   // Verificar auth ANTES del try/catch para que redirect() no sea atrapado.
+  // Un único client compartido entre auth check y data fetch — evita race
+  // condition de refresh token entre getStudyStats y listStudies.
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -107,7 +109,8 @@ export default async function DashboardPage() {
   let stats: StudyStats = { total: 0, ready: 0, in_progress: 0, pending: 0, errors: 0 };
   let studies: Awaited<ReturnType<typeof listStudies>> = [];
   try {
-    const [s, list] = await Promise.all([getStudyStats(), listStudies()]);
+    const opts = { supabase, userId: user!.id };
+    const [s, list] = await Promise.all([getStudyStats(opts), listStudies(opts)]);
     stats = s;
     studies = list;
   } catch (err) {

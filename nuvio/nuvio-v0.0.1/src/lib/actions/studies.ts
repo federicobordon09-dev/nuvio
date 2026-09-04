@@ -19,9 +19,9 @@ async function assertAuthenticated(supabase: Awaited<ReturnType<typeof createCli
   return user;
 }
 
-export async function listStudies() {
-  const supabase = await createClient();
-  const user = await assertAuthenticated(supabase);
+export async function listStudies(opts?: { supabase?: Awaited<ReturnType<typeof createClient>>; userId?: string }) {
+  const supabase = opts?.supabase ?? (await createClient());
+  const user = opts?.userId ? { id: opts.userId } : await assertAuthenticated(supabase);
 
   const { data, error } = await supabase
     .from("studies")
@@ -228,9 +228,9 @@ export async function getStudyCount(): Promise<number> {
  * Resumen de estudios del usuario por stage combinado (documento + análisis).
  * Se usa en el dashboard para mostrar los conteos reales por estado.
  */
-export async function getStudyStats(): Promise<StudyStats> {
-  const supabase = await createClient();
-  const user = await assertAuthenticated(supabase);
+export async function getStudyStats(opts?: { supabase?: Awaited<ReturnType<typeof createClient>>; userId?: string }): Promise<StudyStats> {
+  const supabase = opts?.supabase ?? (await createClient());
+  const user = opts?.userId ? { id: opts.userId } : await assertAuthenticated(supabase);
 
   const { data, error } = await supabase
     .from("studies")

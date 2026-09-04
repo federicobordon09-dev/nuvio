@@ -8,7 +8,7 @@ import { EmptyState } from "@/components/dashboard/EmptyState";
 export const dynamic = "force-dynamic";
 
 export default async function EstudiosPage() {
-  // Verificar auth ANTES del try/catch para que redirect() no sea atrapado.
+  // Auth ANTES del try/catch y con un único client — shared con la data fetch.
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -18,7 +18,7 @@ export default async function EstudiosPage() {
 
   let studies: NonNullable<Awaited<ReturnType<typeof listStudies>>>;
   try {
-    studies = await listStudies();
+    studies = await listStudies({ supabase, userId: user!.id });
   } catch (err) {
     console.error("[nuvio:estudios] Error cargando estudios:", err);
     studies = [];
