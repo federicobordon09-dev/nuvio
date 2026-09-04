@@ -4,6 +4,10 @@ import type { Measurement, MeasurementStatus } from "@/lib/analysis/schema";
 
 interface MeasurementsSectionProps {
   measurements: Measurement[];
+  /** Label contextual (por tipo de estudio) — por defecto "Valores de tu estudio". */
+  title?: string;
+  /** Marca la sección como primaria (jerarquía visual superior). */
+  primary?: boolean;
 }
 
 const MEASUREMENT_STATUS_LABELS: Record<MeasurementStatus, string> = {
@@ -28,7 +32,11 @@ const STATUS_STYLES: Record<MeasurementStatus, string> = {
  * Sección de mediciones/valores médicos.
  * Muestra cada medición como tarjeta con valor, unidad, rango y estado.
  */
-export function MeasurementsSection({ measurements }: MeasurementsSectionProps) {
+export function MeasurementsSection({
+  measurements,
+  title,
+  primary,
+}: MeasurementsSectionProps) {
   if (measurements.length === 0) return null;
 
   return (
@@ -36,9 +44,11 @@ export function MeasurementsSection({ measurements }: MeasurementsSectionProps) 
       <div className="mb-3 flex items-baseline justify-between gap-2">
         <h3
           id="measurements-section-heading"
-          className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground"
+          className={`text-[13px] font-semibold uppercase tracking-wide ${
+            primary ? "text-primary-600" : "text-muted-foreground"
+          }`}
         >
-          Valores de tu estudio
+          {title ?? "Valores de tu estudio"}
         </h3>
         <span className="text-[12px] text-muted-foreground">
           {measurements.length} medición{measurements.length !== 1 ? "es" : ""}
