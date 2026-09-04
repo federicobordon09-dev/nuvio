@@ -85,7 +85,7 @@ export function FindingRow({
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className="mt-1 text-[12px] font-medium text-ocean transition-colors hover:text-ocean-dark"
+            className="mt-1 min-h-[44px] py-2 text-[12px] font-medium text-ocean transition-colors hover:text-ocean-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean"
             aria-expanded={expanded}
           >
             {expanded ? "Ver menos" : "Ver más"}

@@ -19,10 +19,16 @@ import { MedicalDisclaimer } from "./MedicalDisclaimer";
 export function AnalysisResult({
   analysis,
   studyId,
+  status = "processed",
+  analysisStatus = "completed",
 }: {
   analysis: StudyAnalysis;
   /** ID del estudio, para los CTAs contextuales hacia el Chat IA (Fase 8.4). */
   studyId: string;
+  /** Estado real del estudio (default: "processed"). */
+  status?: string;
+  /** Estado real del análisis (default: "completed"). */
+  analysisStatus?: string | null | undefined;
 }) {
   const presentation = getStudyResultPresentation(analysis.study_type);
   const visibleSections = getVisibleResultSections(analysis);
@@ -37,8 +43,8 @@ export function AnalysisResult({
         studyType={analysis.study_type}
         documentType={analysis.document_type}
         summary={analysis.summary}
-        status="processed"
-        analysisStatus="completed"
+        status={status}
+        analysisStatus={analysisStatus ?? null}
       />
 
       {/* CTA principal: abrir Chat IA contextualizado con este estudio */}

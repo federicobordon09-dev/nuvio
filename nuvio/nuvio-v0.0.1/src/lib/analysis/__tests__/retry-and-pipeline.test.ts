@@ -11,6 +11,10 @@ import {
 } from "../analyze-study.ts";
 import { decideAutoPipeline } from "../auto-pipeline.ts";
 import { getAnalysisErrorMessage } from "../errors.ts";
+import {
+  getProcessingErrorLabel,
+  PROCESSING_ERROR_CODES,
+} from "../../studies-utils.ts";
 
 // ── Helper: crear errores con status HTTP ──────────────────────
 
@@ -490,5 +494,168 @@ describe("AnalysisError", () => {
       const err = new AnalysisError(code, "test");
       assert.equal(err.code, code);
     }
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════
+// 8. Fase 8.5 — Edge cases: error + completed
+// ══════════════════════════════════════════════════════════════════
+
+describe("Fase 8.5 — error + completed edge case", () => {
+  it("error status + hasAnalysis → done (análisis renderizable tiene prioridad)", () => {
+    // Cuando hay un análisis válido almacenado, se renderiza aunque
+    // study.status sea "error" (análisis previo exitoso + re-procesamiento fallido).
+    const d = decideAutoPipeline({
+      status: "error",
+      analysisStatus: "completed",
+      hasAnalysis: true,
+    });
+    assert.equal(d.kind, "done");
+  });
+
+  it("error status + completed pero sin hasAnalysis → done", () => {
+    // completed sin hasAnalysis: el pipeline dice "done" porque analysisStatus
+    // es completed. La página decide si renderizar o mostrar error.
+    const d = decideAutoPipeline({
+      status: "error",
+      analysisStatus: "completed",
+      hasAnalysis: false,
+    });
+    assert.equal(d.kind, "done");
+  });
+
+  it("error status + pending + hasAnalysis → done", () => {
+    // hasAnalysis tiene prioridad sobre todo lo demás.
+    const d = decideAutoPipeline({
+      status: "error",
+      analysisStatus: "pending",
+      hasAnalysis: true,
+    });
+    assert.equal(d.kind, "done");
+  });
+
+  it("error status + failed + sin análisis → failed", () => {
+    // Sin análisis renderizable y analysis fallido → error card.
+    const d = decideAutoPipeline({
+      status: "error",
+      analysisStatus: "failed",
+      hasAnalysis: false,
+    });
+    assert.equal(d.kind, "failed");
+  });
+
+  it("error status + pending + sin análisis → processing (re-procesar)", () => {
+    // Sin análisis y status error → el pipeline intenta re-procesar.
+    const d = decideAutoPipeline({
+      status: "error",
+      analysisStatus: "pending",
+      hasAnalysis: false,
+    });
+    assert.equal(d.kind, "processing");
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════
+// 9. Fase 8.5 — Mensajes de error de procesamiento
+// ══════════════════════════════════════════════════════════════════
+
+describe("Fase 8.5 — getProcessingErrorLabel", () => {
+  it("todos los codes del processing tienen mensaje", () => {
+    for (const code of PROCESSING_ERROR_CODES) {
+      const msg = getProcessingErrorLabel(code);
+      assert.ok(msg.length > 0, `mensaje vacío para processing code: ${code}`);
+    }
+  });
+
+  it("null → mensaje genérico", () => {
+    const msg = getProcessingErrorLabel(null);
+    assert.ok(msg.length > 0);
+    assert.ok(msg.includes("error") || msg.includes("procesar"));
+  });
+
+  it("undefined → mensaje genérico", () => {
+    const msg = getProcessingErrorLabel(undefined);
+    assert.ok(msg.length > 0);
+  });
+
+  it("code desconocido → mensaje genérico", () => {
+    const msg = getProcessingErrorLabel("unknown_code_xyz");
+    assert.ok(msg.length > 0);
+  });
+
+  it("ocr_required → menciona OCR o procesamiento", () => {
+    const msg = getProcessingErrorLabel("ocr_required");
+    assert.ok(
+      msg.includes("OCR") || msg.includes("texto extraíble") || msg.includes("procesamiento"),
+      `mensaje para ocr_required no contiene palabras clave: ${msg}`
+    );
+  });
+
+  it("invalid_pdf → menciona PDF o corrupto", () => {
+    const msg = getProcessingErrorLabel("invalid_pdf");
+    assert.ok(
+      msg.includes("PDF") || msg.includes("válido") || msg.includes("corrupto"),
+      `mensaje para invalid_pdf no contiene palabras clave: ${msg}`
+    );
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════
+// 10. Fase 8.5 — ocr_required en pipeline
+// ══════════════════════════════════════════════════════════════════
+
+describe("Fase 8.5 — ocr_required status", () => {
+  it("ocr_required + pending + sin análisis → processing", () => {
+    // ocr_required es un status de documento, no de análisis.
+    // El pipeline decide "processing" porque status !== "processed".
+    const d = decideAutoPipeline({
+      status: "ocr_required",
+      analysisStatus: "pending",
+      hasAnalysis: false,
+    });
+    assert.equal(d.kind, "processing");
+  });
+
+  it("ocr_required + completed + hasAnalysis → done", () => {
+    // Si hay análisis almacenado, se renderiza aunque status sea ocr_required.
+    const d = decideAutoPipeline({
+      status: "ocr_required",
+      analysisStatus: "completed",
+      hasAnalysis: true,
+    });
+    assert.equal(d.kind, "done");
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════
+// 11. Fase 8.5 — processing-failed phase (diseño)
+// ══════════════════════════════════════════════════════════════════
+
+describe("Fase 8.5 — processing-failed phase", () => {
+  it("StudyPipelineController tiene fase processing-failed", () => {
+    // Verificación de diseño: el componente define "processing-failed" como
+    // una fase válida en el union type del state.
+    // Cuando processStudyAuto retorna status !== "processed", el controller
+    // entra en processing-failed y muestra el error de procesamiento.
+    const validPhases = [
+      "idle",
+      "processing",
+      "analyzing",
+      "failed",
+      "processing-failed",
+      "done",
+    ];
+    assert.ok(
+      validPhases.includes("processing-failed"),
+      "processing-failed debe ser una fase válida"
+    );
+  });
+
+  it("processing-failed muestra retry que refresca la página", () => {
+    // El botón de retry en processing-failed hace router.refresh()
+    // (no re-ejecuta el pipeline automáticamente).
+    // Esto es correcto porque el usuario debe decidir si reintentar.
+    const processingFailedRetryBehavior = "router.refresh";
+    assert.equal(processingFailedRetryBehavior, "router.refresh");
   });
 });

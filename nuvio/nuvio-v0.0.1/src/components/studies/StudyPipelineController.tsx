@@ -8,6 +8,7 @@ import {
 } from "@/lib/actions/studies";
 import { decideAutoPipeline } from "@/lib/analysis/auto-pipeline";
 import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
+import { getProcessingErrorLabel } from "@/lib/studies-utils";
 
 interface StudyPipelineControllerProps {
   studyId: string;
@@ -44,7 +45,7 @@ export function StudyPipelineController({
   const router = useRouter();
 
   const [phase, setPhase] = useState<
-    "idle" | "processing" | "analyzing" | "failed" | "done"
+    "idle" | "processing" | "analyzing" | "failed" | "processing-failed" | "done"
   >(() => {
     const decision = decideAutoPipeline({ status, analysisStatus, hasAnalysis });
     switch (decision.kind) {
@@ -58,6 +59,8 @@ export function StudyPipelineController({
         return "analyzing";
     }
   });
+
+  const [processingError, setProcessingError] = useState<string | null>(null);
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const started = useRef(false);
@@ -75,7 +78,7 @@ export function StudyPipelineController({
         setPhase("failed");
       }
     } catch {
-      setErrorMessage("No pudimos analizar este estudio.");
+      setErrorMessage("No pudimos analizar este estudio. Podés intentarlo nuevamente.");
       setPhase("failed");
     }
   }, [studyId, router]);
@@ -109,6 +112,7 @@ export function StudyPipelineController({
       // ── Documento no procesado: procesar primero ────────────
       if (decision.kind === "processing") {
         setPhase("processing");
+        setProcessingError(null);
         try {
           const result = await processStudyAuto(studyId);
 
@@ -116,13 +120,14 @@ export function StudyPipelineController({
             // Procesamiento exitoso → proceder a análisis.
             await runAnalysis();
           } else {
-            // Error de procesamiento → la página mostrará el error.
-            setPhase("done");
-            router.refresh();
+            // Error de procesamiento reportado por la server action.
+            setProcessingError(getProcessingErrorLabel(result.processing_error));
+            setPhase("processing-failed");
           }
         } catch {
-          // Error de procesamiento → la página muestra el error + retry manual.
-          setPhase("failed");
+          // Error de red/inesperado en procesamiento.
+          setProcessingError("No pudimos procesar este documento. Podés intentarlo nuevamente.");
+          setPhase("processing-failed");
         }
         return;
       }
@@ -158,6 +163,34 @@ export function StudyPipelineController({
   // ── Render ────────────────────────────────────────────────────
 
   if (phase === "done") return null;
+
+  if (phase === "processing-failed") {
+    return (
+      <div className="rounded-xl border border-border bg-surface p-5">
+        <div className="mb-3 flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-danger" />
+          <h2 className="text-[15px] font-medium text-foreground">
+            Procesamiento del documento
+          </h2>
+        </div>
+        <p className="text-[14px] leading-[1.6] text-danger-strong">
+          {processingError ?? getProcessingErrorLabel(null)}
+        </p>
+        <div className="mt-4">
+          <button
+            type="button"
+            onClick={() => {
+              setProcessingError(null);
+              router.refresh();
+            }}
+            className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-[14px] font-medium text-ocean transition-colors hover:bg-ocean-tint"
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (phase === "failed") {
     return (

@@ -61,10 +61,32 @@ export default async function EstudioDetailPage({
   }
 
   // ── Contenido de la columna principal ─────────────────────────
-  const showProcessButton =
+
+  // La sidebar muestra "Procesar" para uploaded, processing y error.
+  const showSidebarProcessButton =
     study.status === "uploaded" ||
     study.status === "processing" ||
     study.status === "error";
+
+  // Determinar si hay un análisis válido renderizable.
+  const hasRenderableAnalysis = analysis !== null;
+
+  // Determinar si debemos mostrar el pipeline controller (procesando/análisis pendiente).
+  const showPipeline =
+    study.status === "processed" &&
+    !hasRenderableAnalysis &&
+    study.analysis_status !== "failed";
+
+  // Determinar si hay un error de análisis sin análisis renderizable.
+  const showAnalysisError =
+    study.status === "processed" &&
+    !hasRenderableAnalysis &&
+    study.analysis_status === "failed";
+
+  // Determinar si hay un error de procesamiento retryable (sin análisis renderizable).
+  const showProcessingError =
+    (study.status === "error" || study.status === "uploaded" || study.status === "ocr_required") &&
+    !hasRenderableAnalysis;
 
   return (
     <div>
@@ -83,63 +105,94 @@ export default async function EstudioDetailPage({
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px] lg:items-start">
         {/* ── Columna principal (ancho) ─────────────────────── */}
         <div className="min-w-0 space-y-6">
-          {study.status === "uploaded" && (
+          {/* ── Estado: uploaded / ocr_required ─────────────── */}
+          {(study.status === "uploaded" || study.status === "ocr_required") && (
             <div className="rounded-xl border border-ocean/20 bg-ocean-tint p-4 text-[14px] leading-[1.6] text-ocean-dark">
-              El documento está pendiente de procesamiento. Iniciá el
-              procesamiento para extraer su contenido.
+              <p>
+                {study.status === "ocr_required"
+                  ? "Este documento requiere procesamiento adicional para extraer su contenido."
+                  : "El documento está pendiente de procesamiento. Iniciá el procesamiento para extraer su contenido."}
+              </p>
+              <div className="mt-3">
+                <StudyProcessButton studyId={study.id} />
+              </div>
             </div>
           )}
+
+          {/* ── Estado: processing ─────────────────────────── */}
           {study.status === "processing" && (
             <div className="rounded-xl border border-ocean/20 bg-ocean-tint p-4 text-[14px] leading-[1.6] text-ocean-dark">
               Se está procesando el documento. Esta operación suele tardar unos
               segundos.
             </div>
           )}
-          {study.status === "error" && (
-            <div className="rounded-xl border border-danger/30 bg-danger-tint p-4 text-[14px] leading-[1.6] text-danger-strong">
-              {getProcessingErrorLabel(study.processing_error)}
-            </div>
-          )}
 
-          {study.status === "processed" && (
+          {/* ── Análisis válido: siempre se muestra ────────── */}
+          {hasRenderableAnalysis && analysis && (
             <>
-              {analysis ? (
-                <>
-                  <AnalysisResult analysis={analysis} studyId={study.id} />
-                  <div className="flex">
-                    <AnalyzeStudyButton studyId={study.id} hasAnalysis />
-                  </div>
-                </>
-              ) : study.analysis_status === "failed" ? (
-                <div className="rounded-xl border border-border bg-surface p-5">
-                  <div className="mb-3 flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-danger" />
-                    <h2 className="text-[15px] font-medium text-foreground">
-                      Análisis de IA
-                    </h2>
-                  </div>
-                  <p className="text-[14px] leading-[1.6] text-danger-strong">
-                    {getAnalysisErrorMessage(study.analysis_error ?? "gemini_failed")}
-                  </p>
-                  <div className="mt-4">
-                    <AnalyzeStudyButton studyId={study.id} hasAnalysis={false} />
-                  </div>
-                </div>
-              ) : (
-                <StudyPipelineController
-                  studyId={study.id}
-                  status={study.status}
-                  analysisStatus={study.analysis_status ?? "pending"}
-                  hasAnalysis={false}
-                />
-              )}
+              <AnalysisResult
+                analysis={analysis}
+                studyId={study.id}
+                status={study.status}
+                analysisStatus={study.analysis_status}
+              />
+              <div className="flex">
+                <AnalyzeStudyButton studyId={study.id} hasAnalysis />
+              </div>
             </>
           )}
 
+          {/* ── Análisis fallido (sin análisis renderizable) ── */}
+          {showAnalysisError && (
+            <div className="rounded-xl border border-border bg-surface p-5">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-danger" />
+                <h2 className="text-[15px] font-medium text-foreground">
+                  Análisis de IA
+                </h2>
+              </div>
+              <p className="text-[14px] leading-[1.6] text-danger-strong">
+                {getAnalysisErrorMessage(study.analysis_error ?? "gemini_failed")}
+              </p>
+              <div className="mt-4">
+                <AnalyzeStudyButton studyId={study.id} hasAnalysis={false} />
+              </div>
+            </div>
+          )}
+
+          {/* ── Pipeline automático (procesando o analizando) ── */}
+          {showPipeline && (
+            <StudyPipelineController
+              studyId={study.id}
+              status={study.status}
+              analysisStatus={study.analysis_status ?? "pending"}
+              hasAnalysis={false}
+            />
+          )}
+
+          {/* ── Error de procesamiento (sin análisis renderizable) ── */}
+          {showProcessingError && (
+            <div className="rounded-xl border border-border bg-surface p-5">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-danger" />
+                <h2 className="text-[15px] font-medium text-foreground">
+                  Procesamiento del documento
+                </h2>
+              </div>
+              <p className="text-[14px] leading-[1.6] text-danger-strong">
+                {getProcessingErrorLabel(study.processing_error)}
+              </p>
+              <div className="mt-4">
+                <StudyProcessButton studyId={study.id} />
+              </div>
+            </div>
+          )}
+
+          {/* ── Extracción no disponible ───────────────────── */}
           {study.status === "processed" && !extraction && (
-            <div className="rounded-xl border border-success/30 bg-success-tint p-4 text-[14px] leading-[1.6] text-success-strong">
-              El documento fue procesado correctamente, pero el contenido
-              extraído todavía no está disponible.
+            <div className="rounded-xl border border-ocean/20 bg-ocean-tint p-4 text-[14px] leading-[1.6] text-ocean-dark">
+              El documento fue procesado, pero todavía no tenemos disponible
+              el contenido extraído.
             </div>
           )}
         </div>
@@ -214,7 +267,7 @@ export default async function EstudioDetailPage({
             className="flex flex-col gap-3"
           >
             <StudyDownloadButton studyId={study.id} />
-            {showProcessButton && <StudyProcessButton studyId={study.id} />}
+            {showSidebarProcessButton && <StudyProcessButton studyId={study.id} />}
             <StudyDeleteButton studyId={study.id} studyName={study.file_name} />
           </section>
 

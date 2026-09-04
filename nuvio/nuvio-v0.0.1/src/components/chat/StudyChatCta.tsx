@@ -16,7 +16,7 @@ interface StudyChatCtaProps {
 }
 
 /**
- * Fase 8.4 — CTA contextual hacia el Chat IA.
+ * Fase 8.4 / 8.5 — CTA contextual hacia el Chat IA.
  *
  * Botón accesible que crea una conversación con el estudio como contexto
  * (reutilizando `createConversationWithContextAction`) y redirige al Chat.
@@ -26,6 +26,9 @@ interface StudyChatCtaProps {
  * - `study_id` y la autorización se resuelven server-side (assertStudyReadyCore);
  *   este botón NO confía en IDs del cliente.
  * - El `prompt` es solo una sugerencia inicial de UX, nunca una prueba de acceso.
+ * - La server action `createConversationWithContextAction` hace `redirect()` en
+ *   caso de éxito. `redirect()` de Next.js lanza un error interno NEXT_REDIRECT
+ *   que NO debe tratarse como fallo: el navegador navega correctamente.
  */
 export function StudyChatCta({
   studyId,
@@ -48,7 +51,12 @@ export function StudyChatCta({
       if (prompt) formData.set("prompt", prompt);
       // La action redirige a /dashboard/chat/[id] al crear la conversación.
       await createConversationWithContextAction(formData);
-    } catch {
+    } catch (err) {
+      // Next.js `redirect()` throws NEXT_REDIRECT internally — no es un error real.
+      if (err instanceof Error && err.message.includes("NEXT_REDIRECT")) {
+        // La navegación ya está en curso; no revertir el estado.
+        return;
+      }
       setError("No pudimos abrir el chat con este estudio. Intentá de nuevo.");
       setBusy(false);
     }
@@ -61,7 +69,7 @@ export function StudyChatCta({
           type="button"
           onClick={handleClick}
           disabled={busy}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:border-ocean/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean disabled:opacity-60"
+          className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-[12px] font-medium text-muted-foreground transition-colors hover:border-ocean/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean disabled:opacity-60"
         >
           <svg
             className="h-3.5 w-3.5 shrink-0 text-ocean"

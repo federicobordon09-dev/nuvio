@@ -35,7 +35,7 @@ export function StudyExtraction({ text, pageCount }: StudyExtractionProps) {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="study-extraction-panel"
-          className="shrink-0 rounded-lg border border-border px-3 py-1.5 text-[12px] font-medium text-ocean transition-colors hover:bg-ocean-tint"
+          className="shrink-0 rounded-lg border border-border px-3 py-1.5 text-[12px] font-medium text-ocean transition-colors hover:bg-ocean-tint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean"
         >
           {open ? "Ocultar" : "Ver contenido"}
         </button>
@@ -44,6 +44,8 @@ export function StudyExtraction({ text, pageCount }: StudyExtractionProps) {
       {open && (
         <div
           id="study-extraction-panel"
+          role="region"
+          aria-label="Contenido extraído del documento"
           className="max-h-[420px] overflow-y-auto border-t border-border px-4 py-4"
         >
           <pre className="whitespace-pre-wrap break-words font-sans text-[13px] leading-[1.6] text-foreground/80">
