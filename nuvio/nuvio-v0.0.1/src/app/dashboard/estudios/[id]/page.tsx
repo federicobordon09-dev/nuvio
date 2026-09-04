@@ -75,13 +75,22 @@ export default async function EstudioDetailPage({
   const showPipeline =
     study.status === "processed" &&
     !hasRenderableAnalysis &&
-    study.analysis_status !== "failed";
+    study.analysis_status !== "failed" &&
+    study.analysis_status !== "completed";
 
   // Determinar si hay un error de análisis sin análisis renderizable.
   const showAnalysisError =
     study.status === "processed" &&
     !hasRenderableAnalysis &&
     study.analysis_status === "failed";
+
+  // Análisis "completado" pero no renderizable: el dato almacenado está
+  // corrupto o incompleto (parseStoredAnalysis devolvió null). Evita la
+  // pantalla en blanco ofreciendo volver a analizar.
+  const showCorruptAnalysis =
+    study.status === "processed" &&
+    !hasRenderableAnalysis &&
+    study.analysis_status === "completed";
 
   // Determinar si hay un error de procesamiento retryable (sin análisis renderizable).
   const showProcessingError =
@@ -153,6 +162,25 @@ export default async function EstudioDetailPage({
               </div>
               <p className="text-[14px] leading-[1.6] text-danger-strong">
                 {getAnalysisErrorMessage(study.analysis_error ?? "gemini_failed")}
+              </p>
+              <div className="mt-4">
+                <AnalyzeStudyButton studyId={study.id} hasAnalysis={false} />
+              </div>
+            </div>
+          )}
+
+          {/* ── Análisis corrupto/incompleto (completado pero no renderizable) ── */}
+          {showCorruptAnalysis && (
+            <div className="rounded-xl border border-border bg-surface p-5">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-warning" />
+                <h2 className="text-[15px] font-medium text-foreground">
+                  Análisis de IA
+                </h2>
+              </div>
+              <p className="text-[14px] leading-[1.6] text-foreground/80">
+                El análisis almacenado de este estudio no se pudo leer. Podés
+                volver a generarlo.
               </p>
               <div className="mt-4">
                 <AnalyzeStudyButton studyId={study.id} hasAnalysis={false} />
