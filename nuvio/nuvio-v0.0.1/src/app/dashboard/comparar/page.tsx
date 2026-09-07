@@ -15,7 +15,12 @@ import { ComparisonSummary } from "@/components/comparison/ComparisonSummary";
 import { MeasurementDiffList } from "@/components/comparison/MeasurementDiffList";
 import { KeyFindingsList } from "@/components/comparison/KeyFindingsList";
 import { ComparisonDisclaimer } from "@/components/comparison/ComparisonDisclaimer";
-import type { ComparisonStudy } from "@/lib/comparison/presentation";
+import {
+  getIncompatibilityMessage,
+  getStudyTypeLabelNullable,
+  type ComparisonStudy,
+} from "@/lib/comparison/presentation";
+import type { StudyType } from "@/lib/studies-utils";
 
 /**
  * Fase 9.4 — Página de comparación de estudios.
@@ -248,7 +253,13 @@ export default async function CompararPage({
 
   // ── Estado: no comparables ──────────────────────────────
   if (!result.comparable) {
-    const detail = result.incompatibility.detail;
+    const { kind } = result.incompatibility;
+    const message = getIncompatibilityMessage(kind);
+    // Para tipos distintos se agrega contexto legible (sin slugs).
+    const typeContext =
+      kind === "different_study_type"
+        ? ` (${getStudyTypeLabelNullable(studyA.study_type as StudyType | null)} vs. ${getStudyTypeLabelNullable(studyB.study_type as StudyType | null)})`
+        : "";
     return (
       <div>
         {header}
@@ -258,10 +269,21 @@ export default async function CompararPage({
             <div className="mb-2 flex items-center gap-2">
               <SplitIcon />
               <h2 className="text-[15px] font-medium text-foreground">
-                Los estudios no son comparables
+                No podemos comparar estos estudios
               </h2>
             </div>
-            <p className="text-[14px] leading-[1.6] text-foreground/80">{detail}</p>
+            <p className="text-[14px] leading-[1.6] text-foreground/80">
+              {message}
+              {typeContext}
+            </p>
+            <div className="mt-4">
+              <Link
+                href="/dashboard/estudios"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-ocean px-4 py-2 text-[14px] font-medium text-white transition-opacity hover:opacity-90"
+              >
+                Volver a mis estudios
+              </Link>
+            </div>
           </div>
         </div>
       </div>

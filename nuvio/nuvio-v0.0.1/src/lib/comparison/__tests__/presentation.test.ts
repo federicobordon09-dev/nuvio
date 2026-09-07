@@ -6,12 +6,18 @@ import {
   formatNumber,
   formatDelta,
   formatPercentageChange,
+  formatSignedDelta,
   changeKind,
   numericComparisonNote,
   importanceLabel,
+  getIncompatibilityMessage,
   computeComparisonTiles,
 } from "../presentation.ts";
-import type { MeasurementComparable, ComparisonResult } from "../types.ts";
+import type {
+  ComparisonIncompatibility,
+  MeasurementComparable,
+  ComparisonResult,
+} from "../types.ts";
 
 // ── Helpers ──────────────────────────────────────────────
 
@@ -238,6 +244,39 @@ describe("formatPercentageChange", () => {
   });
 });
 
+// ── formatSignedDelta ────────────────────────────────────
+
+describe("formatSignedDelta", () => {
+  it("increased → \"+28\"", () => {
+    assert.equal(formatSignedDelta(comparable()), "+28");
+  });
+
+  it("decreased → \"-28\"", () => {
+    assert.equal(
+      formatSignedDelta(comparable({
+        valueDiff: valueDiff("both_numeric", { direction: "decreased" as const }),
+      })),
+      "-28"
+    );
+  });
+
+  it("stable → \"28\" sin signo", () => {
+    assert.equal(
+      formatSignedDelta(comparable({
+        valueDiff: valueDiff("both_numeric", { direction: "stable" as const }),
+      })),
+      "28"
+    );
+  });
+
+  it("not_comparable → null", () => {
+    assert.equal(
+      formatSignedDelta(comparable({ valueDiff: valueDiff("not_comparable" as const) })),
+      null
+    );
+  });
+});
+
 // ── changeKind ───────────────────────────────────────────
 
 describe("changeKind", () => {
@@ -329,6 +368,42 @@ describe("importanceLabel", () => {
   });
 });
 
+// ── getIncompatibilityMessage ────────────────────────────
+
+describe("getIncompatibilityMessage", () => {
+  const kinds: ComparisonIncompatibility["kind"][] = [
+    "not_completed",
+    "missing_study_type",
+    "different_study_type",
+    "empty_analysis",
+  ];
+
+  it("devuelve un mensaje legible para cada kind", () => {
+    for (const kind of kinds) {
+      const msg = getIncompatibilityMessage(kind);
+      assert.ok(msg.length > 0, `sin mensaje para "${kind}"`);
+      assert.notEqual(msg, kind, `el mensaje de "${kind}" repite el slug`);
+    }
+  });
+
+  it("no expone slugs técnicos ni detalles de backend", () => {
+    const messages = kinds.map(getIncompatibilityMessage);
+    for (const msg of messages) {
+      assert.doesNotMatch(msg, /analysis_status|study_type|_id\b/i);
+      assert.doesNotMatch(msg, /slug|pending|completed|processing/i);
+      assert.doesNotMatch(msg, /no está implementada|backend|detail/i);
+    }
+  });
+
+  it("different_study_type explica que no pueden compararse", () => {
+    assert.match(getIncompatibilityMessage("different_study_type"), /no pueden compararse/i);
+  });
+
+  it("empty_analysis habla de información insuficiente", () => {
+    assert.match(getIncompatibilityMessage("empty_analysis"), /información|analizada/i);
+  });
+});
+
 // ── computeComparisonTiles ───────────────────────────────
 
 describe("computeComparisonTiles", () => {
@@ -339,12 +414,39 @@ describe("computeComparisonTiles", () => {
     return tile;
   };
 
-  it("devuelve 10 tiles", () => {
-    assert.equal(tiles.length, 10);
+  it("devuelve 11 tiles", () => {
+    assert.equal(tiles.length, 11);
+  });
+
+  it("cambios → suma de aumentos y disminuciones", () => {
+    assert.equal(byKey("changes").value, 3);
+  });
+
+  it("cambios es el primer tile y pertenece al grupo primario", () => {
+    assert.equal(tiles[0].key, "changes");
+    assert.equal(byKey("changes").group, "primary");
   });
 
   it("mediciones comparadas → overall.numericSummary.comparableCount", () => {
     assert.equal(byKey("compared").value, 1);
+  });
+
+  it("agrupa primario (qué cambió) y secundario (detalle)", () => {
+    const primary = tiles.filter((t) => t.group === "primary").map((t) => t.key);
+    const secondary = tiles.filter((t) => t.group === "secondary").map((t) => t.key);
+    assert.deepEqual(
+      primary,
+      ["changes", "increased", "decreased", "stable"]
+    );
+    assert.deepEqual(
+      secondary,
+      ["compared", "new", "missing", "non_numeric", "new_findings", "missing_findings", "modified_findings"]
+    );
+  });
+
+  it("primario = pocos tiles dominantes (máx 4-5)", () => {
+    const primary = tiles.filter((t) => t.group === "primary");
+    assert.ok(primary.length <= 5, `primario con ${primary.length} tiles`);
   });
 
   it("subieron → overall.numericSummary.increasedCount", () => {

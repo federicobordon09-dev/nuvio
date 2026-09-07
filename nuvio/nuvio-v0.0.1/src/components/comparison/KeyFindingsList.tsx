@@ -124,7 +124,7 @@ function ComparableFindingCard({
         )}
       </div>
       {explanation && (
-        <p className="mt-auto pt-1 text-[13px] leading-[1.55] text-foreground/80 line-clamp-2">
+        <p className="mt-auto pt-1 text-[13px] leading-[1.55] text-foreground/80">
           {explanation}
         </p>
       )}
@@ -150,7 +150,7 @@ function NewMissingFindingCard({
       </div>
       <ImportanceBadge importance={diff.finding.importance} />
       {explanation && (
-        <p className="mt-auto pt-1 text-[13px] leading-[1.55] text-foreground/80 line-clamp-2">
+        <p className="mt-auto pt-1 text-[13px] leading-[1.55] text-foreground/80">
           {explanation}
         </p>
       )}

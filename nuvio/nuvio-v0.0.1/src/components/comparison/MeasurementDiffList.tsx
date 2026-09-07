@@ -1,5 +1,5 @@
 import type { MeasurementDiff } from "@/lib/comparison/types";
-import type { Measurement, MeasurementStatus } from "@/lib/analysis/schema";
+import type { Measurement } from "@/lib/analysis/schema";
 import {
   changeKind,
   CHANGE_LABELS,
@@ -7,47 +7,15 @@ import {
   CHANGE_ICONS,
   formatValueWithUnit,
   formatReferenceRange,
-  formatDelta,
+  formatSignedDelta,
   formatPercentageChange,
   numericComparisonNote,
+  UNIT_MISMATCH_NOTE,
   MEASUREMENT_STATUS_LABELS,
   MEASUREMENT_STATUS_TONES,
 } from "@/lib/comparison/presentation";
 
 // ── Comparación: mediciones ─────────────────────────────────────────────
-
-/** Columna Anterior/Posterior de una medición comparable. */
-function MeasurementColumn({
-  label,
-  value,
-  unit,
-  referenceRange,
-  status,
-}: {
-  label: "Anterior" | "Posterior";
-  value: string;
-  unit: string | null | undefined;
-  referenceRange: string | null | undefined;
-  status?: MeasurementStatus;
-}) {
-  const range = formatReferenceRange(referenceRange);
-  return (
-    <div>
-      <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-1 font-mono text-[17px] font-medium leading-none tracking-tight text-foreground">
-        {formatValueWithUnit(value, unit)}
-      </p>
-      {status !== undefined && (
-        <span className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium ${MEASUREMENT_STATUS_TONES[status]}`}>
-          {MEASUREMENT_STATUS_LABELS[status]}
-        </span>
-      )}
-      {range && <p className="mt-1.5 text-[12px] text-muted-foreground">Ref. {range}</p>}
-    </div>
-  );
-}
 
 /** Tarjeta de una medición nueva o ausente. */
 function NewMissingMeasurementCard({
@@ -94,7 +62,14 @@ function NewMissingMeasurementCard({
   );
 }
 
-/** Tarjeta de una medición comparable (presente en ambos estudios). */
+/**
+ * Tarjeta de una medición comparable (presente en ambos estudios).
+ * Jerarquía de la información (Fase 9.6):
+ * - Nombre + badge de cambio
+ * - Anterior → Posterior (los valores se muestran una sola vez)
+ * - Resumen del cambio: "Aumentó · +15 mg/dL · +15,8%" / "Sin cambios"
+ * - Estado y rango de referencia subordinados (solo cuando aportan contexto)
+ */
 function ComparableMeasurementCard({
   diff,
 }: {
@@ -102,12 +77,16 @@ function ComparableMeasurementCard({
 }) {
   const kind = changeKind(diff);
   const note = numericComparisonNote(diff);
-  const delta = formatDelta(diff);
+  const delta = formatSignedDelta(diff);
   const pct = formatPercentageChange(diff);
+  const unit = diff.unitMismatch.currentUnit ?? diff.unitMismatch.previousUnit ?? "";
   const statusChanged =
     diff.statusDiff.changed &&
     diff.statusDiff.previousStatus !== undefined &&
     diff.statusDiff.currentStatus !== undefined;
+  const currentStatus = diff.statusDiff.currentStatus;
+  const currentRange = formatReferenceRange(diff.referenceRangeDiff.currentRange);
+  const isChanged = kind === "increased" || kind === "decreased";
 
   return (
     <article className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
@@ -123,62 +102,78 @@ function ComparableMeasurementCard({
         </span>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <MeasurementColumn
-          label="Anterior"
-          value={diff.previousValue}
-          unit={diff.unitMismatch.previousUnit}
-          referenceRange={diff.referenceRangeDiff.previousRange}
-          status={diff.statusDiff.previousStatus}
-        />
-        <MeasurementColumn
-          label="Posterior"
-          value={diff.currentValue}
-          unit={diff.unitMismatch.currentUnit}
-          referenceRange={diff.referenceRangeDiff.currentRange}
-          status={diff.statusDiff.currentStatus}
-        />
+      {/* Anterior → Posterior (una sola lectura de valores) */}
+      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+          Anterior
+        </span>
+        <span className="font-mono text-[17px] font-medium leading-none tracking-tight text-foreground">
+          {formatValueWithUnit(diff.previousValue, diff.unitMismatch.previousUnit)}
+        </span>
+        <span className="text-muted-foreground" aria-hidden="true">→</span>
+        <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+          Posterior
+        </span>
+        <span className="font-mono text-[17px] font-medium leading-none tracking-tight text-foreground">
+          {formatValueWithUnit(diff.currentValue, diff.unitMismatch.currentUnit)}
+        </span>
       </div>
 
-      {/* Fila de detalle del cambio */}
-      <div className="border-t border-border pt-2.5">
-        {delta !== null && (
+      {/* Resumen del cambio */}
+      {isChanged && delta !== null ? (
+        <p className="text-[14px] font-semibold text-foreground">
+          {CHANGE_LABELS[kind]}
+          <span className="tabular-nums">
+            {" · "}{delta}{unit ? ` ${unit}` : ""}{pct !== null ? ` · ${pct}` : ""}
+          </span>
+        </p>
+      ) : kind === "stable" ? (
+        <p className="text-[13px] text-muted-foreground">Sin cambios</p>
+      ) : kind === "incompatible" ? (
+        <p className="text-[12px] leading-[1.6] text-muted-foreground">
+          {UNIT_MISMATCH_NOTE}
+        </p>
+      ) : (
+        note && (
           <p className="text-[12px] leading-[1.6] text-muted-foreground">
-            <span className="font-medium text-foreground">Cambio:</span>{" "}
-            {formatValueWithUnit(diff.previousValue, diff.unitMismatch.previousUnit)}
-            {" → "}
-            {formatValueWithUnit(diff.currentValue, diff.unitMismatch.currentUnit)}
-            {pct !== null && (
-              <span className="tabular-nums"> ·{" "}{pct}</span>
-            )}
+            {note}
           </p>
+        )
+      )}
+
+      {/* Estado y rango: subordinados, solo cuando aportan contexto */}
+      {isChanged &&
+        (statusChanged ||
+          diff.referenceRangeDiff.changed ||
+          currentStatus !== undefined ||
+          currentRange) && (
+          <div className="border-t border-border pt-2.5 text-[12px] leading-[1.6] text-muted-foreground">
+            {statusChanged ? (
+              <p>
+                <span className="font-medium text-foreground">Estado:</span>{" "}
+                {MEASUREMENT_STATUS_LABELS[diff.statusDiff.previousStatus!]} →{" "}
+                {MEASUREMENT_STATUS_LABELS[diff.statusDiff.currentStatus!]}
+              </p>
+            ) : currentStatus !== undefined ? (
+              <p>
+                <span className="font-medium text-foreground">Estado:</span>{" "}
+                {MEASUREMENT_STATUS_LABELS[currentStatus]}
+              </p>
+            ) : null}
+            {diff.referenceRangeDiff.changed ? (
+              <p className={statusChanged ? "mt-1" : ""}>
+                <span className="font-medium text-foreground">Rango de referencia:</span>{" "}
+                {formatReferenceRange(diff.referenceRangeDiff.previousRange) ?? "no informado"}
+                {" → "}
+                {formatReferenceRange(diff.referenceRangeDiff.currentRange) ?? "no informado"}
+              </p>
+            ) : currentRange ? (
+              <p className={currentStatus !== undefined || statusChanged ? "mt-1" : ""}>
+                <span className="font-medium text-foreground">Ref.:</span> {currentRange}
+              </p>
+            ) : null}
+          </div>
         )}
-        {delta === null && note && (
-          <p className="text-[12px] leading-[1.6] text-muted-foreground">{note}</p>
-        )}
-        {delta === null && !note && (
-          <p className="text-[12px] leading-[1.6] text-muted-foreground">
-            {formatValueWithUnit(diff.previousValue, diff.unitMismatch.previousUnit)}
-            {" → "}
-            {formatValueWithUnit(diff.currentValue, diff.unitMismatch.currentUnit)}
-          </p>
-        )}
-        {statusChanged && (
-          <p className="mt-1 text-[12px] leading-[1.6] text-muted-foreground">
-            <span className="font-medium text-foreground">Estado:</span>{" "}
-            {MEASUREMENT_STATUS_LABELS[diff.statusDiff.previousStatus!]} →{" "}
-            {MEASUREMENT_STATUS_LABELS[diff.statusDiff.currentStatus!]}
-          </p>
-        )}
-        {diff.referenceRangeDiff.changed && (
-          <p className="mt-1 text-[12px] leading-[1.6] text-muted-foreground">
-            <span className="font-medium text-foreground">Rango de referencia:</span>{" "}
-            {formatReferenceRange(diff.referenceRangeDiff.previousRange) ?? "no informado"}
-            {" → "}
-            {formatReferenceRange(diff.referenceRangeDiff.currentRange) ?? "no informado"}
-          </p>
-        )}
-      </div>
     </article>
   );
 }
