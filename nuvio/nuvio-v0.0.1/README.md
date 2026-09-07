@@ -187,10 +187,124 @@ La plataforma debe ayudar a responder preguntas como:
 - **Chat:** `chat/[id]/page.tsx` lee `?prompt=` y lo pasa a `ChatView.initialPrompt`; se muestra como primera sugerencia en la fase guiada (`suggest`) sin reemplazar `useSuggestedQuestions` / `SuggestedQuestions`.
 - No se crean tablas nuevas ni segundas estrategias de contexto; conversaciones multi-estudio, `?new=1`, `/dashboard/chat` y cleanup post-borrado permanecen intactos.
 
+### Fase 9 — Comparación determinista de estudios
+
+#### Fase 9.1 — Auditoría de comparación
+- Revisión de la arquitectura existente (tipos de estudio, análisis persistido, contratos Zod) para definir cómo integrar una comparación de dos estudios sin usar IA.
+
+#### Fase 9.2 — Motor determinista de comparación
+- Nuevo módulo `src/lib/comparison/` (`types.ts`, `compare-studies.ts`, `url.ts`).
+- `compareStudies()` devuelve `ComparisonResult`, una unión discriminada:
+  - `{ comparable: false, incompatibility }` con kinds: `not_completed`, `missing_study_type`, `different_study_type`, `empty_analysis`.
+  - `{ comparable: true, measurementDiffs, keyFindingDiffs, overall }` con mediciones comparables/nuevas/ausentes, hallazgos comparables/nuevos/ausentes, y resumen numérico (subidas, bajadas, estables, no comparables).
+- Tests unitarios extensos en `src/lib/comparison/__tests__/compare-studies.test.ts`.
+
+#### Fase 9.3 — Página `/dashboard/comparar`
+- Página server-side que lee `?ids=ID_A,ID_B`, valida el parámetro con `parseCompareIds` (exactamente dos IDs, no duplicados, sin vacíos).
+- Verifica autenticación y ownership de ambos estudios server-side, ejecuta el motor y muestra el resultado de comparación o la incompatibilidad.
+- Helper de URL: `src/lib/comparison/url.ts`.
+
+#### Fase 9.4 — UI de resultados de comparación
+- Componentes de presentación en `src/components/comparison/`: `ComparisonContext`, `ComparisonSummary`, `MeasurementDiffList`, `KeyFindingsList`, `ComparisonDisclaimer`.
+- `page.tsx` reescrito para componerlos; lógica de formato pura en `src/lib/comparison/presentation.ts` (con tests).
+- Recap: mediciones con Anterior/Posterior, cambio, delta y porcentaje, rango de referencia, estado; hallazgos nuevos/ausentes/cambiados; disclaimer médico.
+
+#### Fase 9.5 — Selección de estudios desde `/dashboard/estudios`
+- `src/lib/comparison/selection.ts`: lógica pura de selección (add/remove/toggle/clear, `canCompare`, `getCompareUrl`, labels accesibles) con tests (`selection.test.ts`).
+- `src/components/dashboard/StudySelection.tsx`: Client Component que envuelve cada `StudyCard` con un checkbox (reutilizando el componente existente), limita la selección a 2 y muestra barra de acción (sticky top en desktop, fija abajo en mobile).
+- Orden de selección determinista: el primero seleccionado = **Anterior (A)**, el segundo = **Posterior (B)**; badges "Anterior"/"Posterior" en las tarjetas y número de orden en el checkbox.
+
+#### Restricciones de la comparación actual
+
+La comparación funciona de forma determinista y tiene estas restricciones:
+
+- compara exactamente dos estudios
+- requiere estudios procesados/analizados (`analysis_status = completed`)
+- requiere que ambos estudios compartan el mismo `study_type`
+- matching exacto por nombre de medición (`Map` claveado por nombre)
+- matching exacto por título de hallazgo (`Map` claveado por título)
+- no realiza fuzzy matching
+- no realiza conversión de unidades
+- no utiliza IA para comparar
+- no realiza interpretación clínica
+- no genera predicciones
+- no genera alertas clínicas
+- no utiliza gráficos
+- no compara más de dos estudios
+
+---
+
+# Estado actual / Próxima sesión
+
+## Estado actual
+
+Nuvio se encuentra con:
+
+- **autenticación funcional** (Google OAuth con PKCE)
+- **dashboard funcional** (conteos reales por estado, estudios recientes, navegación)
+- **upload de estudios funcional** (PDFs privados en Supabase Storage)
+- **extracción PDF funcional** (MuPDF WASM, estado por documento)
+- **análisis mediante IA funcional** (Gemini → Zod → `study_analyses`)
+- **almacenamiento de análisis funcional** (JSONB, RLS, upsert idempotente)
+- **chat contextual funcional** (conversaciones persistidas, contexto por estudio)
+- **comparación determinista de dos estudios funcional** (`/dashboard/comparar`)
+- **selección de estudios desde `/dashboard/estudios` funcional** (Fase 9.5)
+- **responsive/mobile navigation funcional**
+- **tests, lint, TypeScript y build validados** (ver § Validaciones más abajo)
+
+## Pendientes inmediatos
+
+1. **Investigar el comportamiento del procesamiento automático.** Ver `Investigación pendiente — procesamiento automático` más abajo. **No asumir causa raíz.**
+2. **Mejorar la legibilidad y jerarquía visual de la pantalla de comparación.** Ver `Pendiente de UX — lectura de la comparación` más abajo.
+3. **Fase 9.6 — PENDIENTE / NO INICIADA.** Continuar únicamente después de revisar los dos puntos anteriores.
+
+> ⚠️ La Fase 9.6 no está iniciada. No se debe asumir ninguna funcionalidad posterior a la Fase 9.5 como implementada.
+
+## Investigación pendiente — procesamiento automático
+
+Confirmado manualmente (2026-09-06), **sin causa raíz asumida**:
+
+- El procesamiento automático puede mostrar inicialmente un estado de pendiente/error genérico.
+- Al usar el botón **"Procesar documento"** (`StudyProcessButton` → `processStudyAction`), el documento se procesa correctamente y **posteriormente aparece el análisis generado por IA**.
+- Por lo tanto, **el pipeline de procesamiento NO se considera roto**.
+- Existe un comportamiento/UX pendiente relacionado con el procesamiento automático o con la representación de su estado.
+- **Queda pendiente investigar** por qué algunos documentos quedan inicialmente en estado pendiente/error y requieren procesamiento manual.
+- No está solucionado; es un issue/pending investigation para la próxima sesión.
+
+## Pendiente de UX — lectura de la comparación
+
+Confirmado manualmente (2026-09-06):
+
+- La comparación **funciona**. Se probaron estudios reales con distintos tipos y el sistema detectó correctamente que **no eran comparables** cuando sus `study_type` eran diferentes (`different_study_type`).
+- Problema detectado: **"El resultado de comparación es difícil de leer."**
+- Queda documentado como **trabajo pendiente de UX/UI** (jerarquía visual, legibilidad). No solucionado.
+
+## Validaciones conocidas
+
+Re-ejecutadas el 2026-09-06 para dejar registrado el estado real:
+
+| Validación | Resultado |
+|---|---|
+| Tests (`pnpm test`) | **457/457 PASS** |
+| TypeScript (`pnpm exec tsc --noEmit`) | **PASS** |
+| ESLint (`pnpm lint`) | **PASS** — 0 errores; solo los 3 warnings pre-existentes (variables `_` sin uso en tests de `schema.test.ts` y `study-ops.test.ts`) |
+| Build (`pnpm build`) | **PASS** — todas las rutas compiladas |
+
+> Nota: los tests del motor de comparación corren vía el script `test`; los tests de `presentation` y `selection` corren de forma standalone con `node --experimental-strip-types --test`. La suite principal (`pnpm test`) = 457 tests.
+
+## Commits de comparación
+
+| Commit | Mensaje |
+|---|---|
+| `ee928a2` | `feat(comparison): add deterministic study comparison engine` |
+| `5d08ac5` | `feat(comparison): add study comparison page` |
+| `051b476` | `feat(comparison): improve comparison result UI` |
+| `7fcf71e` | `feat(comparison): integrate study selection` |
+
 ## Mejoras futuras (no implementadas)
 
 1. **Indicadores visuales adicionales de estado** — estados activos/inactivos más visibles en conversaciones.
-2. **Comparador de estudios visual** — potenciar `/dashboard/comparar` más allá de contexto textual.
+2. **Refinamiento de la pantalla de comparación** — ver `Pendiente de UX — lectura de la comparación` (el comparador base ya está implementado en Fases 9.2–9.5).
 
 ---
 
@@ -210,7 +324,7 @@ src/
 │   │   │   └── [id]/page.tsx       # Detalle + resultados del análisis
 │   │   ├── chat/page.tsx           # Raíz del Chat IA (Welcome / redirige a la reciente)
 │   │   ├── chat/[id]/page.tsx      # Conversación activa (mensajes + contexto)
-│   │   ├── comparar/page.tsx       # Comparar estudios (futuro)
+│   │   ├── comparar/page.tsx       # Comparación de dos estudios
 │   │   └── perfil/page.tsx         # Perfil del usuario
 │   └── layout.tsx                  # Layout raíz
 ├── lib/
@@ -240,13 +354,21 @@ src/
 │   │   ├── dates.ts                # Formato de fechas (es-AR)
 │   │   ├── errors.ts               # Mensajes de error del chat
 │   │   └── __tests__/              # Tests unitarios del chat
+│   ├── comparison/
+│   │   ├── types.ts                # Tipos de comparación (ComparisonResult, diffs)
+│   │   ├── compare-studies.ts      # Motor determinista de comparación
+│   │   ├── url.ts                  # Parseo/validación del parámetro ids
+│   │   ├── presentation.ts         # Formato puro para la UI de resultados
+│   │   ├── selection.ts            # Lógica pura de selección de estudios
+│   │   └── __tests__/              # Tests del motor y la selección
 │   ├── studies-utils.ts            # Tipos, labels, constantes
 │   └── auth/
 │       └── callbacks.ts            # Helpers de auth
 ├── components/
 │   ├── ui/                         # Componentes base (shadcn/ui)
 │   ├── auth/                       # Componentes de autenticación
-│   ├── dashboard/                  # Componentes del dashboard (nav, cards)
+│   ├── dashboard/                  # Componentes del dashboard (nav, cards, selección)
+│   ├── comparison/                 # Componentes de la UI de comparación
 │   ├── studies/                    # Componentes de estudios (AnalysisResult, etc.)
 │   └── chat/                       # Componentes del Chat IA
 │       ├── ChatPageLayout.tsx      # Marco de dos paneles (sidebar + conversación)
@@ -419,7 +541,7 @@ pnpm build
 # Lint
 pnpm lint
 
-# Tests (186 tests, node:test)
+# Tests (457 tests, node:test)
 pnpm test
 
 # Deploy (automático tras push a main)
