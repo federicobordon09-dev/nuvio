@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { listStudies } from "@/lib/actions/studies";
+import { groupStudiesByType } from "@/lib/studies/history";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { StudySelectionList } from "@/components/dashboard/StudySelection";
@@ -55,15 +56,17 @@ export default async function EstudiosPage() {
         />
       ) : (
         <StudySelectionList
-          studies={studies.map((s) => ({
-            id: s.id,
-            file_name: s.file_name,
-            study_type: s.study_type,
-            status: s.status,
-            analysis_status: s.analysis_status,
-            file_size: s.file_size,
-            created_at: s.created_at,
-          }))}
+          groups={groupStudiesByType(
+            studies.map((s) => ({
+              id: s.id,
+              file_name: s.file_name,
+              study_type: s.study_type,
+              status: s.status,
+              analysis_status: s.analysis_status,
+              file_size: s.file_size,
+              created_at: s.created_at,
+            })),
+          )}
         />
       )}
     </div>

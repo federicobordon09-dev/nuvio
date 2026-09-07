@@ -43,6 +43,13 @@
   --color-primary-800: #062A4D;
   --color-primary-900: #041D36;
 
+  /* Violeta — modo evolución longitudinal (Fase 10.3).
+     Distinto del ocean (comparación A↔B) para que la selección
+     de serie sea visualmente inconfundible. */
+  --color-violet: #6D4BC4;
+  --color-violet-dark: #4B328A;
+  --color-violet-tint: #EFEAFB;
+
   /* Ink — paleta neutra cálida */
   --ink-950: #1C2530;
   --ink-900: #242E38;
