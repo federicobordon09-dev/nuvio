@@ -1,12 +1,7 @@
-import type { ReactNode } from "react";
 import Link from "next/link";
 import { parseCompareIds } from "@/lib/comparison/url";
 import { compareStudies } from "@/lib/comparison/compare-studies";
 import type {
-  ComparisonResult,
-  KeyFindingDiff,
-  MeasurementComparable,
-  MeasurementDiff,
   StudyForComparison,
 } from "@/lib/comparison/types";
 import type { StudyAnalysis } from "@/lib/analysis/schema";
@@ -15,30 +10,28 @@ import { getStudy, getStudyAnalysis } from "@/lib/actions/studies";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Breadcrumbs } from "@/components/dashboard/Breadcrumbs";
 import { EmptyState } from "@/components/dashboard/EmptyState";
-import {
-  getStudyTypeLabelNullable,
-  formatFileSize,
-  type StudyType,
-} from "@/lib/studies-utils";
+import { ComparisonContext } from "@/components/comparison/ComparisonContext";
+import { ComparisonSummary } from "@/components/comparison/ComparisonSummary";
+import { MeasurementDiffList } from "@/components/comparison/MeasurementDiffList";
+import { KeyFindingsList } from "@/components/comparison/KeyFindingsList";
+import { ComparisonDisclaimer } from "@/components/comparison/ComparisonDisclaimer";
+import type { ComparisonStudy } from "@/lib/comparison/presentation";
 
 /**
- * Fase 9.3 — Página de comparación de estudios.
+ * Fase 9.4 — Página de comparación de estudios.
  *
  * Funciona mediante parámetros de URL: `/dashboard/comparar?ids=ID_A,ID_B`
  *
  * - Carga ambos estudios con verificación de ownership server-side (getStudy).
  * - Carga y parsea ambos análisis almacenados (getStudyAnalysis + parseStoredAnalysis).
  * - Ejecuta el motor determinístico de Fase 9.2 (compareStudies).
- * - Muestra resultados básicos; la presentación detallada es de Fase 9.4.
+ * - La presentación delega en componentes bajo src/components/comparison/,
+ *   que reciben los datos ya calculados (sin lógica de comparación duplicada).
  */
 
 // ── Tipos de la fila de estudio (solo los campos que necesita la página) ──
 
-type StudyRow = {
-  id: string;
-  file_name: string;
-  file_size: number;
-  study_type: string | null;
+type StudyRow = ComparisonStudy & {
   analysis_status: string | null;
 };
 
@@ -101,282 +94,7 @@ function CheckCircleIcon() {
   );
 }
 
-function ArrowUpIcon() {
-  return (
-    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
-    </svg>
-  );
-}
-
-function ArrowDownIcon() {
-  return (
-    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-    </svg>
-  );
-}
-
-function MinusIcon() {
-  return (
-    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
-    </svg>
-  );
-}
-
-// ── Helpers de formato ─────────────────────────────────────────────────────
-
-function formatNumber(n: number): string {
-  return Number.isInteger(n) ? n.toString() : n.toFixed(2);
-}
-
-function measurementValue(diff: MeasurementComparable): string {
-  const { previousValue, currentValue, unitMismatch } = diff;
-  const fmt = (v: string, u: string | null | undefined) =>
-    v.length > 0 ? `${v}${u ? ` ${u}` : ""}` : "—";
-  return `${fmt(previousValue, unitMismatch.previousUnit)} → ${fmt(currentValue, unitMismatch.currentUnit)}`;
-}
-
-function measurementChangeLabel(diff: MeasurementComparable): string {
-  const vd = diff.valueDiff;
-  if (vd.kind === "both_numeric") {
-    if (vd.direction === "increased") return `Subió ${formatNumber(vd.absoluteDifference)}`;
-    if (vd.direction === "decreased") return `Bajó ${formatNumber(vd.absoluteDifference)}`;
-    return "Sin cambios";
-  }
-  if (vd.kind === "not_comparable") return "No comparable";
-  return "Sin comparación numérica";
-}
-
-function measurementChangeTone(diff: MeasurementComparable): string {
-  const vd = diff.valueDiff;
-  if (vd.kind === "both_numeric") {
-    if (vd.direction === "increased") return "text-danger";
-    if (vd.direction === "decreased") return "text-success";
-    return "text-muted-foreground";
-  }
-  return "text-muted-foreground";
-}
-
-function measurementChangeIcon(diff: MeasurementComparable): ReactNode {
-  const vd = diff.valueDiff;
-  if (vd.kind === "both_numeric") {
-    if (vd.direction === "increased") return <ArrowUpIcon />;
-    if (vd.direction === "decreased") return <ArrowDownIcon />;
-  }
-  return <MinusIcon />;
-}
-
-const IMPORTANCE_LABELS: Record<string, string> = {
-  normal: "Normal",
-  high: "Alto",
-  low: "Bajo",
-  abnormal: "Anormal",
-  unknown: "Desconocido",
-};
-
-function importanceLabel(importance?: string | null): string {
-  return importance ? IMPORTANCE_LABELS[importance] ?? importance : "Sin especificar";
-}
-
-function valueDiffSummaryLabel(diff: MeasurementComparable): string {
-  const vd = diff.valueDiff;
-  if (vd.kind !== "both_numeric") return "—";
-  const parts = [measurementChangeLabel(diff)];
-  if (vd.percentageChange !== null) {
-    const pct = `${vd.percentageChange > 0 ? "+" : ""}${formatNumber(vd.percentageChange)}%`;
-    parts.push(pct);
-  }
-  return parts.join(" · ");
-}
-
-// ── Componentes de listado ─────────────────────────────────────────────────
-
-function MeasurementDiffList({ diffs }: { diffs: MeasurementDiff[] }) {
-  if (diffs.length === 0) {
-    return (
-      <p className="text-[13px] text-muted-foreground">Sin mediciones para mostrar.</p>
-    );
-  }
-  return (
-    <ul className="divide-y divide-border">
-      {diffs.map((diff) => {
-        if (diff.status === "new") {
-          return (
-            <li key={`new-${diff.name}`} className="flex items-center justify-between gap-3 py-2.5">
-              <span className="min-w-0 truncate text-[14px] font-medium text-foreground">{diff.name}</span>
-              <span className="shrink-0 rounded-full bg-ocean-tint px-2.5 py-0.5 text-[12px] font-medium text-ocean">
-                Nuevo
-              </span>
-            </li>
-          );
-        }
-        if (diff.status === "missing") {
-          return (
-            <li key={`missing-${diff.name}`} className="flex items-center justify-between gap-3 py-2.5">
-              <span className="min-w-0 truncate text-[14px] font-medium text-foreground">{diff.name}</span>
-              <span className="shrink-0 rounded-full bg-muted px-2.5 py-0.5 text-[12px] font-medium text-muted-foreground">
-                Ausente
-              </span>
-            </li>
-          );
-        }
-        return (
-          <li key={`cmp-${diff.name}`} className="flex items-center justify-between gap-3 py-2.5">
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="truncate text-[14px] font-medium text-foreground">{diff.name}</span>
-                <span className={`inline-flex shrink-0 items-center gap-1 text-[13px] font-medium ${measurementChangeTone(diff)}`}>
-                  {measurementChangeIcon(diff)}
-                  {measurementChangeLabel(diff)}
-                </span>
-              </div>
-              <p className="mt-0.5 font-mono text-[12px] text-muted-foreground">
-                {measurementValue(diff)}
-              </p>
-            </div>
-            <span className="shrink-0 text-[12px] text-muted-foreground">
-              {valueDiffSummaryLabel(diff)}
-            </span>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-function KeyFindingDiffList({ diffs }: { diffs: KeyFindingDiff[] }) {
-  if (diffs.length === 0) {
-    return (
-      <p className="text-[13px] text-muted-foreground">Sin hallazgos para mostrar.</p>
-    );
-  }
-  return (
-    <ul className="divide-y divide-border">
-      {diffs.map((diff) => {
-        if (diff.status === "new") {
-          return (
-            <li key={`new-${diff.title}`} className="flex items-center justify-between gap-3 py-2.5">
-              <span className="min-w-0 truncate text-[14px] font-medium text-foreground">{diff.title}</span>
-              <span className="shrink-0 rounded-full bg-ocean-tint px-2.5 py-0.5 text-[12px] font-medium text-ocean">
-                Nuevo
-              </span>
-            </li>
-          );
-        }
-        if (diff.status === "missing") {
-          return (
-            <li key={`missing-${diff.title}`} className="flex items-center justify-between gap-3 py-2.5">
-              <span className="min-w-0 truncate text-[14px] font-medium text-foreground">{diff.title}</span>
-              <span className="shrink-0 rounded-full bg-muted px-2.5 py-0.5 text-[12px] font-medium text-muted-foreground">
-                Ausente
-              </span>
-            </li>
-          );
-        }
-        return (
-          <li key={`cmp-${diff.title}`} className="flex items-center justify-between gap-3 py-2.5">
-            <span className="min-w-0 truncate text-[14px] font-medium text-foreground">{diff.title}</span>
-            {diff.importanceChanged ? (
-              <span className="shrink-0 text-[12px] text-warning">
-                Importancia: {importanceLabel(diff.previousImportance)} → {importanceLabel(diff.currentImportance)}
-              </span>
-            ) : (
-              <span className="shrink-0 text-[12px] text-muted-foreground">Sin cambios</span>
-            )}
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-// ── Resultados ─────────────────────────────────────────────────────────────
-
-function SectionCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <section className="rounded-xl border border-border bg-surface p-5">
-      <h2 className="mb-3 text-[14px] font-medium text-foreground">{title}</h2>
-      {children}
-    </section>
-  );
-}
-
-function OverallCard({ result }: { result: Extract<ComparisonResult, { comparable: true }> }) {
-  const { overall } = result;
-  const items = [
-    { label: "Mediciones comparadas", value: overall.numericSummary.comparableCount },
-    { label: "Subieron", value: overall.numericSummary.increasedCount },
-    { label: "Bajaron", value: overall.numericSummary.decreasedCount },
-    { label: "Estables", value: overall.numericSummary.stableCount },
-    { label: "Sin comparación numérica", value: overall.numericSummary.notComparableCount },
-    { label: "Parámetros nuevos", value: overall.newParametersCount },
-    { label: "Parámetros ausentes", value: overall.missingParametersCount },
-    { label: "Hallazgos nuevos", value: overall.newFindingsCount },
-    { label: "Hallazgos ausentes", value: overall.missingFindingsCount },
-  ];
-  return (
-    <SectionCard title="Resumen de la comparación">
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
-        {items.map((item) => (
-          <div key={item.label}>
-            <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
-              {item.label}
-            </dt>
-            <dd className="mt-1 text-[20px] font-medium leading-none text-foreground">
-              {item.value}
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </SectionCard>
-  );
-}
-
-function StudiesContextRow({ studyA, studyB }: { studyA: StudyRow; studyB: StudyRow }) {
-  const renderStudy = (study: StudyRow) => (
-    <Link
-      href={`/dashboard/estudios/${study.id}`}
-      className="group rounded-xl border border-border bg-surface p-4 transition-colors hover:border-ocean/40"
-    >
-      <p className="truncate text-[14px] font-medium text-foreground group-hover:text-ocean">
-        {study.file_name}
-      </p>
-      <dl className="mt-2 space-y-1">
-        <div className="flex items-center justify-between gap-2">
-          <dt className="text-[12px] text-muted-foreground">Tipo</dt>
-          <dd className="text-[12px] font-medium text-foreground">
-            {getStudyTypeLabelNullable(study.study_type as StudyType | null)}
-          </dd>
-        </div>
-        <div className="flex items-center justify-between gap-2">
-          <dt className="text-[12px] text-muted-foreground">Tamaño</dt>
-          <dd className="text-[12px] font-medium text-foreground">
-            {formatFileSize(study.file_size)}
-          </dd>
-        </div>
-      </dl>
-    </Link>
-  );
-
-  return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <span className="sr-only">Estudio A</span>
-      {renderStudy(studyA)}
-      <span className="sr-only">Estudio B</span>
-      {renderStudy(studyB)}
-    </div>
-  );
-}
-
-// ── Página ─────────────────────────────────────────────────────────────────
+// ── Página ────────────────────────────────────────────────────────────
 
 export default async function CompararPage({
   searchParams,
@@ -402,7 +120,7 @@ export default async function CompararPage({
     </>
   );
 
-  // ── Estados: IDs inválidos ─────────────────────────────────
+  // ── Estados: IDs inválidos ───────────────────────────────
   if (!parsed.ok) {
     return (
       <div>
@@ -473,7 +191,7 @@ export default async function CompararPage({
     );
   }
 
-  // ── Carga de análisis almacenados ─────────────────────────
+  // ── Carga de análisis almacenados ───────────────────────
   let analysisA: StudyAnalysis | null = null;
   try {
     const rowA = await getStudyAnalysis(studyA.id);
@@ -512,7 +230,7 @@ export default async function CompararPage({
     );
   }
 
-  // ── Ejecutar el motor de comparación (Fase 9.2) ───────────
+  // ── Ejecutar el motor de comparación (Fase 9.2) ─────────
   const studyForA: StudyForComparison = {
     analysis: analysisA,
     analysisStatus: toAnalysisStatus(studyA.analysis_status),
@@ -523,14 +241,19 @@ export default async function CompararPage({
   };
   const result = compareStudies(studyForA, studyForB);
 
-  // ── Estado: no comparables ────────────────────────────────
+  // Contexto de ambos estudios para todas las vistas post-carga.
+  const context = (
+    <ComparisonContext studyA={studyA} studyB={studyB} />
+  );
+
+  // ── Estado: no comparables ──────────────────────────────
   if (!result.comparable) {
     const detail = result.incompatibility.detail;
     return (
       <div>
         {header}
         <div className="space-y-6">
-          <StudiesContextRow studyA={studyA} studyB={studyB} />
+          {context}
           <div className="rounded-xl border border-warning/30 bg-warning-tint p-5">
             <div className="mb-2 flex items-center gap-2">
               <SplitIcon />
@@ -545,7 +268,7 @@ export default async function CompararPage({
     );
   }
 
-  // ── Estado: comparables ───────────────────────────────────
+  // ── Estado: comparables sin diferencias ─────────────────
   const hasChanges =
     result.overall.newParametersCount > 0 ||
     result.overall.missingParametersCount > 0 ||
@@ -560,7 +283,7 @@ export default async function CompararPage({
       <div>
         {header}
         <div className="space-y-6">
-          <StudiesContextRow studyA={studyA} studyB={studyB} />
+          {context}
           <EmptyState
             icon={<CheckCircleIcon />}
             title="Sin diferencias detectadas"
@@ -571,21 +294,51 @@ export default async function CompararPage({
     );
   }
 
+  // ── Estado: comparables con diferencias ─────────────────
+  // Explicaciones reales: las toma del análisis posterior (B) porque es el
+  // que describe el hallazgo tal como está presente en la comparación.
+  const explanations = new Map<string, string>();
+  for (const finding of analysisB.key_findings) {
+    explanations.set(finding.title, finding.explanation);
+  }
+
+  const nonNumericCount = result.overall.numericSummary.notComparableCount;
+
   return (
     <div>
       {header}
       <div className="space-y-6">
-        <StudiesContextRow studyA={studyA} studyB={studyB} />
-        <OverallCard result={result} />
+        {context}
+        <ComparisonSummary result={result} />
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <SectionCard title="Mediciones">
-            <MeasurementDiffList diffs={result.measurementDiffs} />
-          </SectionCard>
-          <SectionCard title="Hallazgos clínicos">
-            <KeyFindingDiffList diffs={result.keyFindingDiffs} />
-          </SectionCard>
-        </div>
+        <section aria-labelledby="comparison-measurements-heading">
+          <div className="mb-3 flex items-baseline justify-between gap-2">
+            <h2
+              id="comparison-measurements-heading"
+              className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground"
+            >
+              Mediciones
+            </h2>
+            <span className="text-[12px] text-muted-foreground">
+              {result.measurementDiffs.length} mediciones*
+            </span>
+          </div>
+          <MeasurementDiffList diffs={result.measurementDiffs} />
+          {nonNumericCount > 0 && (
+            <p className="mt-3 text-[12px] text-muted-foreground">
+              * {nonNumericCount} valor
+              {nonNumericCount !== 1 ? "es" : ""} sin comparación numérica
+              (texto o unidades distintas).
+            </p>
+          )}
+        </section>
+
+        <KeyFindingsList
+          diffs={result.keyFindingDiffs}
+          explanations={explanations}
+        />
+
+        <ComparisonDisclaimer />
       </div>
     </div>
   );
