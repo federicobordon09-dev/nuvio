@@ -1,13 +1,12 @@
 import { getStudy, getStudyExtraction, getStudyAnalysis } from "@/lib/actions/studies";
 import type { StudyAnalysis } from "@/lib/analysis/schema";
 import { parseStoredAnalysis } from "@/lib/analysis/stored";
-import { formatFileSize, getProcessingErrorLabel, getStudyTypeLabelNullable } from "@/lib/studies-utils";
+import { formatFileSize, getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Breadcrumbs } from "@/components/dashboard/Breadcrumbs";
 import { StudyDeleteButton } from "@/components/dashboard/StudyDeleteButton";
 import { StudyDownloadButton } from "@/components/dashboard/StudyDownloadButton";
-import { StudyProcessButton } from "@/components/dashboard/StudyProcessButton";
 import { StudyStatusBadge } from "@/components/dashboard/StudyStatusBadge";
 import { AnalyzeStudyButton } from "@/components/studies/AnalyzeStudyButton";
 import { AnalysisResult } from "@/components/studies/AnalysisResult";
@@ -62,21 +61,24 @@ export default async function EstudioDetailPage({
 
   // ── Contenido de la columna principal ─────────────────────────
 
-  // La sidebar muestra "Procesar" para uploaded, processing y error.
-  const showSidebarProcessButton =
-    study.status === "uploaded" ||
-    study.status === "processing" ||
-    study.status === "error";
-
   // Determinar si hay un análisis válido renderizable.
   const hasRenderableAnalysis = analysis !== null;
 
-  // Determinar si debemos mostrar el pipeline controller (procesando/análisis pendiente).
+  // Determinar si debemos mostrar el pipeline controller.
+  // Cubre el procesamiento completo desde cualquier estado:
+  // - uploaded / processing / ocr_required → iniciar o continuar procesamiento
+  // - processed + análisis pendiente → analizar automáticamente
+  // - error → reintentar procesamiento (si no hay análisis previo)
   const showPipeline =
-    study.status === "processed" &&
-    !hasRenderableAnalysis &&
-    study.analysis_status !== "failed" &&
-    study.analysis_status !== "completed";
+    (study.status === "uploaded" ||
+      study.status === "processing" ||
+      study.status === "ocr_required" ||
+      study.status === "error" ||
+      (study.status === "processed" &&
+        !hasRenderableAnalysis &&
+        study.analysis_status !== "failed" &&
+        study.analysis_status !== "completed")) &&
+    !hasRenderableAnalysis;
 
   // Determinar si hay un error de análisis sin análisis renderizable.
   const showAnalysisError =
@@ -91,11 +93,6 @@ export default async function EstudioDetailPage({
     study.status === "processed" &&
     !hasRenderableAnalysis &&
     study.analysis_status === "completed";
-
-  // Determinar si hay un error de procesamiento retryable (sin análisis renderizable).
-  const showProcessingError =
-    (study.status === "error" || study.status === "uploaded" || study.status === "ocr_required") &&
-    !hasRenderableAnalysis;
 
   return (
     <div>
@@ -114,28 +111,6 @@ export default async function EstudioDetailPage({
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px] lg:items-start">
         {/* ── Columna principal (ancho) ─────────────────────── */}
         <div className="min-w-0 space-y-6">
-          {/* ── Estado: uploaded / ocr_required ─────────────── */}
-          {(study.status === "uploaded" || study.status === "ocr_required") && (
-            <div className="rounded-xl border border-ocean/20 bg-ocean-tint p-4 text-[14px] leading-[1.6] text-ocean-dark">
-              <p>
-                {study.status === "ocr_required"
-                  ? "Este documento requiere procesamiento adicional para extraer su contenido."
-                  : "El documento está pendiente de procesamiento. Iniciá el procesamiento para extraer su contenido."}
-              </p>
-              <div className="mt-3">
-                <StudyProcessButton studyId={study.id} />
-              </div>
-            </div>
-          )}
-
-          {/* ── Estado: processing ─────────────────────────── */}
-          {study.status === "processing" && (
-            <div className="rounded-xl border border-ocean/20 bg-ocean-tint p-4 text-[14px] leading-[1.6] text-ocean-dark">
-              Se está procesando el documento. Esta operación suele tardar unos
-              segundos.
-            </div>
-          )}
-
           {/* ── Análisis válido: siempre se muestra ────────── */}
           {hasRenderableAnalysis && analysis && (
             <>
@@ -198,24 +173,6 @@ export default async function EstudioDetailPage({
             />
           )}
 
-          {/* ── Error de procesamiento (sin análisis renderizable) ── */}
-          {showProcessingError && (
-            <div className="rounded-xl border border-border bg-surface p-5">
-              <div className="mb-3 flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-danger" />
-                <h2 className="text-[15px] font-medium text-foreground">
-                  Procesamiento del documento
-                </h2>
-              </div>
-              <p className="text-[14px] leading-[1.6] text-danger-strong">
-                {getProcessingErrorLabel(study.processing_error)}
-              </p>
-              <div className="mt-4">
-                <StudyProcessButton studyId={study.id} />
-              </div>
-            </div>
-          )}
-
           {/* ── Extracción no disponible ───────────────────── */}
           {study.status === "processed" && !extraction && (
             <div className="rounded-xl border border-ocean/20 bg-ocean-tint p-4 text-[14px] leading-[1.6] text-ocean-dark">
@@ -223,6 +180,7 @@ export default async function EstudioDetailPage({
               el contenido extraído.
             </div>
           )}
+
         </div>
 
         {/* ── Columna secundaria (300px) ────────────────────── */}
@@ -295,7 +253,6 @@ export default async function EstudioDetailPage({
             className="flex flex-col gap-3"
           >
             <StudyDownloadButton studyId={study.id} />
-            {showSidebarProcessButton && <StudyProcessButton studyId={study.id} />}
             <StudyDeleteButton studyId={study.id} studyName={study.file_name} />
           </section>
 

@@ -112,6 +112,22 @@ La plataforma debe ayudar a responder preguntas como:
 - El análisis se dispara automáticamente cuando un estudio queda procesado
 - Reintentos y manejo de errores sin afectar la disponibilidad del estudio
 
+### Fase 4.5 — Procesamiento automático post-upload completo
+- **Procesamiento automático del documento:** tras subir un estudio, `StudyPipelineController` inicia automáticamente la extracción PDF (MuPDF) y posterior análisis IA sin intervención del usuario
+- **Flujo completo automatizado:** `uploaded` → `processing` (extracción) → `processed` → `analysis_status: processing` (Gemini) → `completed`
+- **Idempotencia y concurrencia:**
+  - `processStudy` retorna early si ya existe extracción y `status === "processed"`
+  - `analyzeStudyWithDeps` usa claim atómico (`.neq("analysis_status", "processing")`) para evitar llamadas duplicadas a Gemini
+  - `StudyPipelineController` usa `useRef` guard para evitar doble ejecución en React Strict Mode / re-renders
+- **Retry manual preservado:** el botón "Procesar documento" (`StudyProcessButton`) y "Analizar con IA" (`AnalyzeStudyButton`) permanecen disponibles como mecanismo de recovery ante errores
+- **Estados cubiertos por el pipeline automático:**
+  - `uploaded` → inicia procesamiento
+  - `processing` (doc) → continúa/esperar
+  - `ocr_required` → procesamiento (fallará con error amigable)
+  - `error` → reintenta procesamiento
+  - `processed + analysis_status pending/processing` → analiza automáticamente
+  - `completed + hasAnalysis` → no procesa (renderiza resultado)
+
 ### Fase 5 — Dashboard y navegación
 - Navegación compartida (DashboardNav / MobileNav)
 - Conteos reales por estado (listos, en proceso, pendientes, con errores)
@@ -246,6 +262,7 @@ Nuvio se encuentra con:
 - **extracción PDF funcional** (MuPDF WASM, estado por documento)
 - **análisis mediante IA funcional** (Gemini → Zod → `study_analyses`)
 - **almacenamiento de análisis funcional** (JSONB, RLS, upsert idempotente)
+- **procesamiento automático post-upload funcional** (subir → procesar → analizar → resultado)
 - **chat contextual funcional** (conversaciones persistidas, contexto por estudio)
 - **comparación determinista de dos estudios funcional** (`/dashboard/comparar`)
 - **selección de estudios desde `/dashboard/estudios` funcional** (Fase 9.5)
@@ -254,22 +271,19 @@ Nuvio se encuentra con:
 
 ## Pendientes inmediatos
 
-1. **Investigar el comportamiento del procesamiento automático.** Ver `Investigación pendiente — procesamiento automático` más abajo. **No asumir causa raíz.**
-2. **Mejorar la legibilidad y jerarquía visual de la pantalla de comparación.** Ver `Pendiente de UX — lectura de la comparación` más abajo.
-3. **Fase 9.6 — PENDIENTE / NO INICIADA.** Continuar únicamente después de revisar los dos puntos anteriores.
+1. **Mejorar la legibilidad y jerarquía visual de la pantalla de comparación.** Ver `Pendiente de UX — lectura de la comparación` más abajo.
+2. **Fase 9.6 — PENDIENTE / NO INICIADA.** Continuar después de mejorar la UX de comparación.
 
 > ⚠️ La Fase 9.6 no está iniciada. No se debe asumir ninguna funcionalidad posterior a la Fase 9.5 como implementada.
 
 ## Investigación pendiente — procesamiento automático
 
-Confirmado manualmente (2026-09-06), **sin causa raíz asumida**:
+**RESUELTO (2026-09-07):**
 
-- El procesamiento automático puede mostrar inicialmente un estado de pendiente/error genérico.
-- Al usar el botón **"Procesar documento"** (`StudyProcessButton` → `processStudyAction`), el documento se procesa correctamente y **posteriormente aparece el análisis generado por IA**.
-- Por lo tanto, **el pipeline de procesamiento NO se considera roto**.
-- Existe un comportamiento/UX pendiente relacionado con el procesamiento automático o con la representación de su estado.
-- **Queda pendiente investigar** por qué algunos documentos quedan inicialmente en estado pendiente/error y requieren procesamiento manual.
-- No está solucionado; es un issue/pending investigation para la próxima sesión.
+- Causa raíz confirmada: `StudyPipelineController` solo se renderizaba cuando `status === "processed"`, por lo que el procesamiento inicial (PDF extracción) nunca se iniciaba automáticamente.
+- Solución: el pipeline controller ahora cubre todos los estados (`uploaded`, `processing`, `ocr_required`, `error`, `processed + analysis pending`).
+- El flujo completo ahora es: subir → procesamiento automático → análisis automático → resultado visible.
+- El botón "Procesar documento" permanece como mecanismo de retry/recovery.
 
 ## Pendiente de UX — lectura de la comparación
 
@@ -281,16 +295,16 @@ Confirmado manualmente (2026-09-06):
 
 ## Validaciones conocidas
 
-Re-ejecutadas el 2026-09-06 para dejar registrado el estado real:
+Re-ejecutadas el 2026-09-07 para dejar registrado el estado real:
 
 | Validación | Resultado |
 |---|---|
-| Tests (`pnpm test`) | **457/457 PASS** |
+| Tests (`pnpm test`) | **479/479 PASS** |
 | TypeScript (`pnpm exec tsc --noEmit`) | **PASS** |
 | ESLint (`pnpm lint`) | **PASS** — 0 errores; solo los 3 warnings pre-existentes (variables `_` sin uso en tests de `schema.test.ts` y `study-ops.test.ts`) |
 | Build (`pnpm build`) | **PASS** — todas las rutas compiladas |
 
-> Nota: los tests del motor de comparación corren vía el script `test`; los tests de `presentation` y `selection` corren de forma standalone con `node --experimental-strip-types --test`. La suite principal (`pnpm test`) = 457 tests.
+> Nota: los tests del motor de comparación corren vía el script `test`; los tests de `presentation` y `selection` corren de forma standalone con `node --experimental-strip-types --test`. La suite principal (`pnpm test`) = 479 tests.
 
 ## Commits de comparación
 
@@ -541,7 +555,7 @@ pnpm build
 # Lint
 pnpm lint
 
-# Tests (457 tests, node:test)
+# Tests (479 tests, node:test)
 pnpm test
 
 # Deploy (automático tras push a main)
