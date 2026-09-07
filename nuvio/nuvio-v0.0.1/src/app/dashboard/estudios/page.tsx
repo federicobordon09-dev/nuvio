@@ -2,8 +2,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { listStudies } from "@/lib/actions/studies";
 import { PageHeader } from "@/components/dashboard/PageHeader";
-import { StudyCard } from "@/components/dashboard/StudyCard";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { StudySelectionList } from "@/components/dashboard/StudySelection";
 
 export const dynamic = "force-dynamic";
 
@@ -54,11 +54,17 @@ export default async function EstudiosPage() {
           }
         />
       ) : (
-        <div className="space-y-4">
-          {studies.map((study) => (
-            <StudyCard key={study.id} study={study} />
-          ))}
-        </div>
+        <StudySelectionList
+          studies={studies.map((s) => ({
+            id: s.id,
+            file_name: s.file_name,
+            study_type: s.study_type,
+            status: s.status,
+            analysis_status: s.analysis_status,
+            file_size: s.file_size,
+            created_at: s.created_at,
+          }))}
+        />
       )}
     </div>
   );
