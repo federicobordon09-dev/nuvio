@@ -4,21 +4,12 @@ import { getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import type { SelectableStudy } from "@/lib/chat/schema";
 
 interface ContextPickerProps {
-  /** Estudios del usuario listos para usar como contexto. */
   studies: SelectableStudy[];
-  /** IDs de estudios seleccionados (estado controlado por el padre). */
   selectedIds: string[];
-  /** Cambia la selección; el padre persiste vía setContextAction. */
   onToggle: (studyId: string, checked: boolean) => void;
-  /** Error de persistencia mostrado al usuario (si el padre lo padece). */
   error?: string | null;
 }
 
-/**
- * Selector de estudios de contexto de la conversación como chips conmutables.
- * Es un componente controlado: el estado de selección y la persistencia viven
- * en ChatView, que orquesta la experiencia guiada del chat.
- */
 export function ContextPicker({
   studies,
   selectedIds,
@@ -43,8 +34,8 @@ export function ContextPicker({
                 key={study.id}
                 className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[12px] font-medium transition-colors ${
                   checked
-                    ? "border-ocean bg-ocean-tint text-ocean-dark"
-                    : "border-border bg-surface text-muted-foreground hover:border-ocean/30 hover:text-foreground"
+                    ? "border-primary bg-primary-muted text-primary"
+                    : "border-border bg-surface text-muted-foreground hover:border-primary/30 hover:text-foreground"
                 }`}
               >
                 <input
@@ -54,7 +45,7 @@ export function ContextPicker({
                   onChange={(e) => onToggle(study.id, e.target.checked)}
                 />
                 <span
-                  className={`h-1.5 w-1.5 rounded-full ${checked ? "bg-ocean" : "bg-muted-foreground/40"}`}
+                  className={`h-1.5 w-1.5 rounded-full ${checked ? "bg-primary" : "bg-muted-foreground/40"}`}
                 />
                 <span className="max-w-[160px] truncate">{study.file_name}</span>
                 <span className="text-muted-foreground/70">

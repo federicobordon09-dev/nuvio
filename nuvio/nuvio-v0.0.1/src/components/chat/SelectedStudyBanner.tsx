@@ -3,19 +3,14 @@
 import { getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import { formatStudyDate } from "@/lib/chat/dates";
 import type { SelectableStudy } from "@/lib/chat/schema";
+import { CheckCircle } from "@/components/ui/icons";
 
 interface SelectedStudyBannerProps {
   studies: SelectableStudy[];
   selectedIds: string[];
-  /** Vuelve al selector de estudios (estado de captura). */
   onChangeStudy: () => void;
 }
 
-/**
- * Banner "Estudio seleccionado" — muestra claramente qué estudio(s) están
- * en uso como contexto y deja una acción evidente "Cambiar estudio".
- * Se usa en la visita guiada antes del chat y encima del chat activo.
- */
 export function SelectedStudyBanner({
   studies,
   selectedIds,
@@ -26,26 +21,13 @@ export function SelectedStudyBanner({
   if (selected.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-ocean-tint/60 px-3 py-3">
+    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-primary-muted/60 px-3 py-3">
       <span
-        className="inline-flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-wide text-ocean-dark"
+        className="inline-flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-wide text-primary"
         aria-hidden="true"
       >
-        {/* check/document badge — refuerza "usando este estudio" */}
-        <span className="flex h-5 w-5 items-center justify-center rounded-lg bg-ocean text-white">
-          <svg
-            className="h-3.5 w-3.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-            />
-          </svg>
+        <span className="flex h-5 w-5 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <CheckCircle className="h-3.5 w-3.5" />
         </span>
         Estudio seleccionado
       </span>
@@ -57,7 +39,7 @@ export function SelectedStudyBanner({
           return (
             <span
               key={study.id}
-              className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-ocean/20 bg-surface px-2.5 py-1 text-[12px] font-medium text-foreground"
+              className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-primary/20 bg-surface px-2.5 py-1 text-[12px] font-medium text-foreground"
             >
               <span className="max-w-[170px] truncate">{study.file_name}</span>
               <span className="hidden sm:inline text-muted-foreground/70">
@@ -76,7 +58,7 @@ export function SelectedStudyBanner({
       <button
         type="button"
         onClick={onChangeStudy}
-        className="ml-auto inline-flex shrink-0 items-center justify-center rounded-lg border border-ocean/30 bg-surface px-3 py-2 text-[12px] font-medium text-ocean transition-colors hover:bg-surface hover:text-ocean-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean focus-visible:ring-offset-1"
+        className="ml-auto inline-flex shrink-0 items-center justify-center rounded-lg border border-primary/30 bg-surface px-3 py-2 text-[12px] font-medium text-primary transition-colors hover:bg-primary-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
         aria-label="Cambiar el estudio seleccionado"
       >
         Cambiar estudio

@@ -4,11 +4,6 @@ interface MessageBubbleProps {
   message: ChatMessage;
 }
 
-/**
- * Burbuja de un mensaje del chat. El usuario a la derecha (acento ocean),
- * el asistente a la izquierda (superficie neutra). El contenido se muestra
- * como texto pre-lineado para conservar saltos de línea.
- */
 export function MessageBubble({ message }: MessageBubbleProps) {
   const isUser = message.role === "user";
 
@@ -17,7 +12,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
       <div
         className={`max-w-[85%] rounded-xl px-4 py-2.5 text-[14px] leading-relaxed ${
           isUser
-            ? "bg-primary-600 text-white"
+            ? "bg-primary text-primary-foreground"
             : "border border-border bg-surface text-foreground"
         }`}
       >

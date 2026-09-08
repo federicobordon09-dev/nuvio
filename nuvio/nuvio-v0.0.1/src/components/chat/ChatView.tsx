@@ -8,6 +8,7 @@ import { ContextPicker } from "./ContextPicker";
 import { NewConversationStudyPicker } from "./NewConversationStudyPicker";
 import { SelectedStudyBanner } from "./SelectedStudyBanner";
 import { SuggestedQuestions } from "./SuggestedQuestions";
+import { Spinner } from "@/components/ui/Spinner";
 
 interface ChatViewProps {
   conversationId: string;
@@ -15,22 +16,9 @@ interface ChatViewProps {
   initialMessages: ChatMessage[];
   selectableStudies: SelectableStudy[];
   contextStudyIds: string[];
-  /** Sugerencia/mensaje inicial contextual (Fase 8.4), propagada desde un CTA. */
   initialPrompt?: string;
 }
 
-/**
- * Orquestación de la experiencia guiada + chat activo.
- *
- * Máquina de estados derivada del contenido (nada de flags artificiales):
- * - pick-study: sin contexto seleccionado — tarjetas grandes de selección.
- * - suggest: con contexto, sin mensajes — banner + preguntas sugeridas grandes.
- * - chat: con mensajes — chat normal con sugerencias compactas secundarias.
- *
- * La "cambiar estudio" de vuelve al estado de selección sin borrar el contexto.
- * Persiste vía las mismas actions ya existentes (setContextAction/ sendMessageAction).
- * No crea una segunda implementación del Chat.
- */
 export function ChatView({
   conversationId,
   conversationTitle,
@@ -39,7 +27,6 @@ export function ChatView({
   contextStudyIds,
   initialPrompt,
 }: ChatViewProps) {
-  // ── Contexto (levantado del antiguo ContextPicker) ────────────
   const [selectedStudyIds, setSelectedStudyIds] =
     useState<string[]>(contextStudyIds);
   const [contextError, setContextError] = useState<string | null>(null);
@@ -47,14 +34,12 @@ export function ChatView({
     () => contextStudyIds.length === 0
   );
 
-  // ── Mensajes ──────────────────────────────────────────────────
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // ── Fase ──────────────────────────────────────────────────────
   const hasMessages = messages.length > 0;
   const hasContext = selectedStudyIds.length > 0;
   const phase: "pick-study" | "suggest" | "chat" = hasMessages
@@ -63,21 +48,17 @@ export function ChatView({
       ? "pick-study"
       : "suggest";
 
-  // ── Tipo del estudio principal (para sugerir preguntas) ────────
   const primaryStudyType = useMemo(() => {
     if (selectedStudyIds.length === 0) return undefined;
     return selectableStudies.find((s) => s.id === selectedStudyIds[0])
       ?.study_type;
   }, [selectedStudyIds, selectableStudies]);
 
-  // ── Preguntas sugeridas (rotación) ────────────────────────────
   const { visible: visibleQuestions, markUsed } = useSuggestedQuestions(
     primaryStudyType,
     messages
   );
 
-  // Pregunta inicial contextual (desde un CTA de resultados): se muestra como
-  // sugerencia principal en la fase guiada, sin reemplazar el flujo existente.
   const guidedQuestions = useMemo(() => {
     if (!initialPrompt) return visibleQuestions;
     return [
@@ -86,7 +67,6 @@ export function ChatView({
     ];
   }, [initialPrompt, visibleQuestions]);
 
-  // ── Persistir contexto (reutiliza la action existente) ────────
   async function persistContext(nextIds: string[]) {
     setContextError(null);
     const formData = new FormData();
@@ -112,7 +92,6 @@ export function ChatView({
     }
   }
 
-  // ── Auto-scroll ───────────────────────────────────────────────
   useEffect(() => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
@@ -120,12 +99,10 @@ export function ChatView({
     });
   }, [messages, sending]);
 
-  // ── Envío ─────────────────────────────────────────────────────
   async function handleSend(rawContent?: string) {
     const content = (rawContent ?? input).trim();
     if (!content || sending) return;
 
-    // Marcar pregunta sugerida como usada antes de enviar.
     if (rawContent !== undefined) markUsed(rawContent);
 
     if (rawContent === undefined) setInput("");
@@ -167,22 +144,14 @@ export function ChatView({
     }
   }
 
-  // ── Render ────────────────────────────────────────────────────
-  // `min-h-0 flex-1` (no `h-full`): ChatView es un item del flex column del
-  // layout y debe poder encogerse por debajo de su contenido para que el área
-  // de mensajes reciba una altura acotada y haga scroll. Con `h-full` +
-  // `min-height: auto` la caja crecía con la respuesta larga y el contenedor
-  // con `overflow-hidden` recortaba el excedente (contenido inaccesible).
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      {/* Encabezado */}
       <div className="border-b border-border px-4 py-3">
         <h1 className="truncate text-[16px] font-medium text-foreground">
           {conversationTitle}
         </h1>
       </div>
 
-      {/* Contexto — chips compactos solo cuando el usuario ya está chateando */}
       {phase === "chat" && (
         <div className="border-b border-border px-4 py-3">
           <ContextPicker
@@ -194,10 +163,6 @@ export function ChatView({
         </div>
       )}
 
-      {/* Área principal — contenido según fase */}
-      {/* Único contenedor con scroll: min-h-0 le permite encogerse por debajo
-          de su contenido para que las respuestas largas se lean con scroll
-          vertical propio, con header e input siempre visibles. */}
       <div
         ref={scrollRef}
         className="min-h-0 flex-1 overflow-y-auto"
@@ -235,17 +200,15 @@ export function ChatView({
           </div>
         )}
 
-        {/* Indicador de envío (fuera del scroll de mensajes) */}
         {sending && (
           <div className="border-t border-border bg-muted/30 px-4 py-2.5">
             <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ocean" />
+              <Spinner className="h-3.5 w-3.5 text-primary" />
               Nuvio está escribiendo…
             </div>
           </div>
         )}
 
-        {/* Error */}
         {error && (
           <div className="flex items-center justify-between gap-3 border-t border-border bg-danger-tint/50 px-4 py-2 text-[13px] text-danger">
             <span>{error}</span>
@@ -260,7 +223,6 @@ export function ChatView({
         )}
       </div>
 
-      {/* Sugerencias compactas secundarias — solo cuando ya hay chat */}
       {phase === "chat" && (
         <SuggestedQuestions
           studyType={primaryStudyType}
@@ -270,7 +232,6 @@ export function ChatView({
         />
       )}
 
-      {/* Input — accesible en las fases suggest y chat */}
       {phase !== "pick-study" && (
         <div className="border-t border-border px-4 py-3">
           <div className="flex items-end gap-2">
@@ -289,13 +250,13 @@ export function ChatView({
                   ? "Escribí tu pregunta sobre este estudio…"
                   : "Escribí tu pregunta sobre tus estudios…"
               }
-              className="max-h-40 min-h-[44px] flex-1 resize-none rounded-lg border border-border bg-surface px-3 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground focus:border-ocean focus:outline-none"
+              className="max-h-40 min-h-[44px] flex-1 resize-none rounded-lg border border-border bg-surface px-3 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
               aria-label="Mensaje"
             />
             <button
               onClick={() => handleSend()}
               disabled={sending || !input.trim()}
-              className="inline-flex h-[44px] shrink-0 items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 text-[14px] font-medium text-white transition-colors hover:bg-primary-700 disabled:opacity-50"
+              className="inline-flex h-[44px] shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-[14px] font-medium text-primary-foreground transition-colors hover:bg-primary-700 disabled:opacity-50"
             >
               {sending ? "Enviando…" : "Enviar"}
             </button>
@@ -309,7 +270,6 @@ export function ChatView({
   );
 }
 
-// ── Mini-burbuja inline (evita circular import de MessageBubble) ──
 function MessageBubbleInline({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
   return (
@@ -317,7 +277,7 @@ function MessageBubbleInline({ message }: { message: ChatMessage }) {
       <div
         className={`max-w-[85%] whitespace-pre-line rounded-xl px-4 py-2.5 text-[14px] leading-relaxed ${
           isUser
-            ? "bg-primary-600 text-white"
+            ? "bg-primary text-primary-foreground"
             : "border border-border bg-surface text-foreground"
         }`}
       >
