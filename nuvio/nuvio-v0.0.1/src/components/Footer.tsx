@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="border-t border-ink-700/10">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 sm:h-16 sm:flex-row sm:py-0 lg:px-8">
         <Image
-          src="/nuvio_logo.png"
+          src="/nuvio_logo_nuevo.png"
           alt="Nuvio"
           width={100}
           height={24}

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description:
     "Nuvio transforma documentos médicos en explicaciones claras y comprensibles. Subí tu estudio y entendé tus resultados.",
   icons: {
-    icon: "/nuvio_logo.png",
+    icon: "/nuvio_logo_circular_con_la_N.png",
   },
 };
 
