@@ -224,6 +224,19 @@ export function canRunEvolution(
 }
 
 /**
+ * Ordena estudios por created_at ASC (semántica temporal de la evolución).
+ * Función pura y genérica (basta con `created_at`), reutilizable por el
+ * servidor (Fase 10.5, filas ricas) y por la URL (filas mínimas).
+ */
+export function orderEvolutionStudiesAsc<
+  T extends { created_at: string },
+>(studies: T[]): T[] {
+  return [...studies].sort((a, b) =>
+    a.created_at < b.created_at ? -1 : a.created_at > b.created_at ? 1 : 0,
+  );
+}
+
+/**
  * URL de la serie con los IDs en orden cronológico ASC.
  * null si la serie no es válida o algún ID no se resuelve.
  */
@@ -232,13 +245,7 @@ export function getEvolutionUrl(
   available: EvolutionStudy[],
 ): string | null {
   if (!canRunEvolution(state, available)) return null;
-  const ordered = [...resolveSelected(state, available)].sort((a, b) =>
-    a.created_at < b.created_at
-      ? -1
-      : a.created_at > b.created_at
-        ? 1
-        : 0,
-  );
+  const ordered = orderEvolutionStudiesAsc(resolveSelected(state, available));
   return buildEvolutionUrl(ordered.map((s) => s.id));
 }
 
