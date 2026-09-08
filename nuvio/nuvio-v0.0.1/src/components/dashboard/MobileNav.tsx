@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/lib/actions/auth";
 import { navItems, isActivePath } from "./nav-items";
+import { X, Menu, LogOut } from "@/components/ui/icons";
 
 interface MobileNavProps {
   userName?: string;
@@ -86,15 +87,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
         aria-controls="mobile-nav-panel"
         aria-label={open ? "Cerrar menú" : "Abrir menú"}
       >
-        {open ? (
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-          </svg>
-        ) : (
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
-          </svg>
-        )}
+        {open ? <X /> : <Menu />}
       </button>
 
       {/* Overlay + drawer — siempre renderizado para permitir transiciones. */}
@@ -108,7 +101,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
       >
         {/* Backdrop */}
         <div
-          className={`absolute inset-0 bg-ink-950/40 backdrop-blur-sm transition-opacity duration-200 ${
+          className={`absolute inset-0 bg-foreground/40 backdrop-blur-sm transition-opacity duration-200 ${
             open ? "opacity-100" : "opacity-0"
           }`}
           onClick={close}
@@ -129,9 +122,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
               className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted/50"
               aria-label="Cerrar menú"
             >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-              </svg>
+              <X />
             </button>
           </div>
 
@@ -147,11 +138,11 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
                       aria-current={active ? "page" : undefined}
                       className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors duration-150 ${
                         active
-                          ? "bg-ocean-tint text-ocean-dark"
+                          ? "bg-primary-muted text-primary-700"
                           : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                       }`}
                     >
-                      <span className={active ? "text-ocean" : "text-muted-foreground"}>
+                      <span className={active ? "text-primary" : "text-muted-foreground"}>
                         {item.icon}
                       </span>
                       {item.label}
@@ -173,7 +164,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
                     className="h-8 w-8 rounded-full"
                   />
                 ) : (
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ocean-tint text-[13px] font-medium text-ocean-dark">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-muted text-[13px] font-medium text-primary-700">
                     {userName.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -190,9 +181,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
                 type="submit"
                 className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium text-muted-foreground transition-colors duration-150 hover:bg-muted/50 hover:text-foreground"
               >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
-                </svg>
+                <LogOut />
                 Cerrar sesión
               </button>
             </form>

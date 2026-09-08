@@ -18,14 +18,14 @@ export default function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-200 ${
         scrolled
-          ? "border-ink-700/10 bg-white/80 backdrop-blur-xl"
+          ? "border-border bg-white/80 backdrop-blur-xl"
           : "border-transparent bg-white"
       }`}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8">
         <Link href="/" className="flex items-center" aria-label="Nuvio">
           <Image
-            src="/nuvio_logo.png"
+            src="/nuvio_logo_nuevo.png"
             alt="Nuvio"
             width={120}
             height={32}
@@ -57,7 +57,7 @@ export default function Navbar() {
 
         <Link
           href="/auth/login"
-          className="inline-flex h-9 items-center rounded-lg bg-ink-950 px-4 text-[13px] font-medium text-white transition-all duration-200 ease-out hover:bg-ink-900 hover:shadow-[0_2px_8px_rgba(11,20,38,0.15)] active:scale-[0.98]"
+          className="inline-flex h-9 items-center rounded-lg bg-primary px-4 text-[13px] font-medium text-white transition-all duration-200 ease-out hover:bg-primary/90 hover:shadow-sm active:scale-[0.98]"
         >
           Empezar
         </Link>

@@ -1,99 +1,111 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #FFFEF9;
-  --color-foreground: #1C2530;
-  --color-muted: #F8F3F0;
-  --color-muted-foreground: #5C6773;
-  --color-border: #E7E1DB;
-  --color-primary: #0B5497;
-  --color-primary-foreground: #ffffff;
-  --color-accent: #0B5497;
-  --color-accent-light: #E6EEF6;
-  --color-accent-foreground: #ffffff;
-  --color-surface: #FFFEF9;
+  /* ───────────────────────────────────────────────────
+     Nuvio Design System — Brand Tokens (Fase 11.1)
+     ─────────────────────────────────────────────────── */
+
+  /* Brand */
+  --color-primary: #251836;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary-muted: #F3E0FE;
+  --color-primary-subtle: #EDE5F6;
+
+  /* Surfaces */
+  --color-background: #FAF8FC;
+  --color-surface: #FFFFFF;
   --color-surface-elevated: #FFFFFF;
 
-  /* Ocean — color de marca */
-  --ocean: #0B5497;
-  --ocean-dark: #083B6B;
-  --ocean-tint: #E6EEF6;
+  /* Text */
+  --color-foreground: #17131A;
+  --color-muted-foreground: #756B7D;
 
-  --color-ocean: #0B5497;
-  --color-ocean-dark: #083B6B;
-  --color-ocean-tint: #E6EEF6;
+  /* Border */
+  --color-border: #E6DFE9;
 
-  /* Primary scale — derivado de Ocean */
-  --primary-50: #E6EEF6;
-  --primary-100: #CDDEF0;
-  --primary-200: #A3C4E3;
-  --primary-400: #3E82C4;
-  --primary-500: #1B6BB0;
-  --primary-600: #0B5497;
-  --primary-700: #083B6B;
-  --primary-800: #062A4D;
-  --primary-900: #041D36;
-  --color-primary-50: #E6EEF6;
-  --color-primary-100: #CDDEF0;
-  --color-primary-200: #A3C4E3;
-  --color-primary-400: #3E82C4;
-  --color-primary-500: #1B6BB0;
-  --color-primary-600: #0B5497;
-  --color-primary-700: #083B6B;
-  --color-primary-800: #062A4D;
-  --color-primary-900: #041D36;
+  /* Status — success */
+  --color-success: #3F8F68;
+  --color-success-tint: #E4F5EB;
+  --color-success-strong: #2D6B4D;
 
-  /* Violeta — modo evolución longitudinal (Fase 10.3).
-     Distinto del ocean (comparación A↔B) para que la selección
-     de serie sea visualmente inconfundible. */
+  /* Status — warning */
+  --color-warning: #C58A32;
+  --color-warning-tint: #F6EBD7;
+  --color-warning-strong: #8A5B15;
+
+  /* Status — error */
+  --color-danger: #C65353;
+  --color-danger-tint: #F6E4E4;
+  --color-danger-strong: #932B2B;
+
+  /* Status — info */
+  --color-info: #251836;
+  --color-info-tint: #EDE5F6;
+
+  /* Evolution accent — específico para evolución longitudinal */
   --color-violet: #6D4BC4;
   --color-violet-dark: #4B328A;
   --color-violet-tint: #EFEAFB;
 
-  /* Ink — paleta neutra cálida */
-  --ink-950: #1C2530;
-  --ink-900: #242E38;
-  --ink-800: #2A3440;
-  --ink-700: #3A4553;
-  --ink-600: #5C6773;
-  --color-ink-950: #1C2530;
-  --color-ink-900: #242E38;
-  --color-ink-800: #2A3440;
-  --color-ink-700: #3A4553;
-  --color-ink-600: #5C6773;
+  /* ── Shadow tokens ── */
+  --shadow-sm: 0 1px 2px rgba(23, 19, 26, 0.04);
+  --shadow-md: 0 2px 8px rgba(23, 19, 26, 0.06);
+  --shadow-lg: 0 4px 16px rgba(23, 19, 26, 0.08);
 
-  /* Status */
-  --success: #1F8A5F;
-  --success-tint: #E4F1EB;
-  --success-strong: #166A48;
-  --color-success: #1F8A5F;
-  --color-success-tint: #E4F1EB;
-  --color-success-strong: #166A48;
-
-  --warning: #B7791F;
-  --warning-tint: #F6EBD7;
-  --warning-strong: #8A5B15;
-  --color-warning: #B7791F;
-  --color-warning-tint: #F6EBD7;
-  --color-warning-strong: #8A5B15;
-
-  --danger: #C0392B;
-  --danger-tint: #F6E4E1;
-  --danger-strong: #932B1F;
-  --color-danger: #C0392B;
-  --color-danger-tint: #F6E4E1;
-  --color-danger-strong: #932B1F;
-
-  --info: #0B5497;
-  --info-tint: #E6EEF6;
-  --color-info: #0B5497;
-  --color-info-tint: #E6EEF6;
-
-  /* Degradé de marca — uso restringido */
-  --gradient-brand: linear-gradient(135deg, #22D3EE, #3B82F6, #2563EB);
-
+  /* ── Typography ── */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* ═══════════════════════════════════════════════════
+     COMPATIBILITY ALIASES — temporal, para migración
+     de componentes que todavía usan los nombres antiguos.
+     Estos aliases NO representan la nueva identidad.
+     Se eliminarán cuando todos los componentes migren.
+     ═══════════════════════════════════════════════════ */
+
+  /* ocean → primary (identidad antigua) */
+  --color-ocean: #251836;
+  --color-ocean-dark: #1A1024;
+  --color-ocean-tint: #F3E0FE;
+  --ocean: #251836;
+  --ocean-dark: #1A1024;
+  --ocean-tint: #F3E0FE;
+
+  /* accent (legado, prácticamente sin uso) */
+  --color-accent: #251836;
+  --color-accent-light: #F3E0FE;
+  --color-accent-foreground: #FFFFFF;
+
+  /* primary scale — derivado de la nueva marca */
+  --color-primary-50: #F3E0FE;
+  --color-primary-100: #E4C5FA;
+  --color-primary-200: #CDA0F0;
+  --color-primary-400: #6D4BC4;
+  --color-primary-500: #4A2FA0;
+  --color-primary-600: #251836;
+  --color-primary-700: #1A1024;
+  --color-primary-800: #120B1A;
+  --color-primary-900: #0A0610;
+
+  /* ink — paleta neutra legacy */
+  --color-ink-950: #17131A;
+  --color-ink-900: #1E1A22;
+  --color-ink-800: #2A2430;
+  --color-ink-700: #3A3440;
+  --color-ink-600: #756B7D;
+
+  /* status legacy aliases */
+  --success: #3F8F68;
+  --success-tint: #E4F5EB;
+  --success-strong: #2D6B4D;
+  --warning: #C58A32;
+  --warning-tint: #F6EBD7;
+  --warning-strong: #8A5B15;
+  --danger: #C65353;
+  --danger-tint: #F6E4E4;
+  --danger-strong: #932B2B;
+  --info: #251836;
+  --info-tint: #EDE5F6;
 }
 
 html {
@@ -109,7 +121,7 @@ body {
 }
 
 ::selection {
-  background: rgba(11, 84, 151, 0.12);
+  background: rgba(37, 24, 54, 0.12);
 }
 
 :focus-visible {

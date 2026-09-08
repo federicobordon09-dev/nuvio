@@ -18,11 +18,11 @@ export function DashboardNav() {
             aria-current={active ? "page" : undefined}
             className={`flex items-center gap-3 rounded-lg py-2.5 text-[14px] font-medium transition-colors duration-150 ${
               active
-                ? "border-l-2 border-ocean bg-ocean-tint pl-[11px] text-ocean-dark"
+                ? "border-l-2 border-primary bg-primary-muted pl-[11px] text-primary-700"
                 : "pl-3 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
             }`}
           >
-            <span className={active ? "text-ocean" : "text-muted-foreground"}>
+            <span className={active ? "text-primary" : "text-muted-foreground"}>
               {item.icon}
             </span>
             {item.label}
