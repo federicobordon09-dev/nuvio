@@ -34,7 +34,7 @@ function NewMissingMeasurementCard({
         </h4>
         <span
           className={`inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-[12px] font-medium ${
-            isNew ? "bg-ocean-tint text-ocean" : "bg-muted text-muted-foreground"
+            isNew ? "bg-primary-muted text-primary" : "bg-muted text-muted-foreground"
           }`}
         >
           {isNew ? "Nuevo" : "Ausente"}

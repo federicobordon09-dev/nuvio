@@ -37,8 +37,8 @@ export function ComparisonContext({
       <span
         className={`inline-flex w-fit shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${
           label === "Anterior"
-            ? "bg-ocean-tint text-ocean"
-            : "bg-ocean text-white"
+            ? "bg-primary-muted text-primary"
+            : "bg-primary text-primary-foreground"
         }`}
       >
         {label}
@@ -48,7 +48,7 @@ export function ComparisonContext({
         href={`/dashboard/estudios/${study.id}`}
         className="mt-3 min-w-0"
       >
-        <p className="truncate text-[15px] font-medium leading-snug text-foreground transition-colors hover:text-ocean">
+        <p className="truncate text-[15px] font-medium leading-snug text-foreground transition-colors hover:text-primary">
           {study.file_name}
         </p>
       </Link>
