@@ -3,6 +3,7 @@
 import { useState, Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -28,17 +29,18 @@ function LoginForm() {
     <>
       {error && (
         <div
-          className="mb-6 p-4 bg-red-900/30 border border-red-700 rounded-lg text-red-300 text-sm"
+          className="mb-6 rounded-lg border border-danger/30 bg-danger-tint p-4 text-[13px] text-danger-strong"
           role="alert"
         >
           {error}
         </div>
       )}
 
-      <button
+      <Button
         onClick={handleGoogleSignIn}
         disabled={loading}
-        className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white text-ink-950 font-medium rounded-lg hover:bg-ink-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-ink-950 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full"
+        size="lg"
       >
         <svg
           className="h-5 w-5"
@@ -63,15 +65,15 @@ function LoginForm() {
           />
         </svg>
         {loading ? "Conectando..." : "Continuar con Google"}
-      </button>
+      </Button>
 
-      <p className="mt-6 text-center text-muted text-sm">
+      <p className="mt-6 text-center text-[13px] text-muted-foreground">
         Al continuar, aceptás nuestros{" "}
-        <a href="/terminos" className="underline hover:text-primary-400">
+        <a href="/terminos" className="underline hover:text-primary">
           Términos de uso
         </a>{" "}
         y{" "}
-        <a href="/privacidad" className="underline hover:text-primary-400">
+        <a href="/privacidad" className="underline hover:text-primary">
           Política de privacidad
         </a>
       </p>
@@ -81,19 +83,19 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-ink-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-foreground px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/nuvio_logo_nuevo.png"
             alt="Nuvio"
-            className="mx-auto h-16 w-auto"
+            className="mx-auto h-16 w-auto brightness-0 invert"
           />
-          <h1 className="mt-4 text-2xl font-medium text-white">
+          <h1 className="mt-4 text-2xl font-medium text-surface">
             Iniciá sesión en Nuvio
           </h1>
-          <p className="mt-2 text-muted">
+          <p className="mt-2 text-[14px] text-muted-foreground">
             Accedé con tu cuenta de Google para gestionar tus estudios médicos
           </p>
         </div>

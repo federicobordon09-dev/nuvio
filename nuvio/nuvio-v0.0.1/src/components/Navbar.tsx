@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/Button";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -18,8 +19,8 @@ export default function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-200 ${
         scrolled
-          ? "border-border bg-white/80 backdrop-blur-xl"
-          : "border-transparent bg-white"
+          ? "border-border bg-surface/80 backdrop-blur-xl"
+          : "border-transparent bg-surface"
       }`}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8">
@@ -55,11 +56,8 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        <Link
-          href="/auth/login"
-          className="inline-flex h-9 items-center rounded-lg bg-primary px-4 text-[13px] font-medium text-white transition-all duration-200 ease-out hover:bg-primary/90 hover:shadow-sm active:scale-[0.98]"
-        >
-          Empezar
+        <Link href="/auth/login">
+          <Button size="sm">Empezar</Button>
         </Link>
       </div>
     </header>
