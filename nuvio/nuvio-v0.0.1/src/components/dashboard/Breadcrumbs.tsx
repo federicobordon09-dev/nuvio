@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChevronRight } from "@/components/ui/icons";
 
 export type Crumb = { label: string; href?: string };
 
@@ -15,16 +16,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
           return (
             <li key={`${item.label}-${i}`} className="flex items-center gap-1.5">
               {i > 0 && (
-                <svg
-                  className="h-3.5 w-3.5 text-muted-foreground/50"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                </svg>
+                <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50" />
               )}
               {isLast || !item.href ? (
                 <span aria-current={isLast ? "page" : undefined} className="text-foreground">

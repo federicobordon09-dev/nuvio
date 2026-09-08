@@ -57,55 +57,13 @@
   --font-mono: var(--font-geist-mono);
 
   /* ═══════════════════════════════════════════════════
-     COMPATIBILITY ALIASES — temporal, para migración
-     de componentes que todavía usan los nombres antiguos.
-     Estos aliases NO representan la nueva identidad.
-     Se eliminarán cuando todos los componentes migren.
+     COMPATIBILITY ALIASES — primary scale
+     Solo tokens con consumidores reales se mantienen.
      ═══════════════════════════════════════════════════ */
 
-  /* ocean → primary (identidad antigua) */
-  --color-ocean: #251836;
-  --color-ocean-dark: #1A1024;
-  --color-ocean-tint: #F3E0FE;
-  --ocean: #251836;
-  --ocean-dark: #1A1024;
-  --ocean-tint: #F3E0FE;
-
-  /* accent (legado, prácticamente sin uso) */
-  --color-accent: #251836;
-  --color-accent-light: #F3E0FE;
-  --color-accent-foreground: #FFFFFF;
-
-  /* primary scale — derivado de la nueva marca */
-  --color-primary-50: #F3E0FE;
-  --color-primary-100: #E4C5FA;
+  /* primary scale — derivado de la nueva marca (solo con consumidores) */
   --color-primary-200: #CDA0F0;
-  --color-primary-400: #6D4BC4;
-  --color-primary-500: #4A2FA0;
-  --color-primary-600: #251836;
   --color-primary-700: #1A1024;
-  --color-primary-800: #120B1A;
-  --color-primary-900: #0A0610;
-
-  /* ink — paleta neutra legacy */
-  --color-ink-950: #17131A;
-  --color-ink-900: #1E1A22;
-  --color-ink-800: #2A2430;
-  --color-ink-700: #3A3440;
-  --color-ink-600: #756B7D;
-
-  /* status legacy aliases */
-  --success: #3F8F68;
-  --success-tint: #E4F5EB;
-  --success-strong: #2D6B4D;
-  --warning: #C58A32;
-  --warning-tint: #F6EBD7;
-  --warning-strong: #8A5B15;
-  --danger: #C65353;
-  --danger-tint: #F6E4E4;
-  --danger-strong: #932B2B;
-  --info: #251836;
-  --info-tint: #EDE5F6;
 }
 
 html {

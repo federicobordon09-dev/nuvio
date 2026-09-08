@@ -60,7 +60,7 @@ export function AnalysisSection({
             <li key={index} className={`text-[14px] leading-[1.6] ${style.textClass}`}>
               <span className="inline-flex items-start gap-2">
                 <span
-                  className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-primary-400"
+                  className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
                   aria-hidden="true"
                 />
                 <span>{item}</span>

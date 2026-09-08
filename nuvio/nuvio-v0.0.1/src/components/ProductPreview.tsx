@@ -8,7 +8,7 @@ export default function ProductPreview() {
     >
       <div className="absolute -inset-4 rounded-2xl bg-primary/[0.03] blur-2xl" />
 
-      <div className="relative rounded-xl border border-border bg-surface shadow-[0_1px_3px_rgba(23,19,26,0.04),0_8px_24px_rgba(23,19,26,0.06)]">
+      <div className="relative rounded-xl border border-border bg-surface shadow-[var(--shadow-md)]">
         <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3">
           <div className="flex gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-border/60" />

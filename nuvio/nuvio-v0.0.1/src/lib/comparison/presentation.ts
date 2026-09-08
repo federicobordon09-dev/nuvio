@@ -265,7 +265,7 @@ export function computeComparisonTiles(
       key: "changes",
       label: "Cambios",
       value: changesCount,
-      tone: "bg-ocean text-white",
+      tone: "bg-primary text-primary-foreground",
       group: "primary",
     },
     {
@@ -293,14 +293,14 @@ export function computeComparisonTiles(
       key: "compared",
       label: "Mediciones comparadas",
       value: overall.numericSummary.comparableCount,
-      tone: "bg-ocean-tint text-ocean",
+      tone: "bg-primary-muted text-primary",
       group: "secondary",
     },
     {
       key: "new",
       label: "Parámetros nuevos",
       value: overall.newParametersCount,
-      tone: "bg-ocean-tint text-ocean",
+      tone: "bg-primary-muted text-primary",
       group: "secondary",
     },
     {
@@ -321,7 +321,7 @@ export function computeComparisonTiles(
       key: "new_findings",
       label: "Hallazgos nuevos",
       value: overall.newFindingsCount,
-      tone: "bg-ocean-tint text-ocean",
+      tone: "bg-primary-muted text-primary",
       group: "secondary",
     },
     {

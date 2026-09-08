@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { getSignedUrl } from "@/lib/actions/studies";
+import { Button } from "@/components/ui/Button";
 
 export function StudyDownloadButton({ studyId }: { studyId: string }) {
   const [loading, setLoading] = useState(false);
@@ -22,13 +23,12 @@ export function StudyDownloadButton({ studyId }: { studyId: string }) {
 
   return (
     <div className="flex flex-col gap-1">
-      <button
+      <Button
         onClick={handleDownload}
         disabled={loading}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-primary-700 disabled:opacity-50"
       >
         {loading ? "Generando enlace…" : "Descargar"}
-      </button>
+      </Button>
       {error && <p className="text-[12px] text-danger">{error}</p>}
     </div>
   );

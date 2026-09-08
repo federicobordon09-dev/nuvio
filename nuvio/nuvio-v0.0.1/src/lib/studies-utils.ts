@@ -152,9 +152,9 @@ export const STUDY_STAGE_STYLES: Record<
     dot: "bg-muted-foreground/50",
   },
   processing: {
-    bg: "bg-ocean-tint",
-    text: "text-ocean",
-    dot: "bg-ocean",
+    bg: "bg-primary-muted",
+    text: "text-primary",
+    dot: "bg-primary",
   },
   error_processing: {
     bg: "bg-danger-tint",
@@ -167,9 +167,9 @@ export const STUDY_STAGE_STYLES: Record<
     dot: "bg-muted-foreground/50",
   },
   analyzing: {
-    bg: "bg-ocean-tint",
-    text: "text-ocean",
-    dot: "bg-ocean",
+    bg: "bg-primary-muted",
+    text: "text-primary",
+    dot: "bg-primary",
   },
   ready: {
     bg: "bg-success-tint",
