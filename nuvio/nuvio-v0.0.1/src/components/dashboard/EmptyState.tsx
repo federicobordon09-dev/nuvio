@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Card } from "@/components/ui/Card";
 
 interface EmptyStateProps {
   icon: ReactNode;
@@ -13,19 +14,19 @@ interface EmptyStateProps {
  */
 export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
-    <div className="rounded-xl border border-border bg-surface p-8">
+    <Card padding="lg">
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted/50 text-muted-foreground">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-muted text-primary">
           {icon}
         </div>
         <h3 className="text-[15px] font-medium text-foreground">{title}</h3>
         {description && (
-          <p className="mt-1 max-w-sm text-[13px] leading-[1.5] text-muted-foreground">
+          <p className="mt-1.5 max-w-sm text-[13px] leading-[1.6] text-muted-foreground">
             {description}
           </p>
         )}
-        {action && <div className="mt-4">{action}</div>}
+        {action && <div className="mt-5">{action}</div>}
       </div>
-    </div>
+    </Card>
   );
 }

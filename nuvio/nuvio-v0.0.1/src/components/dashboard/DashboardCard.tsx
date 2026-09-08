@@ -20,7 +20,7 @@ interface DashboardCardProps {
  */
 export function DashboardCard({
   icon,
-  iconTone = "bg-ocean-tint text-ocean",
+  iconTone = "bg-primary-muted text-primary",
   title,
   description,
   footer,
@@ -54,20 +54,9 @@ export function DashboardCard({
     return (
       <Link
         href={href}
-        className={`${classes} group hover:border-ocean/20 hover:bg-ocean-tint/20`}
+        className={`${classes} group hover:border-primary/20 hover:bg-primary-muted/30`}
       >
-        <h3 className="text-[15px] font-medium text-foreground transition-colors group-hover:text-ocean">
-          {title}
-        </h3>
-        {description && (
-          <p className="mt-1 text-[13px] leading-[1.5] text-muted-foreground">
-            {description}
-          </p>
-        )}
-        {value && (
-          <p className="mt-3 text-[13px] font-medium text-foreground">{value}</p>
-        )}
-        {footer}
+        {content}
       </Link>
     );
   }

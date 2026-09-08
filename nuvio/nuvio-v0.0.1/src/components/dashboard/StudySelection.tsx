@@ -33,6 +33,7 @@ import {
   isSelected,
   getSelectionIndex,
 } from "@/lib/comparison/selection";
+import { Compare, Sparkles, Check, Plus } from "@/components/ui/icons";
 
 /** Props del componente de lista con selección. */
 interface StudySelectionListProps {
@@ -173,7 +174,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
       mobile ? "flex-1 px-4 py-3 text-[15px]" : "px-4 py-2.5 text-[14px]"
     } ${
       canCompareNow
-        ? "bg-ocean text-white hover:bg-ocean-dark"
+        ? "bg-primary text-white hover:bg-primary-700"
         : "bg-muted text-muted-foreground cursor-not-allowed"
     }`;
 
@@ -184,23 +185,10 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
         {seriesNotification}
       </div>
       {/* Header del modo selección (tablet y desktop: md+) */}
-      <div className="hidden md:block sticky top-4 z-10 mb-4 rounded-xl border border-ocean/20 bg-ocean-tint/50 p-4">
+      <div className="hidden md:block sticky top-4 z-10 mb-4 rounded-xl border border-primary/20 bg-primary-muted/50 p-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
-            <svg
-              className="h-5 w-5 text-ocean shrink-0"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
-              />
-            </svg>
+            <Compare className="h-5 w-5 text-primary shrink-0" />
             <div className="min-w-0">
               <p
                 className="text-[14px] font-medium text-foreground"
@@ -274,9 +262,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                     {/* Contador de serie cuando está activa */}
                     {isActiveFamily && (
                       <span className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-violet/30 bg-violet-tint/50 px-3 py-1.5 text-[13px] font-medium text-violet">
-                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 3v18m-4.5-9h18" />
-                        </svg>
+                        <Plus className="h-3.5 w-3.5" />
                         {getEvolutionCountLabel(familySelection)}
                       </span>
                     )}
@@ -287,9 +273,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                         onClick={handleSeriesRun}
                         className={seriesButtonClasses(false)}
                       >
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-                        </svg>
+                        <Sparkles className="h-4 w-4" />
                         Ver evolución
                       </button>
                     ) : isActiveFamily ? (
@@ -298,9 +282,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                         disabled
                         className={seriesButtonClasses(false)}
                       >
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-                        </svg>
+                        <Sparkles className="h-4 w-4" />
                         {getEvolutionCtaLabel(familySelection, familyStudies)}
                       </button>
                     ) : (
@@ -309,9 +291,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                         onClick={() => setSeries(beginEvolutionSeries(group.studyType!))}
                         className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-violet/30 bg-violet-tint/50 px-3 py-1.5 text-[13px] font-medium text-violet transition-colors hover:bg-violet-tint/80"
                       >
-                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 3v18m-4.5-9h18" />
-                        </svg>
+                        <Plus className="h-3.5 w-3.5" />
                         Seleccionar serie
                       </button>
                     )}
@@ -386,9 +366,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                   onClick={handleSeriesRun}
                   className={seriesButtonClasses(true)}
                 >
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-                  </svg>
+                  <Sparkles className="h-4 w-4" />
                   {getEvolutionCtaLabel(series, allStudies)}
                 </button>
                 <button
@@ -475,7 +453,7 @@ function StudyCardWithCheckbox({
   return (
     <div className={`relative rounded-xl transition-all ${
       selected
-        ? "ring-2 ring-ocean/20 bg-ocean-tint/30"
+        ? "ring-2 ring-primary/20 bg-primary-muted/30"
         : seriesSelected
           ? "ring-2 ring-violet/20 bg-violet-tint/30"
           : ""
@@ -494,22 +472,18 @@ function StudyCardWithCheckbox({
           <span
             className={`inline-flex h-6 w-6 items-center justify-center rounded-full border-2 transition-colors ${
               selected
-                ? "bg-ocean border-ocean text-white"
+                ? "bg-primary border-primary text-white"
                 : disabled
                 ? "border-muted text-muted-foreground bg-muted"
-                : "border-border text-foreground hover:border-ocean"
+                : "border-border text-foreground hover:border-primary"
             }`}
           >
             {selected ? (
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-              </svg>
+              <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
             ) : index >= 0 ? (
               <span className="text-[13px] font-bold">{index + 1}</span>
             ) : (
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0-13.5L16.5 12M21 7.5H7.5" />
-              </svg>
+              <Compare className="h-4 w-4" />
             )}
           </span>
         </label>
@@ -536,9 +510,7 @@ function StudyCardWithCheckbox({
               aria-label={seriesSelected ? `Quitar ${study.file_name} de la serie` : `Añadir ${study.file_name} a la serie`}
             />
             <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-violet/50 text-violet transition-colors hover:bg-violet-tint">
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 3v18m-4.5-9h18" />
-              </svg>
+              <Plus className="h-3.5 w-3.5" />
             </span>
           </label>
         </div>
@@ -552,7 +524,7 @@ function StudyCardWithCheckbox({
       {/* Badge de orden */}
       {badgeLabel && (
         <div className="absolute bottom-4 right-4 z-10">
-          <span className="inline-flex shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide bg-ocean text-white">
+          <span className="inline-flex shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide bg-primary text-white">
             {badgeLabel}
           </span>
         </div>

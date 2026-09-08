@@ -5,6 +5,7 @@ import { MobileNav } from "@/components/dashboard/MobileNav";
 import { signOut } from "@/lib/actions/auth";
 import Image from "next/image";
 import Link from "next/link";
+import { LogOut } from "@/components/ui/icons";
 
 export default async function DashboardLayout({
   children,
@@ -30,7 +31,7 @@ export default async function DashboardLayout({
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-surface/80 px-4 backdrop-blur-xl lg:hidden">
         <Link href="/dashboard" className="flex items-center" aria-label="Nuvio">
           <Image
-            src="/nuvio_logo.png"
+            src="/nuvio_logo_nuevo.png"
             alt="Nuvio"
             width={100}
             height={24}
@@ -48,7 +49,7 @@ export default async function DashboardLayout({
             <div className="flex h-16 items-center px-5">
               <Link href="/dashboard" className="flex items-center" aria-label="Nuvio">
                 <Image
-                  src="/nuvio_logo.png"
+                  src="/nuvio_logo_nuevo.png"
                   alt="Nuvio"
                   width={120}
                   height={32}
@@ -72,7 +73,7 @@ export default async function DashboardLayout({
                     className="h-8 w-8 rounded-full"
                   />
                 ) : (
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ocean-tint text-[13px] font-medium text-ocean-dark">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-muted text-[13px] font-medium text-primary">
                     {userName.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -92,9 +93,7 @@ export default async function DashboardLayout({
                   type="submit"
                   className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium text-muted-foreground transition-colors duration-150 hover:bg-muted/50 hover:text-foreground"
                 >
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
-                  </svg>
+                  <LogOut className="h-5 w-5" />
                   Cerrar sesión
                 </button>
               </form>
