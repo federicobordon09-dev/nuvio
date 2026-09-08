@@ -13,12 +13,8 @@ import { AnalysisResult } from "@/components/studies/AnalysisResult";
 import { StudyExtraction } from "@/components/studies/StudyExtraction";
 import { StudyPipelineController } from "@/components/studies/StudyPipelineController";
 import { getAnalysisErrorMessage } from "@/lib/analysis/errors";
+import { ErrorTriangle } from "@/components/ui/icons";
 
-/**
- * Límite de ejecución en Vercel (Hobby: máx 60 s, Pro: máx 300 s).
- * Debe ser estrictamente mayor que ANALYSIS_TIMEOUT_MS (45 s) en gemini.ts
- * para que AbortController pueda actuar antes de que la plataforma corte la función.
- */
 export const maxDuration = 60;
 
 export default async function EstudioDetailPage({
@@ -41,11 +37,9 @@ export default async function EstudioDetailPage({
       extraction = await getStudyExtraction(id);
     } catch {
       // La tabla puede no existir aún o haber un error transitorio.
-      // Se muestra el fallback sin romper la página.
     }
   }
 
-  // Obtener análisis IA almacenado (sin volver a llamar a Gemini).
   let analysis: StudyAnalysis | null = null;
   if (study.status === "processed") {
     try {
@@ -55,20 +49,11 @@ export default async function EstudioDetailPage({
       }
     } catch {
       // La tabla puede no existir aún o haber un error transitorio.
-      // Se muestra la página sin análisis sin romper.
     }
   }
 
-  // ── Contenido de la columna principal ─────────────────────────
-
-  // Determinar si hay un análisis válido renderizable.
   const hasRenderableAnalysis = analysis !== null;
 
-  // Determinar si debemos mostrar el pipeline controller.
-  // Cubre el procesamiento completo desde cualquier estado:
-  // - uploaded / processing / ocr_required → iniciar o continuar procesamiento
-  // - processed + análisis pendiente → analizar automáticamente
-  // - error → reintentar procesamiento (si no hay análisis previo)
   const showPipeline =
     (study.status === "uploaded" ||
       study.status === "processing" ||
@@ -80,15 +65,11 @@ export default async function EstudioDetailPage({
         study.analysis_status !== "completed")) &&
     !hasRenderableAnalysis;
 
-  // Determinar si hay un error de análisis sin análisis renderizable.
   const showAnalysisError =
     study.status === "processed" &&
     !hasRenderableAnalysis &&
     study.analysis_status === "failed";
 
-  // Análisis "completado" pero no renderizable: el dato almacenado está
-  // corrupto o incompleto (parseStoredAnalysis devolvió null). Evita la
-  // pantalla en blanco ofreciendo volver a analizar.
   const showCorruptAnalysis =
     study.status === "processed" &&
     !hasRenderableAnalysis &&
@@ -109,9 +90,8 @@ export default async function EstudioDetailPage({
       />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px] lg:items-start">
-        {/* ── Columna principal (ancho) ─────────────────────── */}
+        {/* ── Columna principal ──────────────────────── */}
         <div className="min-w-0 space-y-6">
-          {/* ── Análisis válido: siempre se muestra ────────── */}
           {hasRenderableAnalysis && analysis && (
             <>
               <AnalysisResult
@@ -126,11 +106,10 @@ export default async function EstudioDetailPage({
             </>
           )}
 
-          {/* ── Análisis fallido (sin análisis renderizable) ── */}
           {showAnalysisError && (
             <div className="rounded-xl border border-border bg-surface p-5">
               <div className="mb-3 flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-danger" />
+                <ErrorTriangle className="h-5 w-5 text-danger" />
                 <h2 className="text-[15px] font-medium text-foreground">
                   Análisis de IA
                 </h2>
@@ -144,7 +123,6 @@ export default async function EstudioDetailPage({
             </div>
           )}
 
-          {/* ── Análisis corrupto/incompleto (completado pero no renderizable) ── */}
           {showCorruptAnalysis && (
             <div className="rounded-xl border border-border bg-surface p-5">
               <div className="mb-3 flex items-center gap-2">
@@ -163,7 +141,6 @@ export default async function EstudioDetailPage({
             </div>
           )}
 
-          {/* ── Pipeline automático (procesando o analizando) ── */}
           {showPipeline && (
             <StudyPipelineController
               studyId={study.id}
@@ -173,9 +150,8 @@ export default async function EstudioDetailPage({
             />
           )}
 
-          {/* ── Extracción no disponible ───────────────────── */}
           {study.status === "processed" && !extraction && (
-            <div className="rounded-xl border border-ocean/20 bg-ocean-tint p-4 text-[14px] leading-[1.6] text-ocean-dark">
+            <div className="rounded-xl border border-primary/20 bg-primary-muted p-4 text-[14px] leading-[1.6] text-primary-700">
               El documento fue procesado, pero todavía no tenemos disponible
               el contenido extraído.
             </div>
@@ -185,7 +161,6 @@ export default async function EstudioDetailPage({
 
         {/* ── Columna secundaria (300px) ────────────────────── */}
         <aside className="space-y-6">
-          {/* Metadata */}
           <section
             aria-label="Metadatos del estudio"
             className="rounded-xl border border-border bg-surface p-5"
@@ -247,7 +222,6 @@ export default async function EstudioDetailPage({
             </dl>
           </section>
 
-          {/* Acciones */}
           <section
             aria-label="Acciones"
             className="flex flex-col gap-3"
@@ -256,7 +230,6 @@ export default async function EstudioDetailPage({
             <StudyDeleteButton studyId={study.id} studyName={study.file_name} />
           </section>
 
-          {/* Contenido extraído (colapsado) */}
           {study.status === "processed" && extraction && (
             <StudyExtraction
               text={extraction.extracted_text}

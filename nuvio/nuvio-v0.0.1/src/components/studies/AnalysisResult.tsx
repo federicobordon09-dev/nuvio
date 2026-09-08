@@ -11,11 +11,6 @@ import { MeasurementsSection } from "./MeasurementsSection";
 import { AnalysisSection } from "./AnalysisSection";
 import { MedicalDisclaimer } from "./MedicalDisclaimer";
 
-/**
- * Componente principal de resultados de análisis médico.
- * Compone las secciones modulares adaptando el orden y la jerarquía
- * según el tipo de estudio (Fase 8.3).
- */
 export function AnalysisResult({
   analysis,
   studyId,
@@ -23,11 +18,8 @@ export function AnalysisResult({
   analysisStatus = "completed",
 }: {
   analysis: StudyAnalysis;
-  /** ID del estudio, para los CTAs contextuales hacia el Chat IA (Fase 8.4). */
   studyId: string;
-  /** Estado real del estudio (default: "processed"). */
   status?: string;
-  /** Estado real del análisis (default: "completed"). */
   analysisStatus?: string | null | undefined;
 }) {
   const presentation = getStudyResultPresentation(analysis.study_type);
@@ -38,7 +30,6 @@ export function AnalysisResult({
 
   return (
     <div className="space-y-5">
-      {/* Encabezado: estado + tipo + resumen */}
       <StudyResultHeader
         studyType={analysis.study_type}
         documentType={analysis.document_type}
@@ -47,7 +38,6 @@ export function AnalysisResult({
         analysisStatus={analysisStatus ?? null}
       />
 
-      {/* CTA principal: abrir Chat IA contextualizado con este estudio */}
       <StudyChatCta
         studyId={studyId}
         label="Preguntar sobre este estudio"
@@ -55,7 +45,6 @@ export function AnalysisResult({
         primary
       />
 
-      {/* Secciones dinámicas según tipo de estudio */}
       {visibleSections.map((section) => {
         const primary = isPrimary(section);
         const label = presentation.labels?.[section];
@@ -119,7 +108,6 @@ export function AnalysisResult({
         }
       })}
 
-      {/* Disclaimer médico */}
       <MedicalDisclaimer />
     </div>
   );

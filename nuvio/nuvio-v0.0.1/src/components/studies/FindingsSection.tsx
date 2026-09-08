@@ -5,18 +5,11 @@ import { FindingRow } from "./FindingRow";
 
 interface FindingsSectionProps {
   findings: KeyFinding[];
-  /** Label contextual (por tipo de estudio) — por defecto "Hallazgos principales". */
   title?: string;
-  /** Marca la sección como primaria (jerarquía visual superior). */
   primary?: boolean;
-  /** ID del estudio, para el CTA contextual de cada hallazgo (Fase 8.4). */
   studyId: string;
 }
 
-/**
- * Sección de hallazgos clínicos principales.
- * Muestra findings en una cuadrícula de 2 columnas.
- */
 export function FindingsSection({
   findings,
   title,
@@ -31,7 +24,7 @@ export function FindingsSection({
         <h3
           id="findings-section-heading"
           className={`text-[13px] font-semibold uppercase tracking-wide ${
-            primary ? "text-primary-600" : "text-muted-foreground"
+            primary ? "text-primary" : "text-muted-foreground"
           }`}
         >
           {title ?? "Hallazgos principales"}

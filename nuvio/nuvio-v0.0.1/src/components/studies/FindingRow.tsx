@@ -5,8 +5,6 @@ import type { KeyFinding, FindingStatus } from "@/lib/analysis/schema";
 import { StudyChatCta } from "@/components/chat/StudyChatCta";
 import { buildStudyChatPrompt } from "@/lib/chat/study-chat-cta";
 
-// ── Status labels & colors (semánticos) ───────────────────────
-
 const STATUS_LABELS: Record<FindingStatus, string> = {
   normal: "Normal",
   high: "Elevado",
@@ -44,20 +42,11 @@ function FindingStatusBadge({ status }: { status: FindingStatus }) {
   );
 }
 
-/**
- * Fila de hallazgo clínico en el panel de resultados.
- *
- * Representa una observación clínica (sin valor numérico). Muestra el
- * título, un badge opcional de importancia, y una explicación que se
- * expande individualmente ("Ver más"). Los valores numéricos/mediciones
- * se representan por separado en la sección de measurements.
- */
 export function FindingRow({
   finding,
   studyId,
 }: {
   finding: KeyFinding;
-  /** ID del estudio, para el CTA contextual "Preguntar sobre este hallazgo". */
   studyId: string;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -85,7 +74,7 @@ export function FindingRow({
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className="mt-1 min-h-[44px] py-2 text-[12px] font-medium text-ocean transition-colors hover:text-ocean-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean"
+            className="mt-1 min-h-[44px] py-2 text-[12px] font-medium text-primary transition-colors hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             aria-expanded={expanded}
           >
             {expanded ? "Ver menos" : "Ver más"}
@@ -93,7 +82,6 @@ export function FindingRow({
         </div>
       )}
 
-      {/* CTA contextual: preguntar sobre este hallazgo */}
       <StudyChatCta
         studyId={studyId}
         label="Preguntar sobre este hallazgo"

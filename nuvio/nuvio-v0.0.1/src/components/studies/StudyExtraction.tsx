@@ -1,19 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@/components/ui/Button";
 
 interface StudyExtractionProps {
   text: string;
   pageCount: number | null;
 }
 
-/**
- * Acordeón colapsable del contenido extraído.
- *
- * Muestra solo el encabezado ("Contenido extraído · N páginas") y un botón
- * para ver el texto completo dentro de un contenedor con scroll. Es respaldo,
- * no contenido principal; no debe competir visualmente con el análisis.
- */
 export function StudyExtraction({ text, pageCount }: StudyExtractionProps) {
   const [open, setOpen] = useState(false);
 
@@ -30,15 +24,15 @@ export function StudyExtraction({ text, pageCount }: StudyExtractionProps) {
               : "Texto extraído del documento original"}
           </p>
         </div>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="study-extraction-panel"
-          className="shrink-0 rounded-lg border border-border px-3 py-1.5 text-[12px] font-medium text-ocean transition-colors hover:bg-ocean-tint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean"
         >
           {open ? "Ocultar" : "Ver contenido"}
-        </button>
+        </Button>
       </div>
 
       {open && (

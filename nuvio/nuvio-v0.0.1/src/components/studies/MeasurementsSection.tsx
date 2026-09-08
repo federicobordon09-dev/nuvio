@@ -6,11 +6,8 @@ import { buildStudyChatPrompt } from "@/lib/chat/study-chat-cta";
 
 interface MeasurementsSectionProps {
   measurements: Measurement[];
-  /** Label contextual (por tipo de estudio) — por defecto "Valores de tu estudio". */
   title?: string;
-  /** Marca la sección como primaria (jerarquía visual superior). */
   primary?: boolean;
-  /** ID del estudio, para el CTA contextual de cada medición (Fase 8.4). */
   studyId: string;
 }
 
@@ -32,10 +29,6 @@ const STATUS_STYLES: Record<MeasurementStatus, string> = {
   no_reference: "bg-muted text-muted-foreground",
 };
 
-/**
- * Sección de mediciones/valores médicos.
- * Muestra cada medición como tarjeta con valor, unidad, rango y estado.
- */
 export function MeasurementsSection({
   measurements,
   title,
@@ -50,7 +43,7 @@ export function MeasurementsSection({
         <h3
           id="measurements-section-heading"
           className={`text-[13px] font-semibold uppercase tracking-wide ${
-            primary ? "text-primary-600" : "text-muted-foreground"
+            primary ? "text-primary" : "text-muted-foreground"
           }`}
         >
           {title ?? "Valores de tu estudio"}
@@ -98,7 +91,6 @@ export function MeasurementsSection({
                 </p>
               )}
 
-              {/* CTA contextual: preguntar sobre este valor */}
               <StudyChatCta
                 studyId={studyId}
                 label="Preguntar sobre este valor"
