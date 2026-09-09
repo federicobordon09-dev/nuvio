@@ -193,6 +193,35 @@ La plataforma debe ayudar a responder preguntas como:
 - Ejemplo: analítico con `measurements` primario ("Valores de tu estudio"), MRI/CT con `findings` primario, ECG con `measurements` → "Parámetros" sin primaria forzada, epicrisis con `recommendations` en posición prioritaria
 - Helpers `hasResultSectionContent()` / `getVisibleResultSections()` para filtrar secciones vacías sin crear componentes paralelos
 
+### Fase 12 — Hardening de seguridad RLS
+- Migración `20260906000000`: INSERT de `study_extractions` valida ownership del estudio referenciado
+- Migración `20260906000001`: UPDATE de `study_extractions` y `study_analyses` valida ownership de fila + estudio (USING + WITH CHECK)
+- Tests estáticos de policies SQL (`policy-hardening.test.ts`)
+
+### Fase 13 — Explicación médica centrada en personas
+- Campo `significance` opcional en `MeasurementSchema` (backwards compatible)
+- Prompt Gemini instruye lenguaje humano, significado primero, sin diagnósticos
+- `measurement-significance.ts`: fallbacks por status para significado legible
+- `MeasurementsSection`: significado primero, datos secundarios
+- `FindingRow`: explicación prominente, título como label
+- `AnalysisResult`: títulos humanizados ("Qué encontramos", "Qué necesita atención", "Qué podés hacer", "Qué no pudimos determinar")
+- `MeasurementDiffList`: diffs legibles primero ("Aumentó/Disminuyó/Se mantuvo similar")
+- `ChatView`: auto-send desde CTA contextual con `requestAnimationFrame`
+
+### Fase 14 — Validación de comprensión y refinamiento
+- Auditoría completa de análisis, comparación, chat CTAs, warnings, limitations, disclaimer
+- Sin problemas detectados — todo cumple jerarquía: significado → estado → dato → detalle técnico
+
+### Fase 15 — Auditoría de seguridad
+- Auditoría completa: Auth/RLS/Storage/Server Actions/Gemini/Frontend/Privacidad
+- Sin vulnerabilidades CRÍTICAS ni ALTO
+- Doble capa de protección: RLS + ownership checks en Server Actions
+- API key solo server-side, bucket privado, zero XSS vectors
+
+### Fase 16 — Release final
+- Validación final: 680 tests, TypeScript, lint, build — todo PASS
+- Commit y push a `main`
+
 ### Fase 8.4 — CTA contextual hacia Chat IA desde la pantalla de resultados
 - **Objetivo:** permitir explorar un estudio desde el resultado sin re-seleccionarlo a mano en el Chat.
 - **CTA principal del resultado:** "Preguntar sobre este estudio" (primario, visible tras el header) → crea una conversación con el `study_id` como contexto y redirige a `/dashboard/chat/[id]`.
