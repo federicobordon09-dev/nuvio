@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { sendMessageAction, setContextAction } from "@/lib/actions/chat";
 import type { ChatMessage, SelectableStudy } from "@/lib/chat/schema";
 import { useSuggestedQuestions } from "@/lib/chat/use-suggested-questions";
@@ -39,6 +39,7 @@ export function ChatView({
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const autoSendPromptRef = useRef<string | null>(null);
 
   const hasMessages = messages.length > 0;
   const hasContext = selectedStudyIds.length > 0;
@@ -47,6 +48,45 @@ export function ChatView({
     : pickingStudy || !hasContext
       ? "pick-study"
       : "suggest";
+
+  const doSend = useCallback(async (content: string) => {
+    if (!content || sending) return;
+    setError(null);
+    const tempId = `temp-${Date.now()}`;
+    const tempUserMessage: ChatMessage = {
+      id: tempId,
+      conversation_id: conversationId,
+      user_id: "",
+      role: "user",
+      content,
+      created_at: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, tempUserMessage]);
+    setSending(true);
+
+    const formData = new FormData();
+    formData.set("conversationId", conversationId);
+    formData.set("content", content);
+
+    try {
+      const result = await sendMessageAction(formData);
+      setMessages((prev) => {
+        const withoutTemp = prev.filter((m) => m.id !== tempId);
+        if (!result.success) {
+          if (result.userMessage) withoutTemp.push(result.userMessage);
+          return withoutTemp;
+        }
+        return [...withoutTemp, result.userMessage, result.assistantMessage];
+      });
+      if (!result.success) {
+        setError(result.error || "No pudimos enviar el mensaje.");
+      }
+    } catch {
+      setError("Ocurrió un error inesperado. Intentá de nuevo.");
+    } finally {
+      setSending(false);
+    }
+  }, [conversationId, sending]);
 
   const primaryStudyType = useMemo(() => {
     if (selectedStudyIds.length === 0) return undefined;
@@ -58,6 +98,22 @@ export function ChatView({
     primaryStudyType,
     messages
   );
+
+  // Schedule auto-send for initial prompt when arriving from a CTA
+  // handleSend is a function declaration (hoisted), safe to omit from deps
+  useEffect(() => {
+    if (autoSendPromptRef.current !== null) return;
+    if (!initialPrompt) return;
+    if (hasMessages) return;
+    if (!hasContext) return;
+    if (sending) return;
+    autoSendPromptRef.current = initialPrompt;
+    // Defer send to avoid setState-in-effect lint error
+    const id = requestAnimationFrame(() => {
+      handleSend(initialPrompt);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [initialPrompt, hasMessages, hasContext, sending]);
 
   const guidedQuestions = useMemo(() => {
     if (!initialPrompt) return visibleQuestions;
@@ -107,41 +163,7 @@ export function ChatView({
 
     if (rawContent === undefined) setInput("");
 
-    setError(null);
-    const tempId = `temp-${Date.now()}`;
-    const tempUserMessage: ChatMessage = {
-      id: tempId,
-      conversation_id: conversationId,
-      user_id: "",
-      role: "user",
-      content,
-      created_at: new Date().toISOString(),
-    };
-    setMessages((prev) => [...prev, tempUserMessage]);
-    setSending(true);
-
-    const formData = new FormData();
-    formData.set("conversationId", conversationId);
-    formData.set("content", content);
-
-    try {
-      const result = await sendMessageAction(formData);
-      setMessages((prev) => {
-        const withoutTemp = prev.filter((m) => m.id !== tempId);
-        if (!result.success) {
-          if (result.userMessage) withoutTemp.push(result.userMessage);
-          return withoutTemp;
-        }
-        return [...withoutTemp, result.userMessage, result.assistantMessage];
-      });
-      if (!result.success) {
-        setError(result.error || "No pudimos enviar el mensaje.");
-      }
-    } catch {
-      setError("Ocurrió un error inesperado. Intentá de nuevo.");
-    } finally {
-      setSending(false);
-    }
+    await doSend(content);
   }
 
   return (

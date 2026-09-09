@@ -101,9 +101,15 @@ Reglas obligatorias:
 - No inventes valores, unidades, rangos de referencia, fechas, síntomas, antecedentes, diagnósticos ni medicamentos.
 - Si un dato es ambiguo, reflejalo en limitations.
 - Si falta información, usá limitations.
-- Explicá en español claro y preciso.
+- Explicá en español claro, directo y comprensible para una persona sin formación médica.
 - No diagnosticues. No prescribas tratamientos. No indiques cambios de medicación.
 - No presentes conclusiones clínicas como certezas cuando el documento no las sustenta.
+- Usá lenguaje cotidiano, no jerga médica. Si usás un término técnico, explicalo brevemente.
+
+Priorización de la información:
+- El campo summary debe explicar qué encontraron en el documento en lenguaje simple, priorizando el significado sobre los números.
+- Para key_findings: la explanation debe explicar qué significa el hallazgo para el paciente, no solo repetir el título. Evitá terminología innecesaria.
+- Para measurements: el campo significance debe explicar qué significa el resultado en lenguaje cotidiano (p. ej. "Está dentro del rango esperado", "Está un poco elevado", "Está por debajo de lo normal"). El value y unit son datos de apoyo, no el foco principal.
 
 Separación entre hallazgos y mediciones:
 - key_findings son observaciones clínicas relevantes (p. ej. "opacidad en lóbulo superior", "ritmo irregular"). No incluyen valor numérico.
@@ -118,6 +124,7 @@ Reglas para measurements:
 - status solo puede ser: within_range, above_range, below_range, abnormal, unknown, no_reference.
 - Si el documento no contiene mediciones numéricas → measurements debe ser un array vacío [].
 - Nunca combines un valor en key_findings; los valores van en measurements.
+- significance: escribí una frase corta en lenguaje cotidiano que explique qué significa este resultado para el paciente. Ejemplos: "Está dentro del rango esperado", "Está un poco por encima de lo normal", "Este valor necesita atención médica". Si no podés determinarlo, omití el campo.
 
 Clasificación del tipo de estudio (study_type):
 - Usá exclusivamente uno de estos códigos: blood_test, MRI, CT, ECG, epicrisis, medical_report, other.
@@ -153,7 +160,7 @@ const ANALYSIS_RESPONSE_SCHEMA = {
     key_findings: {
       type: "array" as const,
       description:
-        "Observaciones clínicas relevantes (sin valor numérico). Ej: 'opacidad en lóbulo superior', 'ritmo irregular'.",
+        "Observaciones clínicas relevantes (sin valor numérico). La explanation debe explicar qué significa el hallazgo para el paciente en lenguaje cotidiano.",
       items: {
         type: "object" as const,
         properties: {
@@ -163,7 +170,7 @@ const ANALYSIS_RESPONSE_SCHEMA = {
           },
           explanation: {
             type: "string" as const,
-            description: "Explicación del hallazgo.",
+            description: "Explicación del hallazgo en lenguaje simple para una persona sin formación médica. Qué significa este hallazgo para el paciente.",
           },
           importance: {
             type: "string" as const,
@@ -212,6 +219,11 @@ const ANALYSIS_RESPONSE_SCHEMA = {
             ] as const,
             description:
               "Estado de la medición respecto al rango. Omitir si no se puede determinar.",
+          },
+          significance: {
+            type: "string" as const,
+            description:
+              "Frase corta en lenguaje cotidiano que explique qué significa este resultado para el paciente. Ej: 'Está dentro del rango esperado', 'Está un poco por encima de lo normal'. Omitir si no se puede determinar.",
           },
         },
         required: ["name", "value"] as const,

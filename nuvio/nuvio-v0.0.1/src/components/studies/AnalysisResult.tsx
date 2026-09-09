@@ -74,7 +74,7 @@ export function AnalysisResult({
             return (
               <AnalysisSection
                 key="observations"
-                title="Observaciones"
+                title="Qué encontramos"
                 items={analysis.observations}
               />
             );
@@ -82,7 +82,7 @@ export function AnalysisResult({
             return (
               <AnalysisSection
                 key="warnings"
-                title="Advertencias"
+                title="Qué necesita atención"
                 items={analysis.warnings}
                 variant="warning"
               />
@@ -91,7 +91,7 @@ export function AnalysisResult({
             return (
               <AnalysisSection
                 key="recommendations"
-                title="Recomendaciones"
+                title="Qué podés hacer"
                 items={analysis.recommendations}
               />
             );
@@ -99,7 +99,7 @@ export function AnalysisResult({
             return (
               <AnalysisSection
                 key="limitations"
-                title="Limitaciones"
+                title="Qué no pudimos determinar"
                 items={analysis.limitations}
               />
             );

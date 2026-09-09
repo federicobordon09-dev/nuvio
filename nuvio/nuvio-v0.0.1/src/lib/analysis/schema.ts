@@ -62,6 +62,7 @@ export const MeasurementSchema = z.object({
   unit: z.string().nullable().optional(),
   reference_range: z.string().nullable().optional(),
   status: MeasurementStatusSchema.optional(),
+  significance: z.string().optional(),
 });
 
 export type Measurement = z.infer<typeof MeasurementSchema>;

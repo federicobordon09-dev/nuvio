@@ -1,6 +1,7 @@
 "use client";
 
 import type { Measurement, MeasurementStatus } from "@/lib/analysis/schema";
+import { getMeasurementSignificance, getStatusLabel } from "@/lib/analysis/measurement-significance";
 import { StudyChatCta } from "@/components/chat/StudyChatCta";
 import { buildStudyChatPrompt } from "@/lib/chat/study-chat-cta";
 
@@ -10,15 +11,6 @@ interface MeasurementsSectionProps {
   primary?: boolean;
   studyId: string;
 }
-
-const MEASUREMENT_STATUS_LABELS: Record<MeasurementStatus, string> = {
-  within_range: "Dentro del rango",
-  above_range: "Por encima del rango",
-  below_range: "Por debajo del rango",
-  abnormal: "Anormal",
-  unknown: "Sin determinar",
-  no_reference: "Sin referencia",
-};
 
 const STATUS_STYLES: Record<MeasurementStatus, string> = {
   within_range: "bg-success-tint text-success-strong",
@@ -49,45 +41,53 @@ export function MeasurementsSection({
           {title ?? "Valores de tu estudio"}
         </h3>
         <span className="text-[12px] text-muted-foreground">
-          {measurements.length} medición{measurements.length !== 1 ? "es" : ""}
+          {measurements.length} valor{measurements.length !== 1 ? "es" : ""}
         </span>
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {measurements.map((m, index) => {
-          const style = m.status ? STATUS_STYLES[m.status] : "";
+          const significance = getMeasurementSignificance(m.significance, m.status);
+          const statusLabel = getStatusLabel(m.status);
           const hasStatus = m.status !== undefined && m.status !== "unknown" && m.status !== "no_reference";
+          const style = m.status ? STATUS_STYLES[m.status] : "";
 
           return (
             <article
               key={m.name || index}
-              className="flex flex-col gap-1 rounded-xl border border-border bg-surface p-4"
+              className="flex flex-col gap-1.5 rounded-xl border border-border bg-surface p-4"
             >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h4 className="min-w-0 text-[14px] font-medium leading-snug text-foreground">
-                  {m.name}
-                </h4>
-                {hasStatus && m.status && (
-                  <span className={`rounded-full px-2.5 py-0.5 text-[12px] font-medium ${style}`}>
-                    {MEASUREMENT_STATUS_LABELS[m.status] ?? m.status}
-                  </span>
-                )}
-              </div>
+              <h4 className="text-[13px] font-medium text-foreground">
+                {m.name}
+              </h4>
 
-              {m.value && (
-                <p className="font-mono text-[20px] font-medium leading-none tracking-tight text-foreground">
-                  {m.value}
-                  {m.unit && (
-                    <span className="ml-1.5 font-sans text-[12px] font-normal text-muted-foreground">
-                      {m.unit}
-                    </span>
-                  )}
+              {significance && (
+                <p className="text-body font-medium text-foreground leading-snug">
+                  {significance}
                 </p>
               )}
 
+              {m.value && (
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-mono text-[15px] font-medium tabular-nums text-foreground">
+                    {m.value}
+                  </span>
+                  {m.unit && (
+                    <span className="text-[12px] text-muted-foreground">
+                      {m.unit}
+                    </span>
+                  )}
+                  {hasStatus && statusLabel && (
+                    <span className={`ml-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${style}`}>
+                      {statusLabel}
+                    </span>
+                  )}
+                </div>
+              )}
+
               {m.reference_range && (
-                <p className="text-[12px] text-muted-foreground">
-                  Ref. {m.reference_range}
+                <p className="text-[11px] text-muted-foreground">
+                  Rango indicado: {m.reference_range}
                 </p>
               )}
 

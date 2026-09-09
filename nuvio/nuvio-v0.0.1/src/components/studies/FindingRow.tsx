@@ -9,7 +9,7 @@ const STATUS_LABELS: Record<FindingStatus, string> = {
   normal: "Normal",
   high: "Elevado",
   low: "Bajo",
-  abnormal: "Anormal",
+  abnormal: "Requiere atención",
   unknown: "Sin datos",
 };
 
@@ -54,7 +54,7 @@ export function FindingRow({
   return (
     <div className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h4 className="min-w-0 text-[14px] font-medium leading-snug text-foreground">
+        <h4 className="min-w-0 text-[13px] font-medium text-muted-foreground">
           {finding.title}
         </h4>
         {finding.importance && (
@@ -65,8 +65,8 @@ export function FindingRow({
       {finding.explanation && (
         <div className="mt-auto pt-1">
           <p
-            className={`text-[13px] leading-[1.55] text-foreground/80 ${
-              expanded ? "" : "line-clamp-2"
+            className={`text-body font-medium leading-body text-foreground ${
+              expanded ? "" : "line-clamp-3"
             }`}
           >
             {finding.explanation}

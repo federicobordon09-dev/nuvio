@@ -52,11 +52,63 @@ function NewMissingMeasurementCard({
       )}
       <p className="mt-1 text-caption text-muted-foreground">
         {isNew
-          ? "Solo aparece en el estudio posterior."
+          ? "Solo aparece en el estudio más reciente."
           : "Solo aparece en el estudio anterior."}
       </p>
     </article>
   );
+}
+
+function HumanReadableChange({
+  kind,
+  diff,
+}: {
+  kind: ReturnType<typeof changeKind>;
+  diff: Extract<MeasurementDiff, { status: "comparable" }>;
+}) {
+  const isChanged = kind === "increased" || kind === "decreased";
+  const delta = formatSignedDelta(diff);
+  const pct = formatPercentageChange(diff);
+  const unit = diff.unitMismatch.currentUnit ?? diff.unitMismatch.previousUnit ?? "";
+
+  if (kind === "stable") {
+    return (
+      <p className="text-body font-medium text-foreground">
+        Se mantuvo similar entre ambos estudios.
+      </p>
+    );
+  }
+
+  if (kind === "incompatible") {
+    return (
+      <p className="text-body text-muted-foreground">
+        {UNIT_MISMATCH_NOTE}
+      </p>
+    );
+  }
+
+  if (kind === "non_numeric") {
+    const note = numericComparisonNote(diff);
+    return note ? (
+      <p className="text-body text-muted-foreground">{note}</p>
+    ) : null;
+  }
+
+  if (isChanged) {
+    const direction = kind === "increased" ? "aumentó" : "disminuyó";
+    return (
+      <p className="text-body font-medium text-foreground">
+        El valor {direction}
+        {delta && (
+          <span className="text-muted-foreground">
+            {" "}({delta}{unit ? ` ${unit}` : ""}{pct ? `, ${pct}` : ""})
+          </span>
+        )}
+      </p>
+    );
+  }
+
+  return null;
 }
 
 function ComparableMeasurementCard({
@@ -65,17 +117,12 @@ function ComparableMeasurementCard({
   diff: Extract<MeasurementDiff, { status: "comparable" }>;
 }) {
   const kind = changeKind(diff);
-  const note = numericComparisonNote(diff);
-  const delta = formatSignedDelta(diff);
-  const pct = formatPercentageChange(diff);
-  const unit = diff.unitMismatch.currentUnit ?? diff.unitMismatch.previousUnit ?? "";
   const statusChanged =
     diff.statusDiff.changed &&
     diff.statusDiff.previousStatus !== undefined &&
     diff.statusDiff.currentStatus !== undefined;
   const currentStatus = diff.statusDiff.currentStatus;
   const currentRange = formatReferenceRange(diff.referenceRangeDiff.currentRange);
-  const isChanged = kind === "increased" || kind === "decreased";
 
   return (
     <article className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
@@ -91,75 +138,48 @@ function ComparableMeasurementCard({
         </span>
       </div>
 
+      <HumanReadableChange kind={kind} diff={diff} />
+
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-        <span className="data-label">
-          Anterior
-        </span>
-        <span className="font-mono text-[17px] font-medium leading-none tracking-tight text-foreground">
+        <span className="data-label">Anterior</span>
+        <span className="font-mono text-[15px] font-medium tabular-nums text-foreground">
           {formatValueWithUnit(diff.previousValue, diff.unitMismatch.previousUnit)}
         </span>
         <span className="text-muted-foreground" aria-hidden="true">→</span>
-        <span className="data-label">
-          Posterior
-        </span>
-        <span className="font-mono text-[17px] font-medium leading-none tracking-tight text-foreground">
+        <span className="data-label">Posterior</span>
+        <span className="font-mono text-[15px] font-medium tabular-nums text-foreground">
           {formatValueWithUnit(diff.currentValue, diff.unitMismatch.currentUnit)}
         </span>
       </div>
 
-      {isChanged && delta !== null ? (
-        <p className="text-body font-semibold text-foreground">
-          {CHANGE_LABELS[kind]}
-          <span className="tabular-nums">
-            {" · "}{delta}{unit ? ` ${unit}` : ""}{pct !== null ? ` · ${pct}` : ""}
-          </span>
-        </p>
-      ) : kind === "stable" ? (
-        <p className="text-caption text-muted-foreground">Sin cambios</p>
-      ) : kind === "incompatible" ? (
-        <p className="text-caption leading-body text-muted-foreground">
-          {UNIT_MISMATCH_NOTE}
-        </p>
-      ) : (
-        note && (
-          <p className="text-caption leading-body text-muted-foreground">
-            {note}
-          </p>
-        )
+      {(statusChanged || currentStatus !== undefined || currentRange) && (
+        <div className="border-t border-border pt-2.5 text-caption leading-body text-muted-foreground">
+          {statusChanged ? (
+            <p>
+              <span className="font-medium text-foreground">Estado:</span>{" "}
+              {MEASUREMENT_STATUS_LABELS[diff.statusDiff.previousStatus!]} →{" "}
+              {MEASUREMENT_STATUS_LABELS[diff.statusDiff.currentStatus!]}
+            </p>
+          ) : currentStatus !== undefined ? (
+            <p>
+              <span className="font-medium text-foreground">Estado:</span>{" "}
+              {MEASUREMENT_STATUS_LABELS[currentStatus]}
+            </p>
+          ) : null}
+          {diff.referenceRangeDiff.changed ? (
+            <p className={statusChanged ? "mt-1" : ""}>
+              <span className="font-medium text-foreground">Rango de referencia:</span>{" "}
+              {formatReferenceRange(diff.referenceRangeDiff.previousRange) ?? "no informado"}
+              {" → "}
+              {formatReferenceRange(diff.referenceRangeDiff.currentRange) ?? "no informado"}
+            </p>
+          ) : currentRange ? (
+            <p className={currentStatus !== undefined || statusChanged ? "mt-1" : ""}>
+              <span className="font-medium text-foreground">Ref.:</span> {currentRange}
+            </p>
+          ) : null}
+        </div>
       )}
-
-      {isChanged &&
-        (statusChanged ||
-          diff.referenceRangeDiff.changed ||
-          currentStatus !== undefined ||
-          currentRange) && (
-          <div className="border-t border-border pt-2.5 text-caption leading-body text-muted-foreground">
-            {statusChanged ? (
-              <p>
-                <span className="font-medium text-foreground">Estado:</span>{" "}
-                {MEASUREMENT_STATUS_LABELS[diff.statusDiff.previousStatus!]} →{" "}
-                {MEASUREMENT_STATUS_LABELS[diff.statusDiff.currentStatus!]}
-              </p>
-            ) : currentStatus !== undefined ? (
-              <p>
-                <span className="font-medium text-foreground">Estado:</span>{" "}
-                {MEASUREMENT_STATUS_LABELS[currentStatus]}
-              </p>
-            ) : null}
-            {diff.referenceRangeDiff.changed ? (
-              <p className={statusChanged ? "mt-1" : ""}>
-                <span className="font-medium text-foreground">Rango de referencia:</span>{" "}
-                {formatReferenceRange(diff.referenceRangeDiff.previousRange) ?? "no informado"}
-                {" → "}
-                {formatReferenceRange(diff.referenceRangeDiff.currentRange) ?? "no informado"}
-              </p>
-            ) : currentRange ? (
-              <p className={currentStatus !== undefined || statusChanged ? "mt-1" : ""}>
-                <span className="font-medium text-foreground">Ref.:</span> {currentRange}
-              </p>
-            ) : null}
-          </div>
-        )}
     </article>
   );
 }

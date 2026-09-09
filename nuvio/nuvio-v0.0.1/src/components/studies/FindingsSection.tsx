@@ -25,7 +25,7 @@ export function FindingsSection({
           id="findings-section-heading"
           className={`data-label ${primary ? "!text-primary" : ""}`}
         >
-          {title ?? "Hallazgos principales"}
+          {title ?? "Hallazgos"}
         </h3>
         <span className="text-caption text-muted-foreground">
           {findings.length} hallazgo{findings.length !== 1 ? "s" : ""}
