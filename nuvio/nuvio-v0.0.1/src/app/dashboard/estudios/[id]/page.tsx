@@ -89,9 +89,9 @@ export default async function EstudioDetailPage({
         description="Información detallada del estudio seleccionado."
       />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px] lg:items-start">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_300px] lg:items-start">
         {/* ── Columna principal ──────────────────────── */}
-        <div className="min-w-0 space-y-6">
+        <div className="min-w-0 space-y-8">
           {hasRenderableAnalysis && analysis && (
             <>
               <AnalysisResult
@@ -107,14 +107,14 @@ export default async function EstudioDetailPage({
           )}
 
           {showAnalysisError && (
-            <div className="rounded-xl border border-border bg-surface p-5">
+            <div className="rounded-xl border border-danger/20 bg-danger-tint/50 p-5">
               <div className="mb-3 flex items-center gap-2">
                 <ErrorTriangle className="h-5 w-5 text-danger" />
-                <h2 className="text-[15px] font-medium text-foreground">
+                <h2 className="text-body font-medium text-foreground">
                   Análisis de IA
                 </h2>
               </div>
-              <p className="text-[14px] leading-[1.6] text-danger-strong">
+              <p className="text-body text-danger-strong">
                 {getAnalysisErrorMessage(study.analysis_error ?? "gemini_failed")}
               </p>
               <div className="mt-4">
@@ -124,14 +124,14 @@ export default async function EstudioDetailPage({
           )}
 
           {showCorruptAnalysis && (
-            <div className="rounded-xl border border-border bg-surface p-5">
+            <div className="rounded-xl border border-warning/20 bg-warning-tint/50 p-5">
               <div className="mb-3 flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-warning" />
-                <h2 className="text-[15px] font-medium text-foreground">
+                <span className="status-dot status-dot-warning" />
+                <h2 className="text-body font-medium text-foreground">
                   Análisis de IA
                 </h2>
               </div>
-              <p className="text-[14px] leading-[1.6] text-foreground/80">
+              <p className="text-body text-muted-foreground">
                 El análisis almacenado de este estudio no se pudo leer. Podés
                 volver a generarlo.
               </p>
@@ -151,7 +151,7 @@ export default async function EstudioDetailPage({
           )}
 
           {study.status === "processed" && !extraction && (
-            <div className="rounded-xl border border-primary/20 bg-primary-muted p-4 text-[14px] leading-[1.6] text-primary-700">
+            <div className="rounded-xl border border-primary/20 bg-primary-muted/50 p-4 text-body text-primary">
               El documento fue procesado, pero todavía no tenemos disponible
               el contenido extraído.
             </div>
@@ -167,19 +167,19 @@ export default async function EstudioDetailPage({
           >
             <dl className="space-y-4">
               <div>
-                <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+                <dt className="data-label">
                   Tipo
                 </dt>
-                <dd className="mt-1 text-[14px] font-medium text-foreground">
+                <dd className="mt-1 text-body font-medium text-foreground">
                   {getStudyTypeLabelNullable(study.study_type)}
                 </dd>
               </div>
 
               <div>
-                <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+                <dt className="data-label">
                   Fecha de subida
                 </dt>
-                <dd className="mt-1 text-[14px] text-foreground">
+                <dd className="mt-1 text-body text-foreground">
                   {new Date(study.created_at).toLocaleDateString("es-AR", {
                     year: "numeric",
                     month: "long",
@@ -191,28 +191,28 @@ export default async function EstudioDetailPage({
               </div>
 
               <div>
-                <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+                <dt className="data-label">
                   Tamaño
                 </dt>
-                <dd className="mt-1 text-[14px] text-foreground">
+                <dd className="mt-1 text-body text-foreground">
                   {formatFileSize(study.file_size)}
                 </dd>
               </div>
 
               <div>
-                <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+                <dt className="data-label">
                   Tipo de archivo
                 </dt>
-                <dd className="mt-1 font-mono text-[13px] text-foreground">
+                <dd className="mt-1 font-mono text-caption text-foreground">
                   {study.mime_type}
                 </dd>
               </div>
 
               <div>
-                <dt className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground">
+                <dt className="data-label">
                   Estado
                 </dt>
-                <dd className="mt-1 text-[14px] text-foreground">
+                <dd className="mt-1 text-body text-foreground">
                   <StudyStatusBadge
                     status={study.status}
                     analysisStatus={study.analysis_status}

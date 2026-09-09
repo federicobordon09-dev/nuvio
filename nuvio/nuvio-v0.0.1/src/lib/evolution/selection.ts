@@ -225,15 +225,20 @@ export function canRunEvolution(
 
 /**
  * Ordena estudios por created_at ASC (semántica temporal de la evolución).
- * Función pura y genérica (basta con `created_at`), reutilizable por el
- * servidor (Fase 10.5, filas ricas) y por la URL (filas mínimas).
+ * Con timestamps idénticos aplica un tiebreaker determinista por `id`
+ * (Fase 10.7): el resultado no depende del orden del input.
+ * Función pura y genérica (basta con `created_at` e `id`), reutilizable por
+ * el servidor (Fase 10.5, filas ricas) y por la URL (filas mínimas).
  */
 export function orderEvolutionStudiesAsc<
-  T extends { created_at: string },
+  T extends { created_at: string; id: string },
 >(studies: T[]): T[] {
-  return [...studies].sort((a, b) =>
-    a.created_at < b.created_at ? -1 : a.created_at > b.created_at ? 1 : 0,
-  );
+  return [...studies].sort((a, b) => {
+    const byDate =
+      a.created_at < b.created_at ? -1 : a.created_at > b.created_at ? 1 : 0;
+    if (byDate !== 0) return byDate;
+    return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+  });
 }
 
 /**

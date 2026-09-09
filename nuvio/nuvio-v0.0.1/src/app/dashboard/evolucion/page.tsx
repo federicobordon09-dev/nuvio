@@ -28,25 +28,6 @@ import { EvolutionDisclaimer } from "@/components/evolution/EvolutionDisclaimer"
 import { Button } from "@/components/ui/Button";
 import { Warning, SearchX, DocumentSlash, Split } from "@/components/ui/icons";
 
-/**
- * Fase 10.5 — Página de evolución longitudinal de estudios.
- *
- * Ruta: `/dashboard/evolucion?ids=ID_A,ID_B,...` (2 a 10 estudios).
- *
- * Pipeline server-side:
- * 1. parseEvolutionIds valida la forma de la URL (rango, vacíos, duplicados).
- * 2. getStudy por cada ID verifica ownership (filtra por user_id).
- * 3. validateEvolutionSeries valida la serie resuelta (min/máx, tipo, ready).
- * 4. Se ordena por created_at ASC (semántica temporal de la evolución).
- * 5. getStudyAnalysis + parseStoredAnalysis leen los análisis almacenados.
- * 6. buildEvolutionSeries (Fase 10.4) construye los tracks de parámetros.
- *
- * Sin charts, sin IA en runtime, sin conversión de unidades y sin
- * interpretación clínica. Los errores son accesibles y no exponen
- * detalles internos del motor.
- */
-
-/** Fila mínima de estudio que necesita la página para validar y mostrar. */
 type StudyRow = {
   id: string;
   file_name: string;
@@ -55,8 +36,6 @@ type StudyRow = {
   analysis_status: string;
   created_at: string;
 };
-
-// ── Mensajes de validación de serie (análogos a los del motor) ──────────
 
 const SERIES_VALIDATION_MESSAGES: Record<SeriesInvalidReason, string> = {
   not_enough_studies:
@@ -71,8 +50,6 @@ const SERIES_VALIDATION_MESSAGES: Record<SeriesInvalidReason, string> = {
     "Uno de los estudios todavía no está listo para evolucionar. Procesá y analizá todos los estudios de la serie primero.",
 };
 
-// ── CTA compartido ───────────────────────────────────────────────────────
-
 function BackToStudiesLink() {
   return (
     <Link href="/dashboard/estudios">
@@ -80,8 +57,6 @@ function BackToStudiesLink() {
     </Link>
   );
 }
-
-// ── Página ───────────────────────────────────────────────────────────────
 
 export default async function EvolucionPage({
   searchParams,
@@ -107,7 +82,6 @@ export default async function EvolucionPage({
     </>
   );
 
-  // ── Estado: IDs de URL inválidos ──────────────────────────
   if (!parsed.ok) {
     return (
       <div>
@@ -122,7 +96,6 @@ export default async function EvolucionPage({
     );
   }
 
-  // ── Carga de estudios (ownership verificado server-side) ──
   const fetched = await Promise.all(
     parsed.ids.map(async (id): Promise<StudyRow | null> => {
       try {
@@ -157,7 +130,6 @@ export default async function EvolucionPage({
 
   const rows = fetched as StudyRow[];
 
-  // ── Validación de la serie resuelta (min/máx, tipo, ready) ──
   const validation = validateEvolutionSeries(rows);
   if (!validation.valid && validation.reason) {
     return (
@@ -173,10 +145,8 @@ export default async function EvolucionPage({
     );
   }
 
-  // ── Orden cronológico ASC (semántica temporal de la evolución) ──
   const ordered = orderEvolutionStudiesAsc(rows);
 
-  // ── Carga y parseo de análisis almacenados ────────────────
   const parsedAnalyses = await Promise.all(
     ordered.map(async (row: StudyRow) => {
       try {
@@ -204,7 +174,6 @@ export default async function EvolucionPage({
     );
   }
 
-  // ── Ejecutar el motor de evolución (Fase 10.4) ──────────
   const engineInput: EngineStudy[] = ordered.map((row: StudyRow, i: number) => ({
     ...(parsedAnalyses[i] as StudyAnalysis),
     id: row.id,
@@ -212,19 +181,18 @@ export default async function EvolucionPage({
   }));
   const result = buildEvolutionSeries({ studies: engineInput });
 
-  // ── Estado defensivo: el motor no encontró serie comparable ──
   if (!result.comparable) {
     return (
       <div>
         {header}
-        <div className="rounded-xl border border-warning/30 bg-warning-tint p-5">
+        <div className="rounded-xl border border-warning/20 bg-warning-tint/50 p-5">
           <div className="mb-2 flex items-center gap-2">
-            <Split className="h-6 w-6" />
-            <h2 className="text-[15px] font-medium text-foreground">
+            <Split className="h-5 w-5 text-warning" />
+            <h2 className="text-body font-medium text-foreground">
               No podemos armar la evolución
             </h2>
           </div>
-          <p className="text-[14px] leading-[1.6] text-foreground/80">
+          <p className="text-body text-muted-foreground">
             {getSeriesIncompatibilityMessage(result.incompatibility.kind)}
           </p>
           <div className="mt-4">
@@ -235,7 +203,6 @@ export default async function EvolucionPage({
     );
   }
 
-  // ── Estado: serie válida sin parámetros compartidos ──
   if (result.parameters.length === 0) {
     return (
       <div>
@@ -264,7 +231,7 @@ export default async function EvolucionPage({
   return (
     <div>
       {header}
-      <div className="space-y-6">
+      <div className="space-y-8">
         <EvolutionSeriesContext
           studies={contextStudies}
           typeLabel={typeLabel}
@@ -273,14 +240,14 @@ export default async function EvolucionPage({
         <EvolutionOverview overall={result.overall} />
 
         <section aria-labelledby="evolution-parameters-heading">
-          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
             <h2
               id="evolution-parameters-heading"
-              className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground"
+              className="data-label"
             >
               Evolución por parámetro
             </h2>
-            <span className="text-[12px] text-muted-foreground">
+            <span className="text-caption text-muted-foreground">
               {result.parameters.length} parámetros
             </span>
           </div>

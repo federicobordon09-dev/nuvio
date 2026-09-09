@@ -20,6 +20,7 @@ import {
   getEvolutionUrl,
   getEvolutionCountLabel,
   getEvolutionCtaLabel,
+  orderEvolutionStudiesAsc,
 } from "../selection.ts";
 import type {
   EvolutionStudy,
@@ -403,5 +404,38 @@ describe("etiquetas de UI", () => {
     s = addEvolutionStudy(s, a);
     s = addEvolutionStudy(s, b);
     assert.equal(getEvolutionCtaLabel(s, [a, b]), "Ver evolución");
+  });
+});
+
+// ── orderEvolutionStudiesAsc (tiebreaker determinista 10.7) ─
+
+describe("orderEvolutionStudiesAsc", () => {
+  it("created_at idénticos → orden determinista por id (no según input)", () => {
+    const z = READY_BLOOD("z-study", "2026-09-01T10:00:00Z");
+    const a = READY_BLOOD("a-study", "2026-09-01T10:00:00Z");
+    const m = READY_BLOOD("m-study", "2026-09-01T10:00:00Z");
+
+    const fwd = orderEvolutionStudiesAsc([z, a, m]).map((s) => s.id);
+    const bwd = orderEvolutionStudiesAsc([a, z, m]).map((s) => s.id);
+    assert.deepEqual(fwd, ["a-study", "m-study", "z-study"]);
+    assert.deepEqual(bwd, ["a-study", "m-study", "z-study"]);
+  });
+
+  it("created_at distintos → cronológico ASC (tiebreaker no interfiere)", () => {
+    const late = READY_BLOOD("aa-id", "2026-09-02T10:00:00Z");
+    const early = READY_BLOOD("zz-id", "2026-08-01T10:00:00Z");
+    assert.deepEqual(
+      orderEvolutionStudiesAsc([late, early]).map((s) => s.id),
+      ["zz-id", "aa-id"],
+    );
+  });
+
+  it("no muta el array de entrada", () => {
+    const input = ["c", "b", "a"].map((id) =>
+      READY_BLOOD(id, "2026-09-01T10:00:00Z"),
+    );
+    const copy = [...input];
+    orderEvolutionStudiesAsc(input);
+    assert.deepEqual(input, copy);
   });
 });

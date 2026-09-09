@@ -46,18 +46,18 @@ export function AnalysisSection({
         {style.icon}
         <h3
           id={`analysis-section-${title.toLowerCase().replace(/\s+/g, "-")}`}
-          className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground"
+          className="data-label"
         >
           {title}
         </h3>
       </header>
 
       {items.length === 0 && empty ? (
-        <p className={`text-[14px] leading-[1.6] ${style.textClass}`}>{empty}</p>
+        <p className={`text-body ${style.textClass}`}>{empty}</p>
       ) : (
         <ul className="space-y-2">
           {items.map((item, index) => (
-            <li key={index} className={`text-[14px] leading-[1.6] ${style.textClass}`}>
+            <li key={index} className={`text-body ${style.textClass}`}>
               <span className="inline-flex items-start gap-2">
                 <span
                   className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-primary"

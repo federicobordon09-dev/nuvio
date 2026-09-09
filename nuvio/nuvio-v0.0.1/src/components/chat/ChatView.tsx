@@ -146,14 +146,14 @@ export function ChatView({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="border-b border-border px-4 py-3">
-        <h1 className="truncate text-[16px] font-medium text-foreground">
+      <div className="border-b border-border px-5 py-3">
+        <h1 className="truncate text-body font-medium text-foreground">
           {conversationTitle}
         </h1>
       </div>
 
       {phase === "chat" && (
-        <div className="border-b border-border px-4 py-3">
+        <div className="border-b border-border px-5 py-3">
           <ContextPicker
             studies={selectableStudies}
             selectedIds={selectedStudyIds}
@@ -193,7 +193,7 @@ export function ChatView({
         )}
 
         {phase === "chat" && (
-          <div className="space-y-4 px-4 py-4">
+          <div className="space-y-4 px-5 py-4">
             {messages.map((m) => (
               <MessageBubbleInline key={m.id} message={m} />
             ))}
@@ -201,8 +201,8 @@ export function ChatView({
         )}
 
         {sending && (
-          <div className="border-t border-border bg-muted/30 px-4 py-2.5">
-            <div className="flex items-center gap-2 text-[13px] text-muted-foreground">
+          <div className="border-t border-border bg-muted/20 px-5 py-2.5">
+            <div className="flex items-center gap-2 text-caption text-muted-foreground">
               <Spinner className="h-3.5 w-3.5 text-primary" />
               Nuvio está escribiendo…
             </div>
@@ -210,7 +210,7 @@ export function ChatView({
         )}
 
         {error && (
-          <div className="flex items-center justify-between gap-3 border-t border-border bg-danger-tint/50 px-4 py-2 text-[13px] text-danger">
+          <div className="flex items-center justify-between gap-3 border-t border-border bg-danger-tint/50 px-5 py-2 text-caption text-danger">
             <span>{error}</span>
             <button
               onClick={() => setError(null)}
@@ -233,7 +233,7 @@ export function ChatView({
       )}
 
       {phase !== "pick-study" && (
-        <div className="border-t border-border px-4 py-3">
+        <div className="border-t border-border px-5 py-3">
           <div className="flex items-end gap-2">
             <textarea
               value={input}
@@ -250,13 +250,13 @@ export function ChatView({
                   ? "Escribí tu pregunta sobre este estudio…"
                   : "Escribí tu pregunta sobre tus estudios…"
               }
-              className="max-h-40 min-h-[44px] flex-1 resize-none rounded-lg border border-border bg-surface px-3 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+              className="max-h-40 min-h-[44px] flex-1 resize-none rounded-lg border border-border bg-surface px-3 py-2.5 text-body text-foreground placeholder:text-muted-foreground transition-colors duration-150 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               aria-label="Mensaje"
             />
             <button
               onClick={() => handleSend()}
               disabled={sending || !input.trim()}
-              className="inline-flex h-[44px] shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-[14px] font-medium text-primary-foreground transition-colors hover:bg-primary-700 disabled:opacity-50"
+              className="inline-flex h-[44px] shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-body font-medium text-primary-foreground transition-all duration-150 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] disabled:opacity-50"
             >
               {sending ? "Enviando…" : "Enviar"}
             </button>
@@ -275,7 +275,7 @@ function MessageBubbleInline({ message }: { message: ChatMessage }) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[85%] whitespace-pre-line rounded-xl px-4 py-2.5 text-[14px] leading-relaxed ${
+        className={`max-w-[85%] whitespace-pre-line rounded-xl px-4 py-2.5 text-body leading-body ${
           isUser
             ? "bg-primary text-primary-foreground"
             : "border border-border bg-surface text-foreground"

@@ -3,21 +3,14 @@ import type { ReactNode } from "react";
 
 interface DashboardCardProps {
   icon: ReactNode;
-  /** Clases de Tailwind para el tile del ícono (fondo + color). */
   iconTone?: string;
   title: string;
   description?: string;
   footer?: ReactNode;
-  /** Si se provee, la tarjeta se convierte en un enlace. */
   href?: string;
-  /** Valor destacado (p. ej. un conteo) mostrado bajo la descripción. */
   value?: ReactNode;
 }
 
-/**
- * Tarjeta del dashboard: ícono + título + descripción + valor/acción opcional.
- * Puede actuar como enlace (href) o como tarjeta informativa (stats).
- */
 export function DashboardCard({
   icon,
   iconTone = "bg-primary-muted text-primary",
@@ -29,37 +22,38 @@ export function DashboardCard({
 }: DashboardCardProps) {
   const content = (
     <>
-      <div
-        className={`mb-3 flex h-10 w-10 items-center justify-center rounded-lg ${iconTone}`}
-      >
-        {icon}
+      <div className="mb-3 flex items-center gap-3">
+        <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${iconTone}`}>
+          {icon}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-body font-medium text-foreground">{title}</h3>
+          {value && (
+            <p className="text-caption text-muted-foreground">{value}</p>
+          )}
+        </div>
       </div>
-      <h3 className="text-[15px] font-medium text-foreground">{title}</h3>
       {description && (
-        <p className="mt-1 text-[13px] leading-[1.5] text-muted-foreground">
+        <p className="text-body text-muted-foreground">
           {description}
         </p>
-      )}
-      {value && (
-        <p className="mt-3 text-[13px] font-medium text-foreground">{value}</p>
       )}
       {footer}
     </>
   );
 
-  const classes =
-    "block h-full rounded-xl border border-border bg-surface p-5 transition-all duration-200";
+  const baseClasses = "block h-full rounded-xl border border-border bg-surface p-5 transition-all duration-150 ease-out animate-fade-in-up";
 
   if (href) {
     return (
       <Link
         href={href}
-        className={`${classes} group hover:border-primary/20 hover:bg-primary-muted/30`}
+        className={`${baseClasses} hover:shadow-md hover:border-primary/20 hover:bg-primary-muted/30 active:scale-[0.99]`}
       >
         {content}
       </Link>
     );
   }
 
-  return <div className={classes}>{content}</div>;
+  return <div className={baseClasses}>{content}</div>;
 }

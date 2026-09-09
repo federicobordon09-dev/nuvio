@@ -29,7 +29,7 @@ function LoginForm() {
     <>
       {error && (
         <div
-          className="mb-6 rounded-lg border border-danger/30 bg-danger-tint p-4 text-[13px] text-danger-strong"
+          className="mb-6 rounded-lg border border-danger/20 bg-danger-tint/50 p-4 text-caption text-danger-strong"
           role="alert"
         >
           {error}
@@ -67,7 +67,7 @@ function LoginForm() {
         {loading ? "Conectando..." : "Continuar con Google"}
       </Button>
 
-      <p className="mt-6 text-center text-[13px] text-muted-foreground">
+      <p className="mt-6 text-center text-caption text-muted-foreground">
         Al continuar, aceptás nuestros{" "}
         <a href="/terminos" className="underline hover:text-primary">
           Términos de uso
@@ -83,19 +83,19 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-foreground px-4">
+    <div className="flex min-h-screen items-center justify-center bg-foreground px-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
+        <div className="mb-8 text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/nuvio_logo_nuevo.png"
             alt="Nuvio"
             className="mx-auto h-16 w-auto brightness-0 invert"
           />
-          <h1 className="mt-4 text-2xl font-medium text-surface">
+          <h1 className="mt-5 text-heading font-medium text-surface">
             Iniciá sesión en Nuvio
           </h1>
-          <p className="mt-2 text-[14px] text-muted-foreground">
+          <p className="mt-2 text-body text-muted-foreground">
             Accedé con tu cuenta de Google para gestionar tus estudios médicos
           </p>
         </div>

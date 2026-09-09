@@ -18,21 +18,8 @@ import type {
   PointValue,
   ValueChange,
 } from "@/lib/evolution/types";
+import { ParameterSparkline } from "./ParameterSparkline";
 
-/**
- * Fase 10.5 — Evolución de parámetros en tabla.
- *
- * Columnas: estudios de la serie en orden cronológico (letras A, B, C…);
- * filas: parámetros. Una celda muestra el valor (con unidad), su estado
- * respecto del rango y el rango de referencia de ESE punto; para columnas
- * posteriores a la primera, una píldora con el cambio frente al punto
- * anterior del mismo parámetro.
- *
- * Los parámetros ausentes en un estudio se muestran como "—". La tabla es
- * horizontalmente scrollable (móvil) y la columna de parámetro queda fija.
- */
-
-/** Detalle corto del cambio numérico ("+0.4 (+7.7%)") o null. */
 function formatChangeDetail(change: ValueChange): string | null {
   if (change.kind !== "both_numeric") return null;
   const delta = formatChangeDelta(change);
@@ -44,7 +31,6 @@ function formatChangeDetail(change: ValueChange): string | null {
       : delta;
 }
 
-/** Píldora del cambio frente al punto anterior. */
 function ChangePill({ change }: { change: ValueChange }) {
   const detail = formatChangeDetail(change);
   return (
@@ -59,7 +45,6 @@ function ChangePill({ change }: { change: ValueChange }) {
   );
 }
 
-/** Celda de un punto temporal del parámetro. */
 function PointCell({
   point,
   change,
@@ -71,7 +56,7 @@ function PointCell({
   return (
     <div className="flex min-w-0 flex-col items-center gap-1">
       {change && <ChangePill change={change} />}
-      <span className="text-[13px] font-medium tabular-nums text-foreground">
+      <span className="text-caption font-medium tabular-nums text-foreground">
         {formatValueWithUnit(point.value, point.unit)}
       </span>
       {status && (
@@ -100,6 +85,7 @@ export function EvolutionParameterTable({
   const columnIndex = new Map<string, number>(
     studies.map((s, i) => [s.id, i]),
   );
+  const studyIds = studies.map((s) => s.id);
 
   return (
     <div className="overflow-x-auto rounded-xl border border-border bg-surface">
@@ -111,9 +97,15 @@ export function EvolutionParameterTable({
           <tr className="border-b border-border">
             <th
               scope="col"
-              className="sticky left-0 z-10 bg-surface px-4 py-3 text-[12px] font-semibold uppercase tracking-wide text-muted-foreground"
+              className="sticky left-0 z-10 bg-surface px-4 py-3 data-label"
             >
               Parámetro
+            </th>
+            <th
+              scope="col"
+              className="px-3 py-3 text-center data-label"
+            >
+              Tendencia
             </th>
             {studies.map((study, i) => (
               <th
@@ -141,6 +133,7 @@ export function EvolutionParameterTable({
               track={track}
               columnIndex={columnIndex}
               studyCount={studies.length}
+              studyIds={studyIds}
             />
           ))}
         </tbody>
@@ -149,18 +142,17 @@ export function EvolutionParameterTable({
   );
 }
 
-/** Fila de un parámetro: alinea cada punto con su columna de estudio. */
 function EvolutionTrackRow({
   track,
   columnIndex,
   studyCount,
+  studyIds,
 }: {
   track: ParameterTrack;
   columnIndex: Map<string, number>;
   studyCount: number;
+  studyIds: string[];
 }) {
-  // Por columna: el punto del parámetro y su cambio frente al punto previo.
-  // El cambio de un punto en el índice j es track.changes[j - 1].
   const cells: { point: PointValue; change: ValueChange | null }[] = Array(
     studyCount,
   ).fill(null);
@@ -180,7 +172,7 @@ function EvolutionTrackRow({
         scope="row"
         className="sticky left-0 z-10 max-w-[12rem] bg-surface px-4 py-3 align-top"
       >
-        <span className="block text-[13px] font-medium text-foreground">
+        <span className="block text-body font-medium text-foreground">
           {track.name}
         </span>
         {track.referenceRange && (
@@ -189,6 +181,9 @@ function EvolutionTrackRow({
           </span>
         )}
       </th>
+      <td className="px-3 py-3 text-center">
+        <ParameterSparkline track={track} studyIds={studyIds} />
+      </td>
       {cells.map((cell, i) =>
         cell ? (
           <td key={i} className="px-3 py-3 text-center">

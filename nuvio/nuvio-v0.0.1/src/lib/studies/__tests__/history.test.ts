@@ -262,6 +262,27 @@ describe("groupStudiesByType", () => {
     assert.equal(groups[0].canEvolve, true);
   });
 
+  it("fechas iguales → orden determinista por id (Fase 10.7)", () => {
+    // Independiente del orden de entrada: [zz, aa, mm] y [aa, zz, mm]
+    // deben producir el mismo orden de miembros y la misma evolutionUrl.
+    const row = (id: string) =>
+      study({ id, created_at: "2026-09-01T10:00:00Z", ...READY });
+
+    const g1 = groupStudiesByType([row("zz"), row("aa"), row("mm")]);
+    const g2 = groupStudiesByType([row("aa"), row("zz"), row("mm")]);
+
+    assert.deepEqual(
+      g1[0].studies.map((s) => s.id),
+      ["aa", "mm", "zz"],
+    );
+    assert.deepEqual(
+      g2[0].studies.map((s) => s.id),
+      ["aa", "mm", "zz"],
+    );
+    assert.equal(g1[0].evolutionUrl, "/dashboard/evolucion?ids=aa,mm,zz");
+    assert.equal(g2[0].evolutionUrl, "/dashboard/evolucion?ids=aa,mm,zz");
+  });
+
   it("exposición de cada tipo de estudio conocido produce su label", () => {
     const types: StudyType[] = [
       "blood_test",

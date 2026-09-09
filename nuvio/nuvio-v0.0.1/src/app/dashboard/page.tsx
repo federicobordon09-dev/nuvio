@@ -3,14 +3,12 @@ import { createClient } from "@/lib/supabase/server";
 import { getStudyStats, listStudies } from "@/lib/actions/studies";
 import type { StudyStats } from "@/lib/studies-utils";
 import { PageHeader } from "@/components/dashboard/PageHeader";
-import { DashboardCard } from "@/components/dashboard/DashboardCard";
 import { StudyCard } from "@/components/dashboard/StudyCard";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { Button } from "@/components/ui/Button";
 import {
   CheckCircle,
   Clock,
-  InfoCircle,
   Warning,
   Upload,
   Document,
@@ -21,7 +19,7 @@ export const dynamic = "force-dynamic";
 
 const RECENT_LIMIT = 4;
 
-const statCards: Array<{
+const statItems: Array<{
   key: keyof StudyStats;
   label: string;
   iconTone: string;
@@ -43,7 +41,7 @@ const statCards: Array<{
     key: "pending",
     label: "Pendientes",
     iconTone: "bg-muted text-muted-foreground",
-    icon: <InfoCircle />,
+    icon: <Document />,
   },
   {
     key: "errors",
@@ -78,9 +76,6 @@ const quickActions = [
 ];
 
 export default async function DashboardPage() {
-  // Verificar auth ANTES del try/catch para que redirect() no sea atrapado.
-  // Un único client compartido entre auth check y data fetch — evita race
-  // condition de refresh token entre getStudyStats y listStudies.
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -96,17 +91,16 @@ export default async function DashboardPage() {
     stats = s;
     studies = list;
   } catch (err) {
-    // Solo tratar errores transitorios de red. Errores de autenticación ya
-    // se manejan arriba con redirect().
     console.error("[nuvio:dashboard] Error cargando datos:", err);
   }
 
   const recent = studies.slice(0, RECENT_LIMIT);
+  const userName = user?.user_metadata?.full_name?.split(" ")[0] ?? user?.email?.split("@")[0] ?? "Usuario";
 
   return (
     <div>
       <PageHeader
-        title="Inicio"
+        title={`Hola, ${userName}`}
         description="Bienvenido a Nuvio. Cargá y entendé tus estudios médicos en un solo lugar."
       >
         <Link href="/dashboard/subir">
@@ -127,39 +121,67 @@ export default async function DashboardPage() {
         />
       ) : (
         <>
-          <section aria-label="Resumen de estudios" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {statCards.map((card) => (
-              <DashboardCard
-                key={card.key}
-                icon={card.icon}
-                iconTone={card.iconTone}
-                title={card.label}
-                value={`${stats[card.key]} ${stats[card.key] === 1 ? "estudio" : "estudios"}`}
-              />
-            ))}
+          {/* Stats - Editorial style */}
+          <section aria-label="Resumen de estudios" className="mb-10">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              {statItems.map((stat) => (
+                <div
+                  key={stat.key}
+                  className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4"
+                >
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${stat.iconTone}`}>
+                    {stat.icon}
+                  </div>
+                  <div>
+                    <p className="text-display font-medium text-foreground">
+                      {stats[stat.key]}
+                    </p>
+                    <p className="text-caption text-muted-foreground">
+                      {stat.label}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
 
-          <section aria-label="Acciones rápidas" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {quickActions.map((action) => (
-              <DashboardCard
-                key={action.href}
-                href={action.href}
-                icon={action.icon}
-                iconTone={action.iconTone}
-                title={action.label}
-                description={action.description}
-              />
-            ))}
+          {/* Quick Actions - Editorial list */}
+          <section aria-label="Acciones rápidas" className="mb-10">
+            <h2 className="text-subheading font-medium text-foreground mb-4">
+              Acciones rápidas
+            </h2>
+            <div className="flex flex-col gap-2">
+              {quickActions.map((action) => (
+                <Link
+                  key={action.href}
+                  href={action.href}
+                  className="group flex items-center gap-4 rounded-xl border border-border bg-surface p-4 transition-all duration-150 ease-out hover:shadow-md hover:border-primary/20 hover:bg-primary-muted/30 active:scale-[0.99]"
+                >
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${action.iconTone}`}>
+                    {action.icon}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-body font-medium text-foreground group-hover:text-primary transition-colors">
+                      {action.label}
+                    </p>
+                    <p className="text-caption text-muted-foreground">
+                      {action.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </section>
 
-          <section aria-label="Estudios recientes" className="mt-10">
+          {/* Recent Studies - Editorial list */}
+          <section aria-label="Estudios recientes">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-[17px] font-medium tracking-[-0.01em] text-foreground">
+              <h2 className="text-subheading font-medium text-foreground">
                 Estudios recientes
               </h2>
               <Link
                 href="/dashboard/estudios"
-                className="text-[14px] font-medium text-primary transition-colors hover:text-primary-700"
+                className="text-body font-medium text-primary transition-colors hover:text-primary/80"
               >
                 Ver todos
               </Link>
@@ -171,7 +193,7 @@ export default async function DashboardPage() {
                 description="Cuando subas estudios, aparecerán acá."
               />
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {recent.map((study) => (
                   <StudyCard key={study.id} study={study} showDelete={false} />
                 ))}

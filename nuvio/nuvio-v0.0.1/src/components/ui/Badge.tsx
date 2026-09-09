@@ -15,7 +15,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   success: "bg-success-tint text-success-strong",
   warning: "bg-warning-tint text-warning-strong",
   error: "bg-danger-tint text-danger-strong",
-  info: "bg-info-tint text-primary",
+  info: "bg-primary-muted text-primary",
   neutral: "bg-primary-muted text-primary",
   muted: "bg-background text-muted-foreground",
 };
@@ -31,7 +31,7 @@ const dotColor: Record<BadgeVariant, string> = {
 
 const sizeStyles: Record<BadgeSize, string> = {
   sm: "px-2 py-0.5 text-[11px]",
-  md: "px-2.5 py-0.5 text-[12px]",
+  md: "px-2.5 py-0.5 text-caption",
 };
 
 /**

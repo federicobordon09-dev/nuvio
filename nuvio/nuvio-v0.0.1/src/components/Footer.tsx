@@ -11,10 +11,10 @@ export default function Footer() {
           height={24}
           className="h-6 w-auto"
         />
-        <p className="text-[13px] leading-[1.6] text-muted-foreground">
+        <p className="text-caption text-muted-foreground">
           Información médica compleja. Explicada de forma clara.
         </p>
-        <p className="text-[12px] leading-[1.4] text-muted-foreground/70">
+        <p className="text-[11px] text-muted-foreground/60">
           &copy; {new Date().getFullYear()} Nuvio
         </p>
       </div>

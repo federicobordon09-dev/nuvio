@@ -33,7 +33,7 @@ export type HistoryGroup = {
   studyType: StudyType | null;
   /** Label legible (ej. "Análisis de sangre", "Pendiente de análisis"). */
   label: string;
-  /** Estudios del grupo, ordenados por `created_at ASC`. */
+  /** Estudios del grupo, ordenados por `created_at ASC` (tiebreaker por `id`). */
   studies: HistoryStudyRow[];
   /** Cantidad de estudios con stage `ready` (status=processed + analysis_status=completed). */
   readyCount: number;
@@ -99,7 +99,11 @@ export function groupStudiesByType(
         ? -1
         : a.created_at > b.created_at
           ? 1
-          : 0,
+          : a.id < b.id
+            ? -1
+            : a.id > b.id
+              ? 1
+              : 0,
     );
 
     const readyMembers = members.filter((s) =>

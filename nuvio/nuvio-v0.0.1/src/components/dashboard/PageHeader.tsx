@@ -1,26 +1,20 @@
 import type { ReactNode } from "react";
 
-/**
- * Cabecera de página consistente: título + descripción opcional
- * + acciones opcionales (p. ej. un botón "Subir estudio").
- */
-export function PageHeader({
-  title,
-  description,
-  children,
-}: {
+interface PageHeaderProps {
   title: ReactNode;
   description?: ReactNode;
   children?: ReactNode;
-}) {
+}
+
+export function PageHeader({ title, description, children }: PageHeaderProps) {
   return (
-    <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        <h1 className="text-[24px] font-medium tracking-[-0.02em] text-foreground">
+        <h1 className="text-heading font-medium tracking-heading text-foreground">
           {title}
         </h1>
         {description && (
-          <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
+          <p className="mt-2 text-body text-muted-foreground max-w-2xl">
             {description}
           </p>
         )}

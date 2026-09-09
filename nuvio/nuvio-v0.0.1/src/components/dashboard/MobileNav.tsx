@@ -24,7 +24,6 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
     toggleRef.current?.focus();
   }, []);
 
-  // Cierra al pulsar Escape + bloquea scroll del body cuando está abierto.
   useEffect(() => {
     if (!open) return;
 
@@ -33,7 +32,6 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
     }
     document.addEventListener("keydown", onKeyDown);
 
-    // Bloquear scroll del body
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -43,7 +41,6 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
     };
   }, [open, close]);
 
-  // Focus trap: mantiene el foco dentro del panel cuando está abierto.
   useEffect(() => {
     if (!open || !panelRef.current) return;
 
@@ -68,7 +65,6 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
     }
 
     document.addEventListener("keydown", handleTab);
-    // Enfocar el primer elemento focusable del panel.
     const firstFocusable = panelRef.current.querySelector<HTMLElement>(
       'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
     );
@@ -82,7 +78,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
       <button
         ref={toggleRef}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+        className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-all duration-150 hover:bg-primary-muted/40 hover:text-foreground active:scale-[0.98]"
         aria-expanded={open}
         aria-controls="mobile-nav-panel"
         aria-label={open ? "Cerrar menú" : "Abrir menú"}
@@ -90,7 +86,6 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
         {open ? <X /> : <Menu />}
       </button>
 
-      {/* Overlay + drawer — siempre renderizado para permitir transiciones. */}
       <div
         className={`fixed inset-0 z-50 h-dvh lg:hidden ${
           open ? "pointer-events-auto" : "pointer-events-none"
@@ -99,35 +94,37 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
         aria-modal="true"
         aria-label="Menú de navegación"
       >
-        {/* Backdrop */}
         <div
-          className={`absolute inset-0 bg-foreground/40 backdrop-blur-sm transition-opacity duration-200 ${
+          className={`absolute inset-0 bg-foreground/30 backdrop-blur-md transition-opacity duration-200 ${
             open ? "opacity-100" : "opacity-0"
           }`}
           onClick={close}
         />
 
-        {/* Drawer panel */}
         <div
           ref={panelRef}
           id="mobile-nav-panel"
-          className={`absolute inset-y-0 left-0 flex w-72 flex-col border-r border-border bg-surface shadow-xl transition-transform duration-200 ease-out ${
+          className={`absolute inset-y-0 left-0 flex w-72 flex-col bg-surface shadow-xl transition-transform duration-200 ease-out ${
             open ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <div className="flex items-center justify-between border-b border-border px-5 py-4">
-            <span className="text-[15px] font-medium text-foreground">Nuvio</span>
+          <div className="flex items-center justify-between px-5 py-4">
+            <span className="text-subheading font-medium text-foreground">Nuvio</span>
             <button
               onClick={close}
-              className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted/50"
+              className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-primary-muted/40 active:scale-[0.98]"
               aria-label="Cerrar menú"
             >
               <X />
             </button>
           </div>
 
+          <div className="px-3">
+            <div className="divider" />
+          </div>
+
           <nav className="flex-1 overflow-y-auto px-3 py-4">
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col gap-0.5">
               {navItems.map((item) => {
                 const active = isActivePath(pathname, item.href);
                 return (
@@ -136,13 +133,13 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
                       href={item.href}
                       onClick={close}
                       aria-current={active ? "page" : undefined}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium transition-colors duration-150 ${
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-body font-medium transition-all duration-150 ease-out ${
                         active
-                          ? "bg-primary-muted text-primary-700"
-                          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                          ? "bg-primary-muted text-primary shadow-sm"
+                          : "text-muted-foreground hover:bg-primary-muted/40 hover:text-foreground"
                       }`}
                     >
-                      <span className={active ? "text-primary" : "text-muted-foreground"}>
+                      <span className={`flex h-5 w-5 items-center justify-center ${active ? "text-primary" : "text-muted-foreground"}`}>
                         {item.icon}
                       </span>
                       {item.label}
@@ -153,25 +150,29 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
             </ul>
           </nav>
 
-          <div className="border-t border-border px-3 py-4">
+          <div className="px-3">
+            <div className="divider" />
+          </div>
+
+          <div className="px-3 py-4">
             {userName && (
-              <div className="mb-3 px-3 flex items-center gap-3">
+              <div className="mb-3 flex items-center gap-3 px-3">
                 {userAvatar ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={userAvatar}
                     alt=""
-                    className="h-8 w-8 rounded-full"
+                    className="h-9 w-9 rounded-full"
                   />
                 ) : (
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-muted text-[13px] font-medium text-primary-700">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-muted text-caption font-medium text-primary">
                     {userName.charAt(0).toUpperCase()}
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-medium text-foreground truncate">{userName}</p>
+                  <p className="text-body font-medium text-foreground truncate">{userName}</p>
                   {userEmail && (
-                    <p className="text-[12px] text-muted-foreground truncate">{userEmail}</p>
+                    <p className="text-caption text-muted-foreground truncate">{userEmail}</p>
                   )}
                 </div>
               </div>
@@ -179,7 +180,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
             <form action={signOut}>
               <button
                 type="submit"
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] font-medium text-muted-foreground transition-colors duration-150 hover:bg-muted/50 hover:text-foreground"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-body font-medium text-muted-foreground transition-all duration-150 hover:bg-primary-muted/40 hover:text-foreground active:scale-[0.98]"
               >
                 <LogOut />
                 Cerrar sesión

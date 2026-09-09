@@ -505,10 +505,29 @@ describe("overall — resumen general", () => {
       // Aspecto: 2 puntos, 1 change both_non_numeric
       // Creatinina: 1 punto, 0 changes
       assert.equal(result.overall.uniqueParameters, 4);
-      assert.equal(result.overall.persistentParameters, 1); // solo Hb en los 3
-      assert.equal(result.overall.transientParameters, 3);  // Glucosa, Aspecto, Creatinina
+      // Fase 10.7: persistente = presente en los 3 estudios (Hb y Glucosa).
+      assert.equal(result.overall.persistentParameters, 2);
+      assert.equal(result.overall.transientParameters, 2); // Aspecto, Creatinina
       assert.equal(result.overall.numericChanges, 3); // Hb(2) + Glucosa(1)
       assert.equal(result.overall.notComparableChanges, 2); // Glucosa(1) + Aspecto(1)
+    }
+  });
+
+  it("persistente se cuenta bien cuando el primero por nombre no lo es (Fase 10.7)", () => {
+    // s1=[Aaa, Zzz], s2=[Zzz]: Zzz es el único persistente (2/2), pero por
+    // orden alfabético Aaa es tracks[0]. totalStudies debe venir de la serie
+    // (2 estudios), no del largo del primer track.
+    const s1 = study("s1", "2026-01-01T10:00:00Z", [
+      measurement("Aaa", "1"),
+      measurement("Zzz", "10"),
+    ]);
+    const s2 = study("s2", "2026-01-02T10:00:00Z", [
+      measurement("Zzz", "12"),
+    ]);
+    const result = buildEvolutionSeries(input([s1, s2]));
+    if (result.comparable) {
+      assert.equal(result.overall.persistentParameters, 1); // Zzz
+      assert.equal(result.overall.transientParameters, 1); // Aaa
     }
   });
 });

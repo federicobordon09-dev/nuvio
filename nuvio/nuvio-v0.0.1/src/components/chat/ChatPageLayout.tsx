@@ -28,14 +28,14 @@ export function ChatPageLayout({
 
   return (
     <div className="grid h-[calc(100vh-7rem)] min-h-[480px] overflow-hidden rounded-xl border border-border bg-surface lg:h-[calc(100vh-6rem)] lg:grid-cols-[280px_1fr]">
-      <aside className="hidden border-r border-border bg-muted/30 lg:block">
+      <aside className="hidden border-r border-border bg-muted/20 lg:block">
         <ConversationList conversations={conversations} />
       </aside>
 
       <div className="relative flex min-h-0 min-w-0 flex-col">
         <button
           onClick={() => setMobileOpen((v) => !v)}
-          className="flex items-center gap-2 border-b border-border bg-surface px-4 py-2.5 text-[13px] font-medium text-primary lg:hidden"
+          className="flex items-center gap-2 border-b border-border bg-surface px-4 py-2.5 text-caption font-medium text-primary transition-colors hover:bg-primary-muted/30 lg:hidden"
           aria-expanded={mobileOpen}
         >
           <Menu className="h-4 w-4" />

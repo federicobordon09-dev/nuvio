@@ -36,7 +36,7 @@ export default function Navbar() {
         </Link>
 
         <nav aria-label="Navegación principal" className="hidden sm:block">
-          <ul className="flex items-center gap-8 text-[13px] font-medium text-muted-foreground">
+          <ul className="flex items-center gap-8 text-caption font-medium text-muted-foreground">
             <li>
               <a
                 href="#como-funciona"

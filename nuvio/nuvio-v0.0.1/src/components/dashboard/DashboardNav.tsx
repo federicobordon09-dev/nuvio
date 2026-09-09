@@ -8,7 +8,7 @@ export function DashboardNav() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Navegación del dashboard" className="flex flex-col gap-1">
+    <nav aria-label="Navegación del dashboard" className="flex flex-col gap-0.5">
       {navItems.map((item) => {
         const active = isActivePath(pathname, item.href);
         return (
@@ -16,13 +16,13 @@ export function DashboardNav() {
             key={item.href}
             href={item.href}
             aria-current={active ? "page" : undefined}
-            className={`flex items-center gap-3 rounded-lg py-2.5 text-[14px] font-medium transition-colors duration-150 ${
+            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-body font-medium transition-all duration-150 ease-out ${
               active
-                ? "border-l-2 border-primary bg-primary-muted pl-[11px] text-primary-700"
-                : "pl-3 text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                ? "bg-primary-muted text-primary shadow-sm"
+                : "text-muted-foreground hover:bg-primary-muted/40 hover:text-foreground"
             }`}
           >
-            <span className={active ? "text-primary" : "text-muted-foreground"}>
+            <span className={`flex h-5 w-5 items-center justify-center ${active ? "text-primary" : "text-muted-foreground"}`}>
               {item.icon}
             </span>
             {item.label}

@@ -24,28 +24,10 @@ import {
 } from "@/lib/comparison/presentation";
 import type { StudyType } from "@/lib/studies-utils";
 
-/**
- * Fase 9.4 — Página de comparación de estudios.
- *
- * Funciona mediante parámetros de URL: `/dashboard/comparar?ids=ID_A,ID_B`
- *
- * - Carga ambos estudios con verificación de ownership server-side (getStudy).
- * - Carga y parsea ambos análisis almacenados (getStudyAnalysis + parseStoredAnalysis).
- * - Ejecuta el motor determinístico de Fase 9.2 (compareStudies).
- * - La presentación delega en componentes bajo src/components/comparison/,
- *   que reciben los datos ya calculados (sin lógica de comparación duplicada).
- */
-
-// ── Tipos de la fila de estudio (solo los campos que necesita la página) ──
-
 type StudyRow = ComparisonStudy & {
   analysis_status: string | null;
 };
 
-/**
- * Normaliza `analysis_status` (que puede ser null) al tipo `AnalysisStatus`
- * requerido por el motor de comparación.
- */
 function toAnalysisStatus(status: string | null): StudyForComparison["analysisStatus"] {
   switch (status) {
     case "completed":
@@ -58,8 +40,6 @@ function toAnalysisStatus(status: string | null): StudyForComparison["analysisSt
       return "pending";
   }
 }
-
-// ── Página ────────────────────────────────────────────────────────────
 
 export default async function CompararPage({
   searchParams,
@@ -85,7 +65,6 @@ export default async function CompararPage({
     </>
   );
 
-  // ── Estados: IDs inválidos ───────────────────────────────
   if (!parsed.ok) {
     return (
       <div>
@@ -104,7 +83,6 @@ export default async function CompararPage({
     );
   }
 
-  // ── Carga de estudios (ownership verificado server-side) ──
   let studyA: StudyRow;
   try {
     studyA = await getStudy(parsed.ids[0]);
@@ -147,7 +125,6 @@ export default async function CompararPage({
     );
   }
 
-  // ── Carga de análisis almacenados ───────────────────────
   let analysisA: StudyAnalysis | null = null;
   try {
     const rowA = await getStudyAnalysis(studyA.id);
@@ -183,7 +160,6 @@ export default async function CompararPage({
     );
   }
 
-  // ── Ejecutar el motor de comparación (Fase 9.2) ─────────
   const studyForA: StudyForComparison = {
     analysis: analysisA,
     analysisStatus: toAnalysisStatus(studyA.analysis_status),
@@ -194,16 +170,13 @@ export default async function CompararPage({
   };
   const result = compareStudies(studyForA, studyForB);
 
-  // Contexto de ambos estudios para todas las vistas post-carga.
   const context = (
     <ComparisonContext studyA={studyA} studyB={studyB} />
   );
 
-  // ── Estado: no comparables ──────────────────────────────
   if (!result.comparable) {
     const { kind } = result.incompatibility;
     const message = getIncompatibilityMessage(kind);
-    // Para tipos distintos se agrega contexto legible (sin slugs).
     const typeContext =
       kind === "different_study_type"
         ? ` (${getStudyTypeLabelNullable(studyA.study_type as StudyType | null)} vs. ${getStudyTypeLabelNullable(studyB.study_type as StudyType | null)})`
@@ -213,14 +186,14 @@ export default async function CompararPage({
         {header}
         <div className="space-y-6">
           {context}
-          <div className="rounded-xl border border-warning/30 bg-warning-tint p-5">
+          <div className="rounded-xl border border-warning/20 bg-warning-tint/50 p-5">
             <div className="mb-2 flex items-center gap-2">
-              <Split className="h-6 w-6" />
-              <h2 className="text-[15px] font-medium text-foreground">
+              <Split className="h-5 w-5 text-warning" />
+              <h2 className="text-body font-medium text-foreground">
                 No podemos comparar estos estudios
               </h2>
             </div>
-            <p className="text-[14px] leading-[1.6] text-foreground/80">
+            <p className="text-body text-muted-foreground">
               {message}
               {typeContext}
             </p>
@@ -235,7 +208,6 @@ export default async function CompararPage({
     );
   }
 
-  // ── Estado: comparables sin diferencias ─────────────────
   const hasChanges =
     result.overall.newParametersCount > 0 ||
     result.overall.missingParametersCount > 0 ||
@@ -261,9 +233,6 @@ export default async function CompararPage({
     );
   }
 
-  // ── Estado: comparables con diferencias ─────────────────
-  // Explicaciones reales: las toma del análisis posterior (B) porque es el
-  // que describe el hallazgo tal como está presente en la comparación.
   const explanations = new Map<string, string>();
   for (const finding of analysisB.key_findings) {
     explanations.set(finding.title, finding.explanation);
@@ -274,25 +243,25 @@ export default async function CompararPage({
   return (
     <div>
       {header}
-      <div className="space-y-6">
+      <div className="space-y-8">
         {context}
         <ComparisonSummary result={result} />
 
         <section aria-labelledby="comparison-measurements-heading">
-          <div className="mb-3 flex items-baseline justify-between gap-2">
+          <div className="mb-4 flex items-baseline justify-between gap-2">
             <h2
               id="comparison-measurements-heading"
-              className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground"
+              className="data-label"
             >
               Mediciones
             </h2>
-            <span className="text-[12px] text-muted-foreground">
+            <span className="text-caption text-muted-foreground">
               {result.measurementDiffs.length} mediciones*
             </span>
           </div>
           <MeasurementDiffList diffs={result.measurementDiffs} />
           {nonNumericCount > 0 && (
-            <p className="mt-3 text-[12px] text-muted-foreground">
+            <p className="mt-3 text-caption text-muted-foreground">
               * {nonNumericCount} valor
               {nonNumericCount !== 1 ? "es" : ""} sin comparación numérica
               (texto o unidades distintas).

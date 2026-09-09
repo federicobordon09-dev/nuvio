@@ -28,7 +28,7 @@ La plataforma debe ayudar a responder preguntas como:
 # Stack tecnológico
 
 * **Framework:** Next.js 16.3.3 (App Router, src directory)
-* **Frontend:** React 19, TypeScript, Tailwind CSS
+* **Frontend:** React 19, TypeScript, Tailwind CSS v4
 * **Backend:** Server Actions, Route Handlers
 * **Auth:** Supabase Auth (Google OAuth + PKCE)
 * **Base de datos:** Supabase (PostgreSQL + RLS)
@@ -248,6 +248,140 @@ La comparación funciona de forma determinista y tiene estas restricciones:
 - no utiliza gráficos
 - no compara más de dos estudios
 
+### Fase 10 — Evolución longitudinal de estudios
+
+#### Fase 10.1 — Auditoría de evolución
+- Revisión de la arquitectura y contratos (tipos de estudio, análisis persistido, Zod, historial, comparación) para definir cómo integrar la evolución de múltiples estudios del mismo tipo sin usar IA.
+
+#### Fase 10.2 — Historial inteligente
+- `src/lib/studies/history.ts`: agrupación de estudios por `study_type` en familias cronológicas (`groupStudiesByType`), `isEvolutionReady` (estudio con stage `ready`), `buildEvolutionUrl` y conteo de estudios listos por familia.
+- Los estudios sin tipo se agrupan como "Pendiente de análisis" y no ofrecen "Ver evolución".
+
+#### Fase 10.3 — Selección de serie longitudinal
+- `src/lib/evolution/selection.ts`: lógica pura de selección de una serie (2–10 estudios del mismo tipo), validación server-side (`validateEvolutionSeries`), `getEvolutionUrl` y labels accesibles.
+- Badges A–J siguen el orden de click; la serie final (URL) se ordena por `created_at ASC` (semántica temporal de la evolución).
+
+#### Fase 10.4 — Motor determinista de evolución longitudinal
+- `src/lib/evolution/build-series.ts`: `buildEvolutionSeries()` transforma una serie cronológica validada en `ParameterTrack[]` con puntos por parámetro y cambios consecutivos (`both_numeric`, `both_non_numeric`, `one_numeric`, `not_comparable`).
+- Determinista, sin IA, sin conversión de unidades, sin interpretación clínica; resumen general (`EvolutionOverall`) con parámetros persistentes/transitorios y conteo de cambios.
+
+#### Fase 10.5 — Página `/dashboard/evolucion`
+- Página server-side que lee `?ids=...` (2–10 estudios), valida la forma (`parseEvolutionIds`), verifica ownership por estudio (`getStudy` filtra por `user_id`), valida la serie, ordena cronológico y ejecuta el motor.
+- UI: `EvolutionSeriesContext`, `EvolutionOverview`, `EvolutionParameterTable` (tabla longitudinal con píldoras de cambio) y `EvolutionDisclaimer`.
+- Flujo de errores accesible y genérico, sin exponer IDs ajenos ni detalles internos del motor.
+
+#### Fase 10.6 — Primera visualización longitudinal (sparkline)
+- `src/lib/evolution/sparkline.ts`: lógica pura de sparkline (≥3 puntos numéricos, segmentos por tramos conectables sin huecos ni unidades incompatibles, sin interpolación, sin división por cero, dirección objetiva ↑/↓/·).
+- `src/components/evolution/ParameterSparkline.tsx`: SVG inline violeta, responsive (`viewBox` + `width 100%`), accesible (`role="img"`, `aria-label`, `<title>`, símbolo + texto, no solo color).
+- Columna "Tendencia" en la tabla; la tabla sigue siendo la fuente primaria.
+
+#### Fase 10.7 — Edge cases + QA final de evolución
+- Corrección de edge cases: bug de `computeOverall` (parámetros persistentes derivados de `tracks[0]` en vez del conteo real de estudios); tiebreaker determinista por `id` para timestamps idénticos (`orderEvolutionStudiesAsc` + orden intra-grupo de `groupStudiesByType`); `<dl>` válido (`dt` antes que `dd`) en `EvolutionOverview`; empty-state para series sin parámetros comparables.
+- Los tests del motor (`build-series.test.ts`), de selección (`selection.test.ts`) e historial (`history.test.ts`) pasan a correr dentro de `pnpm test`.
+- La etapa funcional de evolución queda **cerrada**.
+
+#### Restricciones de la evolución actual
+
+La evolución funciona de forma determinista y tiene estas restricciones:
+
+- permite series de 2 a 10 estudios del mismo tipo
+- requiere estudios procesados/analizados (`analysis_status = completed`) y con tipo definido
+- matching exacto por nombre de medición (`Map` claveado por nombre)
+- no realiza fuzzy matching
+- no realiza conversión de unidades
+- no utiliza IA para evolucionar
+- no realiza interpretación clínica
+- no genera predicciones
+- no genera alertas clínicas
+- no reemplaza al médico
+
+### Fase 11 — Rediseño UI/UX global (Design System Nuvio)
+
+Rediseño visual completo de toda la aplicación, migrando de la paleta legacy Ocean/Ivory/Cream a la identidad oficial de Nuvio (#251836, #F3E0FE, #FAF8FC). Se mantiene la lógica de negocio intacta — solo cambia cómo se ve, no qué hace.
+
+#### Fase 11.1 — Foundation (Design System)
+- **`globals.css`**: paleta de tokens de marca: primary (#251836), muted (#756B7D), background (#FAF8FC), surface (#FFFFFF), foreground (#17131A), border (#E6DFE9), success (#3F8F68), warning (#C58A32), error (#C65353), violet evolution (#6D4BC4). Shadow tokens tinted to primary (sm/md/lg/xl). Tipografía Inter + IBM Plex Mono (mono solo para datos clínicos).
+- **Iconos centralizados** (`src/components/ui/icons/index.tsx`): 30 iconos SVG custom con `strokeWidth={1.5}`, `className="h-5 w-5"`, `aria-hidden="true"`.
+- **Primitivos UI** (`src/components/ui/`): Button (primary/secondary/ghost/danger, sm/md/lg con active:scale-[0.98]), Card (default/interactive/none, sm/md/lg), Badge (success/warning/error/info/neutral/muted, sm/md), Input (label+error pattern), Textarea (label+error pattern), Spinner.
+- **Typography utilities** en CSS: `.text-display`, `.text-heading`, `.text-subheading`, `.text-body`, `.text-caption` con sizing/spacing/weight variables.
+- **Surface utilities**: `.surface-canvas`, `.surface-base`, `.surface-raised`, `.surface-overlay`.
+- **Status indicators**: `.status-dot-*` con colores semánticos, `.status-dot-processing` con pulse animation.
+- **Animation system**: `fade-in`, `fade-in-up`, `fade-in-down`, `slide-in-right`, `slide-in-left`, `scale-in`, `pulse-subtle`, `float` con stagger delays (`.delay-0` a `.delay-600`). Respeto a `prefers-reduced-motion`.
+- **Scrollbar styling** fino y consistente.
+- **Navbar** (`src/components/Navbar.tsx`): `bg-surface/80 backdrop-blur-xl`, logo Nuvio, CTA con Button.
+- **DashboardNav** (`src/components/dashboard/DashboardNav.tsx`): dividers, secciones, active state `bg-primary-muted shadow-sm`.
+- **MobileNav** (`src/components/dashboard/MobileNav.tsx`): drawer con `backdrop-blur`, active `bg-primary-muted/40`.
+
+#### Fase 11.2 — Dashboard y páginas core
+- **`dashboard/page.tsx`**: editorial layout — greeting header con `text-heading`, stats grid, acciones como list items (no cards), estudios recientes en lista con `animate-fade-in-up`.
+- **`dashboard/layout.tsx`**: sidebar con dividers, secciones, user section, `text-body`/`text-caption` tokens, `h-16` mobile header.
+- **`dashboard/estudios/`**: StudyCard con `animate-fade-in-up`, hover `border-primary/20 bg-primary-muted/30`, group hover effects.
+- **`dashboard/estudios/[id]/page.tsx`**: editorial metadata sidebar con `data-label` tokens, danger/info/warning states como tinted containers.
+
+#### Fase 11.3 — Study Detail y Results
+- **StudyResultHeader**: removed card wrapper, uses `.data-label` class, editorial spacing.
+- **FindingsSection**: `.data-label` class for headings.
+- **AnalysisSection**: `.data-label` class, `text-body` items, `animate-fade-in-up`.
+- **FindingRow**: badges de status, botón "Ver más" expandible, CTA contextual al chat.
+- **MeasurementsSection**: valores en `font-mono`, badges de status.
+- **MedicalDisclaimer**: `bg-primary-muted/50` tinted container.
+- **StudyExtraction**: `<pre>` colapsable con `font-mono text-caption`.
+- **StudyPipelineController**: editorial error/processing states con tinted borders.
+
+#### Fase 11.4 — Chat IA
+- **ChatPageLayout**: `grid lg:grid-cols-[280px_1fr]`, sidebar `bg-muted/20`, mobile drawer con `backdrop-blur`.
+- **ChatView**: editorial styling, `animate-fade-in` on welcome, `text-body`/`text-caption` tokens.
+- **ConversationList**: "Nueva conversación" con `active:scale-[0.98]`, active state `bg-primary-muted shadow-sm`, delete con `active:scale-[0.95]`.
+- **ChatWelcome**: `bg-primary-muted` icono, `animate-fade-in`, `text-heading` title.
+- **ConversationList**: `animate-fade-in-up` on items.
+
+#### Fase 11.5 — Comparación y Evolución
+- **ComparisonContext**: editorial labels, `.data-label` class.
+- **ComparisonSummary**: collapsible secondary tiles, `.data-label`, `animate-fade-in-up`.
+- **MeasurementDiffList**: editorial diff cards con `.data-label`, `font-mono` values, `text-body`/`text-caption`.
+- **`comparar/page.tsx`**: editorial states with tinted containers.
+- **EvolutionOverview**: collapsible secondary tiles, `.data-label`, `animate-fade-in-up`.
+- **EvolutionParameterTable**: `font-mono` values, `.data-label` headers, `text-body`/`text-caption`.
+- **EvolutionDisclaimer**: editorial styling consistent with MedicalDisclaimer.
+- **EvolutionSeriesContext**: editorial cards with `.data-label`.
+- **`evolucion/page.tsx`**: editorial layout with tinted containers.
+
+#### Fase 11.6 — Landing y Login
+- **Hero**: dot pattern más sutil (32px, 3 colores), `data-label` subtitle, `text-display` title, `mt-10` CTAs.
+- **HowItWorks**: `bg-muted/20`, `data-label` subtitle, `text-heading` title, steps con `rounded-xl`.
+- **Security**: `data-label` subtitle, `text-heading` title, features con `rounded-xl`.
+- **Disclaimer**: `bg-primary-muted/30`, `border-primary/20`, `text-body` content.
+- **Navbar**: `text-caption` nav items, consistent with dashboard.
+- **Footer**: `text-caption` content, `text-[11px]` copyright.
+- **Login**: `text-heading` title, `text-body` subtitle, error `border-danger/20 bg-danger-tint/50`.
+
+#### Assets oficiales
+
+| Asset | Uso |
+|-------|-----|
+| `public/nuvio_logo_nuevo.png` | Logo principal (navbar, dashboard layout, login) |
+| `public/nuvio_logo_circular_con_la_N.png` | Isotipo / favicon |
+
+#### Design System — Tokens oficiales
+
+| Token | Valor | Uso |
+|-------|-------|-----|
+| `--color-primary` | `#251836` | Brand principal |
+| `--color-primary-muted` | `#F3E0FE` | Fondos suaves, badges, active states |
+| `--color-background` | `#FAF8FC` | Fondo de página |
+| `--color-surface` | `#FFFFFF` | Cards, paneles, superficies |
+| `--color-foreground` | `#17131A` | Texto principal |
+| `--color-muted-foreground` | `#756B7D` | Texto secundario, labels |
+| `--color-border` | `#E6DFE9` | Bordes generales |
+| `--color-success` | `#3F8F68` | Estados exitosos |
+| `--color-warning` | `#C58A32` | Advertencias |
+| `--color-danger` | `#C65353` | Errores |
+| `--color-violet` | `#6D4BC4` | Evolution accent (exclusivo) |
+| `--shadow-sm` | `0 1px 2px rgba(37,24,54,0.04)` | Sombras sutiles (tinted primary) |
+| `--shadow-md` | `0 2px 8px rgba(37,24,54,0.06)` | Sombras medias |
+| `--shadow-lg` | `0 4px 16px rgba(37,24,54,0.08)` | Sombras elevadas |
+| `--shadow-xl` | `0 8px 32px rgba(37,24,54,0.12)` | Sombras máximas |
+
 ---
 
 # Estado actual / Próxima sesión
@@ -266,45 +400,41 @@ Nuvio se encuentra con:
 - **chat contextual funcional** (conversaciones persistidas, contexto por estudio)
 - **comparación determinista de dos estudios funcional** (`/dashboard/comparar`)
 - **selección de estudios desde `/dashboard/estudios` funcional** (Fase 9.5)
+- **historial inteligente de estudios por tipo funcional** (Fase 10.2)
+- **selección de serie longitudinal funcional** (Fase 10.3)
+- **motor determinista de evolución funcional** (Fase 10.4)
+- **página de evolución funcional** (`/dashboard/evolucion`, Fase 10.5)
+- **sparklines de tendencia funcionales** (Fase 10.6, SVG inline)
+- **QA final de evolución cerrado** (Fase 10.7)
+- **rediseño editorial completo** (Fases 11.1–11.6) — paleta Nuvio, tipografía editorial, animation system, surface/status tokens
+- **Design System Nuvio consistente** (tokens de marca, sombras tinted, status indicators)
 - **responsive/mobile navigation funcional**
 - **tests, lint, TypeScript y build validados** (ver § Validaciones más abajo)
 
-## Pendientes inmediatos
-
-1. **Mejorar la legibilidad y jerarquía visual de la pantalla de comparación.** Ver `Pendiente de UX — lectura de la comparación` más abajo.
-2. **Fase 9.6 — PENDIENTE / NO INICIADA.** Continuar después de mejorar la UX de comparación.
-
-> ⚠️ La Fase 9.6 no está iniciada. No se debe asumir ninguna funcionalidad posterior a la Fase 9.5 como implementada.
-
-## Investigación pendiente — procesamiento automático
-
-**RESUELTO (2026-09-07):**
-
-- Causa raíz confirmada: `StudyPipelineController` solo se renderizaba cuando `status === "processed"`, por lo que el procesamiento inicial (PDF extracción) nunca se iniciaba automáticamente.
-- Solución: el pipeline controller ahora cubre todos los estados (`uploaded`, `processing`, `ocr_required`, `error`, `processed + analysis pending`).
-- El flujo completo ahora es: subir → procesamiento automático → análisis automático → resultado visible.
-- El botón "Procesar documento" permanece como mecanismo de retry/recovery.
-
-## Pendiente de UX — lectura de la comparación
-
-Confirmado manualmente (2026-09-06):
-
-- La comparación **funciona**. Se probaron estudios reales con distintos tipos y el sistema detectó correctamente que **no eran comparables** cuando sus `study_type` eran diferentes (`different_study_type`).
-- Problema detectado: **"El resultado de comparación es difícil de leer."**
-- Queda documentado como **trabajo pendiente de UX/UI** (jerarquía visual, legibilidad). No solucionado.
-
-## Validaciones conocidas
-
-Re-ejecutadas el 2026-09-07 para dejar registrado el estado real:
+## Validaciones
 
 | Validación | Resultado |
 |---|---|
-| Tests (`pnpm test`) | **479/479 PASS** |
+| Tests (`pnpm test`) | **680/680 PASS** |
 | TypeScript (`pnpm exec tsc --noEmit`) | **PASS** |
-| ESLint (`pnpm lint`) | **PASS** — 0 errores; solo los 3 warnings pre-existentes (variables `_` sin uso en tests de `schema.test.ts` y `study-ops.test.ts`) |
+| ESLint (`pnpm lint`) | **PASS** — 0 errores; 3 warnings pre-existentes en tests ajenos |
 | Build (`pnpm build`) | **PASS** — todas las rutas compiladas |
 
-> Nota: los tests del motor de comparación corren vía el script `test`; los tests de `presentation` y `selection` corren de forma standalone con `node --experimental-strip-types --test`. La suite principal (`pnpm test`) = 479 tests.
+> Nota: los tests de evolución (`build-series.test.ts`, `selection.test.ts`, `history.test.ts`, `sparkline.test.ts`, `parse-ids.test.ts`, `presentation.test.ts`) corren todos vía `pnpm test`. La suite completa desde la raíz del proyecto = 680 tests.
+
+## Commits de rediseño
+
+| Commit | Mensaje |
+|---|---|
+| `feat(ui)` | `establish Nuvio design system foundation` |
+| `feat(ui)` | `redesign dashboard and core pages` |
+| `fix(ui)` | `update Nuvio favicon asset` |
+| `fix` | `add Nuvio logo assets and remove old logo` |
+| `feat(ui)` | `redesign study detail and results` |
+| `feat(ui)` | `redesign chat` |
+| `feat(ui)` | `redesign comparison and evolution` |
+| `feat(ui)` | `redesign landing and login` |
+| `refactor(ui)` | `finalize Nuvio design system cleanup` |
 
 ## Commits de comparación
 
@@ -314,6 +444,28 @@ Re-ejecutadas el 2026-09-07 para dejar registrado el estado real:
 | `5d08ac5` | `feat(comparison): add study comparison page` |
 | `051b476` | `feat(comparison): improve comparison result UI` |
 | `7fcf71e` | `feat(comparison): integrate study selection` |
+
+## Commits de evolución
+
+| Commit | Mensaje |
+|---|---|
+| `9cbd121` | `feat(10.2+10.3): historial inteligente + selección de serie longitudinal` |
+| `d4ee6fa` | `feat(10.4): motor determinista de evolución longitudinal` |
+| `fabf049` | `feat(evolution): Fase 10.5 — /dashboard/evolucion page` |
+| (esta PR) | `feat(evolution): Fase 10.6+10.7 — sparklines y QA final de evolución` |
+
+## Pendientes conocidos
+
+1. **Mejorar la legibilidad y jerarquía visual de la pantalla de comparación.** Ver `Pendiente de UX — lectura de la comparación` más abajo.
+2. **Fase 9.6 — PENDIENTE / NO INICIADA.** Continuar después de mejorar la UX de comparación.
+
+## Pendiente de UX — lectura de la comparación
+
+Confirmado manualmente (2026-09-06):
+
+- La comparación **funciona**. Se probaron estudios reales con distintos tipos y el sistema detectó correctamente que **no eran comparables** cuando sus `study_type` eran diferentes (`different_study_type`).
+- Problema detectado: **"El resultado de comparación es difícil de leer."**
+- Queda documentado como **trabajo pendiente de UX/UI** (jerarquía visual, legibilidad). No solucionado.
 
 ## Mejoras futuras (no implementadas)
 
@@ -339,7 +491,9 @@ src/
 │   │   ├── chat/page.tsx           # Raíz del Chat IA (Welcome / redirige a la reciente)
 │   │   ├── chat/[id]/page.tsx      # Conversación activa (mensajes + contexto)
 │   │   ├── comparar/page.tsx       # Comparación de dos estudios
+│   │   ├── evolucion/page.tsx      # Evolución longitudinal (2–10 estudios)
 │   │   └── perfil/page.tsx         # Perfil del usuario
+│   ├── (landing)/page.tsx          # Landing page pública
 │   └── layout.tsx                  # Layout raíz
 ├── lib/
 │   ├── supabase/
@@ -375,24 +529,34 @@ src/
 │   │   ├── presentation.ts         # Formato puro para la UI de resultados
 │   │   ├── selection.ts            # Lógica pura de selección de estudios
 │   │   └── __tests__/              # Tests del motor y la selección
+│   ├── evolution/
+│   │   ├── types.ts                # Tipos de evolución (ParameterTrack, PointValue…)
+│   │   ├── build-series.ts         # Motor determinista de evolución (Fase 10.4)
+│   │   ├── parse-ids.ts            # Parseo/validación del parámetro ids (2–10)
+│   │   ├── presentation.ts         # Formato puro para la UI de resultados
+│   │   ├── selection.ts            # Lógica pura de selección de serie (Fase 10.3)
+│   │   ├── sparkline.ts            # Lógica pura del sparkline (Fase 10.6)
+│   │   └── __tests__/              # Tests del motor, selección, sparkline y formatos
 │   ├── studies-utils.ts            # Tipos, labels, constantes
 │   └── auth/
 │       └── callbacks.ts            # Helpers de auth
 ├── components/
-│   ├── ui/                         # Componentes base (shadcn/ui)
+│   ├── ui/                         # Componentes base (Button, Card, Badge, Input, Spinner, Icons)
 │   ├── auth/                       # Componentes de autenticación
 │   ├── dashboard/                  # Componentes del dashboard (nav, cards, selección)
 │   ├── comparison/                 # Componentes de la UI de comparación
+│   ├── evolution/                  # Componentes de la UI de evolución (Fase 10)
 │   ├── studies/                    # Componentes de estudios (AnalysisResult, etc.)
-│   └── chat/                       # Componentes del Chat IA
-│       ├── ChatPageLayout.tsx      # Marco de dos paneles (sidebar + conversación)
-│       ├── ChatView.tsx            # Máquina de estados pick-study / suggest / chat
-│       ├── ChatWelcome.tsx         # Pantalla inicial (server component)
-│       ├── ConversationList.tsx    # Historial de conversaciones
-│       ├── NewConversationStudyPicker.tsx
-│       ├── SelectedStudyBanner.tsx
-│       ├── SuggestedQuestions.tsx
-│       └── ContextPicker.tsx       # Contexto de estudios (chips)
+│   ├── chat/                       # Componentes del Chat IA
+│   │   ├── ChatPageLayout.tsx      # Marco de dos paneles (sidebar + conversación)
+│   │   ├── ChatView.tsx            # Máquina de estados pick-study / suggest / chat
+│   │   ├── ChatWelcome.tsx         # Pantalla inicial (server component)
+│   │   ├── ConversationList.tsx    # Historial de conversaciones
+│   │   ├── NewConversationStudyPicker.tsx
+│   │   ├── SelectedStudyBanner.tsx
+│   │   ├── SuggestedQuestions.tsx
+│   │   └── ContextPicker.tsx       # Contexto de estudios (chips)
+│   └── landing/                    # Componentes de la landing (Hero, HowItWorks, etc.)
 ├── middleware.ts                    # Proxy/middleware de auth
 └── types/
     └── database.ts                 # Tipos de Supabase
@@ -555,7 +719,7 @@ pnpm build
 # Lint
 pnpm lint
 
-# Tests (479 tests, node:test)
+# Tests (680 tests, node:test)
 pnpm test
 
 # Deploy (automático tras push a main)
@@ -570,22 +734,6 @@ git push
 - **Producción:** https://nuvio-lemon-six.vercel.app
 - **Local:** http://localhost:3000
 - **Pipeline:** cada cambio se hace con `commit` + `push` a `main`; **Vercel redesplega automáticamente** tras el push.
-
----
-
-# Comandos de desarrollo
-
-Para iniciar el proyecto:
-
-```bash
-pnpm dev
-```
-
-Por defecto, la aplicación estará disponible en:
-
-```text
-http://localhost:3000
-```
 
 ---
 

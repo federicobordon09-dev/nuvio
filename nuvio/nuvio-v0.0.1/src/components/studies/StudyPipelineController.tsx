@@ -139,14 +139,14 @@ export function StudyPipelineController({
 
   if (phase === "processing-failed") {
     return (
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-danger/20 bg-danger-tint/50 p-5">
         <div className="mb-3 flex items-center gap-2">
           <ErrorTriangle className="h-5 w-5 text-danger" />
-          <h2 className="text-[15px] font-medium text-foreground">
+          <h2 className="text-body font-medium text-foreground">
             Procesamiento del documento
           </h2>
         </div>
-        <p className="text-[14px] leading-[1.6] text-danger-strong">
+        <p className="text-body text-danger-strong">
           {processingError ?? getProcessingErrorLabel(null)}
         </p>
         <div className="mt-4">
@@ -166,14 +166,14 @@ export function StudyPipelineController({
 
   if (phase === "failed") {
     return (
-      <div className="rounded-xl border border-border bg-surface p-5">
+      <div className="rounded-xl border border-danger/20 bg-danger-tint/50 p-5">
         <div className="mb-3 flex items-center gap-2">
           <ErrorTriangle className="h-5 w-5 text-danger" />
-          <h2 className="text-[15px] font-medium text-foreground">
+          <h2 className="text-body font-medium text-foreground">
             Análisis de IA
           </h2>
         </div>
-        <p className="text-[14px] leading-[1.6] text-danger-strong">
+        <p className="text-body text-danger-strong">
           {errorMessage ?? getAnalysisErrorMessage("gemini_failed")}
         </p>
         <div className="mt-4">
@@ -192,16 +192,16 @@ export function StudyPipelineController({
   }
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-5">
+    <div className="rounded-xl border border-primary/20 bg-primary-muted/50 p-5">
       <div className="flex items-center gap-3">
         <Spinner className="h-5 w-5 text-primary" />
         <div>
-          <h2 className="text-[15px] font-medium text-foreground">
+          <h2 className="text-body font-medium text-foreground">
             {phase === "processing"
               ? "Procesando documento…"
               : "Analizando con IA…"}
           </h2>
-          <p className="mt-0.5 text-[13px] text-muted-foreground">
+          <p className="mt-0.5 text-caption text-muted-foreground">
             {phase === "processing"
               ? "Extrayendo contenido del PDF. Esto tarda unos segundos."
               : "La IA está interpretando el documento. Esto puede tardar unos segundos."}

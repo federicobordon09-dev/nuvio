@@ -4,21 +4,24 @@ export default function HowItWorks() {
   return (
     <section
       id="como-funciona"
-      className="bg-muted/30"
+      className="bg-muted/20"
       aria-labelledby="como-funciona-heading"
     >
-      <div className="mx-auto max-w-6xl px-6 py-20 sm:py-24 lg:px-8">
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32 lg:px-8">
+        <p className="data-label mb-3 text-muted-foreground">
+          Proceso
+        </p>
         <h2
           id="como-funciona-heading"
-          className="text-[22px] font-medium leading-[1.4] tracking-[-0.02em] text-foreground"
+          className="text-heading font-medium tracking-tight text-foreground"
         >
           Cómo funciona
         </h2>
-        <p className="mt-3 max-w-lg text-[15px] leading-[1.6] text-muted-foreground">
+        <p className="mt-3 max-w-lg text-body text-muted-foreground">
           Tres pasos simples para entender tus resultados.
         </p>
 
-        <div className="relative mt-12">
+        <div className="relative mt-14">
           <div
             className="pointer-events-none absolute inset-x-0 top-1/2 hidden h-px sm:block"
             aria-hidden="true"
@@ -64,19 +67,19 @@ function Step({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="relative rounded-xl border border-border bg-surface p-5 shadow-[var(--shadow-sm)] transition-all duration-200 ease-out hover:bg-muted/40 hover:shadow-[var(--shadow-md)] hover:border-border">
-      <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-muted text-primary">
+    <div className="relative rounded-xl border border-border bg-surface p-6 shadow-[var(--shadow-sm)] transition-all duration-200 ease-out hover:shadow-[var(--shadow-md)] hover:border-border/80">
+      <div className="mb-5 flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-muted text-primary">
           {icon}
         </div>
-        <span className="text-[11px] font-medium tracking-widest text-muted-foreground uppercase">
-          {step}
+        <span className="data-label uppercase">
+          Paso {step}
         </span>
       </div>
-      <h3 className="text-[18px] font-medium leading-[1.4] text-foreground">
+      <h3 className="text-subheading font-medium text-foreground">
         {title}
       </h3>
-      <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
+      <p className="mt-2 text-body text-muted-foreground">
         {description}
       </p>
     </div>

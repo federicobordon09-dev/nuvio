@@ -11,7 +11,6 @@ import { Document } from "@/components/ui/icons";
 export const dynamic = "force-dynamic";
 
 export default async function EstudiosPage() {
-  // Auth ANTES del try/catch y con un único client — shared con la data fetch.
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -29,7 +28,10 @@ export default async function EstudiosPage() {
 
   return (
     <div>
-      <PageHeader title="Mis estudios" description="Todos tus estudios médicos en un solo lugar.">
+      <PageHeader
+        title="Mis estudios"
+        description="Tu biblioteca personal de información médica."
+      >
         <Link href="/dashboard/subir">
           <Button>Subir estudio</Button>
         </Link>

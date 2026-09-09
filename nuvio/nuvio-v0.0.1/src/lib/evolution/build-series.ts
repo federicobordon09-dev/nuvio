@@ -260,8 +260,15 @@ function buildParameterTracks(studies: EvolutionStudy[]): ParameterTrack[] {
 
 /**
  * Calcula el resumen general (EvolutionOverall) a partir de los tracks.
+ * `totalStudies` es la cantidad real de estudios de la serie: un parámetro
+ * persistente es el que aparece en TODOS ellos (Fase 10.7 — corrige un bug:
+ * antes se derivaba de `tracks[0]`, que tras el sort por nombre puede ser un
+ * parámetro no persistente).
  */
-function computeOverall(tracks: ParameterTrack[]): EvolutionOverall {
+function computeOverall(
+  tracks: ParameterTrack[],
+  totalStudies: number,
+): EvolutionOverall {
   let persistentParameters = 0;
   let transientParameters = 0;
   let numericChanges = 0;
@@ -269,8 +276,6 @@ function computeOverall(tracks: ParameterTrack[]): EvolutionOverall {
   let decreased = 0;
   let stable = 0;
   let notComparableChanges = 0;
-
-  const totalStudies = tracks.length > 0 ? tracks[0].points.length : 0;
 
   for (const track of tracks) {
     // Parámetro persistente = presente en TODOS los estudios
@@ -326,7 +331,7 @@ export function buildEvolutionSeries(input: EvolutionInput): EvolutionResult {
 
   // No mutar: trabajar con copias si es necesario, pero aquí solo leemos
   const tracks = buildParameterTracks(studies);
-  const overall = computeOverall(tracks);
+  const overall = computeOverall(tracks, studies.length);
 
   return {
     comparable: true,

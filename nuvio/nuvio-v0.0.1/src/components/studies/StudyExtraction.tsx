@@ -13,12 +13,12 @@ export function StudyExtraction({ text, pageCount }: StudyExtractionProps) {
 
   return (
     <div className="rounded-xl border border-border bg-surface">
-      <div className="flex items-center justify-between gap-3 px-4 py-3">
+      <div className="flex items-center justify-between gap-3 px-5 py-4">
         <div className="min-w-0">
-          <h2 className="text-[13px] font-medium text-foreground">
+          <h2 className="text-body font-medium text-foreground">
             Contenido extraído
           </h2>
-          <p className="truncate text-[12px] text-muted-foreground">
+          <p className="mt-0.5 text-caption text-muted-foreground">
             {pageCount != null
               ? `${pageCount} página${pageCount !== 1 ? "s" : ""} del documento original`
               : "Texto extraído del documento original"}
@@ -40,9 +40,9 @@ export function StudyExtraction({ text, pageCount }: StudyExtractionProps) {
           id="study-extraction-panel"
           role="region"
           aria-label="Contenido extraído del documento"
-          className="max-h-[420px] overflow-y-auto border-t border-border px-4 py-4"
+          className="max-h-[420px] overflow-y-auto border-t border-border px-5 py-4"
         >
-          <pre className="whitespace-pre-wrap break-words font-sans text-[13px] leading-[1.6] text-foreground/80">
+          <pre className="whitespace-pre-wrap break-words font-mono text-caption leading-body text-foreground/80">
             {text}
           </pre>
         </div>

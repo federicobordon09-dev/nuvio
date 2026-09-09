@@ -6,15 +6,6 @@ import {
   getSeriesDateRangeLabel,
 } from "@/lib/evolution/presentation";
 
-/**
- * Fase 10.5 — Contexto de la serie longitudinal.
- *
- * Muestra cada estudio de la evolución como una tarjeta identificada con
- * su letra de la serie (A, B, C… en orden cronológico ASC), la misma que
- * encabeza las columnas de la tabla de parámetros.
- *
- * Tema violeta (#6D4BC4), distinto del ocean de la comparación (A↔B).
- */
 export function EvolutionSeriesContext({
   studies,
   typeLabel,
@@ -24,14 +15,14 @@ export function EvolutionSeriesContext({
 }) {
   return (
     <section aria-labelledby="evolution-series-heading">
-      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
         <h2
           id="evolution-series-heading"
-          className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground"
+          className="data-label"
         >
           La serie · {typeLabel}
         </h2>
-        <span className="text-[12px] text-muted-foreground">
+        <span className="text-caption text-muted-foreground">
           {studies.length} estudio{studies.length !== 1 ? "s" : ""} ·{" "}
           {getSeriesDateRangeLabel(studies)}
         </span>
@@ -50,7 +41,7 @@ export function EvolutionSeriesContext({
               >
                 {SERIES_LETTERS[i]}
               </span>
-              <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+              <span className="data-label">
                 Estudio {i + 1} de {studies.length}
               </span>
             </div>
@@ -59,12 +50,12 @@ export function EvolutionSeriesContext({
               href={`/dashboard/estudios/${study.id}`}
               className="mt-3 min-w-0"
             >
-              <p className="truncate text-[14px] font-medium leading-snug text-foreground transition-colors hover:text-violet">
+              <p className="truncate text-body font-medium leading-snug text-foreground transition-colors hover:text-violet">
                 {study.file_name}
               </p>
             </Link>
 
-            <p className="mt-1 text-[12px] text-muted-foreground">
+            <p className="mt-1 text-caption text-muted-foreground">
               {formatLongDate(study.created_at)}
             </p>
           </article>
