@@ -184,6 +184,13 @@ body {
   border-radius: var(--radius-sm);
 }
 
+/* ── Focus on dark plum surfaces — the default plum outline is invisible there ── */
+
+.on-dark :focus-visible,
+.on-dark:focus-visible {
+  outline-color: var(--color-lilac-glow);
+}
+
 /* ───────────────────────────────────────────────────
    TYPOGRAPHY UTILITIES
    ─────────────────────────────────────────────────── */
@@ -211,6 +218,24 @@ body {
   line-height: var(--leading-heading);
   letter-spacing: var(--tracking-heading);
   font-weight: 600;
+}
+
+/* headline-lg: 36px / 44px / -0.025em — section titles on marketing surfaces */
+.text-title-lg {
+  font-family: var(--font-heading);
+  font-size: 2.25rem;
+  line-height: 2.75rem;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+
+/* headline-lg-mobile: 26px / 34px / -0.02em */
+@media (max-width: 767px) {
+  .text-title-lg {
+    font-size: 1.625rem;
+    line-height: 2.125rem;
+    letter-spacing: -0.02em;
+  }
 }
 
 .text-subheading {

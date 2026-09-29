@@ -6,11 +6,11 @@ export default function ProductPreview() {
       className="relative"
       style={{ animation: "float 6s ease-in-out infinite" }}
     >
-      <div className="absolute -inset-4 rounded-2xl bg-primary/[0.03] blur-2xl" />
+      <div className="absolute -inset-4 rounded-2xl bg-lilac-glow/20 blur-2xl" />
 
-      <div className="relative rounded-xl border border-border bg-surface shadow-[var(--shadow-md)]">
+      <div className="relative rounded-xl border border-white/10 bg-surface shadow-xl">
         <div className="flex items-center gap-2 border-b border-border/40 px-5 py-3">
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5" aria-hidden="true">
             <span className="h-2.5 w-2.5 rounded-full bg-border/60" />
             <span className="h-2.5 w-2.5 rounded-full bg-border/60" />
             <span className="h-2.5 w-2.5 rounded-full bg-border/60" />
@@ -33,9 +33,9 @@ export default function ProductPreview() {
           </div>
 
           <div className="mb-3">
-            <h4 className="text-[13px] font-medium text-foreground">
+            <p className="text-[13px] font-medium text-foreground">
               Análisis de sangre completo
-            </h4>
+            </p>
             <p className="mt-0.5 text-[12px] leading-[1.4] text-muted-foreground">
               14 de marzo de 2026
             </p>
