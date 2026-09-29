@@ -5,7 +5,7 @@ import { MobileNav } from "@/components/dashboard/MobileNav";
 import { signOut } from "@/lib/actions/auth";
 import Image from "next/image";
 import Link from "next/link";
-import { LogOut } from "@/components/ui/icons";
+import { LogOut, Upload } from "@/components/ui/icons";
 
 export default async function DashboardLayout({
   children,
@@ -44,9 +44,9 @@ export default async function DashboardLayout({
 
       <div className="flex">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-border lg:bg-surface">
+        <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-border lg:bg-surface lg:shadow-sm">
           <div className="flex h-full flex-col">
-            <div className="flex h-16 items-center px-5">
+            <div className="flex h-16 shrink-0 items-center px-6">
               <Link href="/dashboard" className="flex items-center" aria-label="Nuvio">
                 <Image
                   src="/nuvio_logo_nuevo.png"
@@ -59,59 +59,65 @@ export default async function DashboardLayout({
               </Link>
             </div>
 
-            <div className="px-3">
-              <div className="divider" />
+            {/* CTA principal */}
+            <div className="px-4 pb-4">
+              <Link
+                href="/dashboard/subir"
+                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-body font-medium text-primary-foreground shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-primary-hover active:translate-y-0"
+              >
+                <Upload className="h-4 w-4" />
+                Subir estudio
+              </Link>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-3 py-4">
+            <div className="flex-1 overflow-y-auto px-4 pb-4">
               <DashboardNav />
             </div>
 
-            <div className="px-3">
-              <div className="divider" />
-            </div>
-
-            <div className="px-3 py-4">
-              <div className="flex items-center gap-3 px-3 mb-3">
-                {userAvatar ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={userAvatar}
-                    alt=""
-                    className="h-9 w-9 rounded-full"
-                  />
-                ) : (
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-muted text-caption font-medium text-primary">
-                    {userName.charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-body font-medium text-foreground truncate">
-                    {userName}
-                  </p>
-                  {userEmail && (
-                    <p className="text-caption text-muted-foreground truncate">
-                      {userEmail}
-                    </p>
+            {/* Pie: usuario + cierre de sesión */}
+            <div className="p-4">
+              <div className="rounded-md bg-background p-3">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  {userAvatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={userAvatar}
+                      alt=""
+                      className="h-9 w-9 shrink-0 rounded-full"
+                    />
+                  ) : (
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-muted text-caption font-medium text-primary">
+                      {userName.charAt(0).toUpperCase()}
+                    </div>
                   )}
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-body font-medium text-foreground">
+                      {userName}
+                    </p>
+                    {userEmail && (
+                      <p className="truncate text-caption text-muted-foreground">
+                        {userEmail}
+                      </p>
+                    )}
+                  </div>
                 </div>
+                <form action={signOut} className="mt-2">
+                  <button
+                    type="submit"
+                    className="flex min-h-11 w-full items-center gap-3 rounded-md px-3 py-2.5 text-body font-medium text-muted-foreground transition-all duration-150 hover:bg-primary-muted/40 hover:text-foreground active:scale-[0.98]"
+                  >
+                    <LogOut />
+                    Cerrar sesión
+                  </button>
+                </form>
               </div>
-              <form action={signOut}>
-                <button
-                  type="submit"
-                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-body font-medium text-muted-foreground transition-all duration-150 hover:bg-primary-muted/40 hover:text-foreground active:scale-[0.98]"
-                >
-                  <LogOut />
-                  Cerrar sesión
-                </button>
-              </form>
             </div>
           </div>
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 lg:pl-64">
-          <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+        <main className="min-w-0 flex-1 lg:pl-64">
+          <div className="mx-auto w-full max-w-[1340px] px-4 pb-16 pt-8 sm:px-6 lg:px-10">
             {children}
           </div>
         </main>

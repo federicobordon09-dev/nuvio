@@ -78,7 +78,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
       <button
         ref={toggleRef}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-all duration-150 hover:bg-primary-muted/40 hover:text-foreground active:scale-[0.98]"
+        className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground transition-all duration-150 hover:bg-primary-muted/40 hover:text-foreground active:scale-[0.98]"
         aria-expanded={open}
         aria-controls="mobile-nav-panel"
         aria-label={open ? "Cerrar menú" : "Abrir menú"}
@@ -104,15 +104,15 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
         <div
           ref={panelRef}
           id="mobile-nav-panel"
-          className={`absolute inset-y-0 left-0 flex w-72 flex-col bg-surface shadow-xl transition-transform duration-200 ease-out ${
+          className={`absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col border-r border-border bg-surface shadow-xl transition-transform duration-200 ease-out ${
             open ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <div className="flex items-center justify-between px-5 py-4">
-            <span className="text-subheading font-medium text-foreground">Nuvio</span>
+            <span className="text-subheading text-primary">Nuvio</span>
             <button
               onClick={close}
-              className="flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-primary-muted/40 active:scale-[0.98]"
+              className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground hover:bg-primary-muted/40 active:scale-[0.98]"
               aria-label="Cerrar menú"
             >
               <X />
@@ -124,7 +124,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
           </div>
 
           <nav className="flex-1 overflow-y-auto px-3 py-4">
-            <ul className="flex flex-col gap-0.5">
+            <ul className="flex flex-col gap-1">
               {navItems.map((item) => {
                 const active = isActivePath(pathname, item.href);
                 return (
@@ -133,13 +133,17 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
                       href={item.href}
                       onClick={close}
                       aria-current={active ? "page" : undefined}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-body font-medium transition-all duration-150 ease-out ${
+                      className={`flex min-h-11 items-center gap-3 rounded-md px-3 py-2.5 text-body font-medium transition-all duration-150 ease-out ${
                         active
-                          ? "bg-primary-muted text-primary shadow-sm"
+                          ? "bg-primary-muted text-primary font-semibold shadow-sm"
                           : "text-muted-foreground hover:bg-primary-muted/40 hover:text-foreground"
                       }`}
                     >
-                      <span className={`flex h-5 w-5 items-center justify-center ${active ? "text-primary" : "text-muted-foreground"}`}>
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center ${
+                          active ? "text-primary" : "text-muted-foreground"
+                        }`}
+                      >
                         {item.icon}
                       </span>
                       {item.label}
@@ -180,7 +184,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
             <form action={signOut}>
               <button
                 type="submit"
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-body font-medium text-muted-foreground transition-all duration-150 hover:bg-primary-muted/40 hover:text-foreground active:scale-[0.98]"
+                className="flex min-h-11 w-full items-center gap-3 rounded-md px-3 py-2.5 text-body font-medium text-muted-foreground transition-all duration-150 hover:bg-primary-muted/40 hover:text-foreground active:scale-[0.98]"
               >
                 <LogOut />
                 Cerrar sesión

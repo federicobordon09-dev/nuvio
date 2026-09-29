@@ -23,7 +23,10 @@ export function DashboardCard({
   const content = (
     <>
       <div className="mb-3 flex items-center gap-3">
-        <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${iconTone}`}>
+        <div
+          aria-hidden="true"
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${iconTone}`}
+        >
           {icon}
         </div>
         <div className="min-w-0 flex-1">
@@ -42,13 +45,14 @@ export function DashboardCard({
     </>
   );
 
-  const baseClasses = "block h-full rounded-xl border border-border bg-surface p-5 transition-all duration-150 ease-out animate-fade-in-up";
+  const baseClasses =
+    "block h-full rounded-xl border border-border bg-surface p-5 shadow-sm transition-all duration-150 ease-out animate-fade-in-up";
 
   if (href) {
     return (
       <Link
         href={href}
-        className={`${baseClasses} hover:shadow-md hover:border-primary/20 hover:bg-primary-muted/30 active:scale-[0.99]`}
+        className={`${baseClasses} hover:border-primary/20 hover:bg-primary-muted/30 hover:shadow-md active:scale-[0.99]`}
       >
         {content}
       </Link>

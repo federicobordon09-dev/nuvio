@@ -19,7 +19,7 @@ interface StudyCardProps {
 
 export function StudyCard({ study, showDelete = true }: StudyCardProps) {
   return (
-    <div className="group rounded-xl border border-border bg-surface p-5 transition-all duration-150 ease-out hover:shadow-md hover:border-primary/20 hover:bg-primary-muted/30 animate-fade-in-up">
+    <div className="group rounded-xl border border-border bg-surface p-5 shadow-sm transition-all duration-150 ease-out hover:border-primary/20 hover:bg-primary-muted/30 hover:shadow-md animate-fade-in-up">
       <div className="flex items-start justify-between gap-4">
         <Link
           href={`/dashboard/estudios/${study.id}`}
