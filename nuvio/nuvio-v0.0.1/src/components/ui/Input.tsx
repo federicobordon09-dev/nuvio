@@ -26,7 +26,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           id={inputId}
-          className={`h-10 w-full rounded-lg border border-border bg-surface px-3 text-body text-foreground placeholder:text-muted-foreground transition-colors duration-150 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`h-12 w-full rounded-md border border-border-strong bg-surface px-4 text-body text-foreground placeholder:text-muted-foreground transition-colors duration-150 focus:border-lilac-glow focus:ring-[3px] focus:ring-lilac-glow/20 disabled:opacity-50 disabled:cursor-not-allowed ${
             error ? "border-danger focus:border-danger focus:ring-danger/20" : ""
           } ${className}`}
           aria-invalid={error ? true : undefined}

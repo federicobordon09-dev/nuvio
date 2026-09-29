@@ -11,11 +11,11 @@ interface CardProps {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: "border border-border bg-surface rounded-xl",
-  elevated: "border border-border bg-surface rounded-xl shadow-md",
-  outlined: "border border-border bg-transparent rounded-xl",
+  default: "border border-border bg-surface rounded-[20px]",
+  elevated: "border border-border bg-surface rounded-[20px] shadow-md",
+  outlined: "border border-border bg-transparent rounded-[20px]",
   interactive:
-    "border border-border bg-surface rounded-xl transition-all duration-150 ease-out hover:shadow-md hover:border-primary/20 hover:bg-primary-muted/30 active:scale-[0.99]",
+    "border border-border bg-surface rounded-[20px] transition-all duration-150 ease-out hover:shadow-md hover:border-primary/20 hover:bg-primary-muted/30 active:scale-[0.99]",
 };
 
 const paddingStyles: Record<CardPadding, string> = {

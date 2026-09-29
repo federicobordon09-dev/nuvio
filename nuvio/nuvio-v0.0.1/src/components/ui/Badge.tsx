@@ -15,23 +15,24 @@ const variantStyles: Record<BadgeVariant, string> = {
   success: "bg-success-tint text-success-strong",
   warning: "bg-warning-tint text-warning-strong",
   error: "bg-danger-tint text-danger-strong",
-  info: "bg-primary-muted text-primary",
+  info: "bg-info-tint text-info",
   neutral: "bg-primary-muted text-primary",
-  muted: "bg-background text-muted-foreground",
+  muted: "bg-muted text-muted-foreground",
 };
 
 const dotColor: Record<BadgeVariant, string> = {
   success: "bg-success",
   warning: "bg-warning",
   error: "bg-danger",
-  info: "bg-primary",
+  info: "bg-info",
   neutral: "bg-primary",
   muted: "bg-muted-foreground",
 };
 
+/* label-sm: 11px / 600 / 16px / 0.04em — pill padding 4px 12px on md */
 const sizeStyles: Record<BadgeSize, string> = {
-  sm: "px-2 py-0.5 text-[11px]",
-  md: "px-2.5 py-0.5 text-caption",
+  sm: "px-2 py-0.5 text-[11px] leading-4 font-semibold tracking-[0.04em]",
+  md: "px-3 py-1 text-[11px] leading-4 font-semibold tracking-[0.04em]",
 };
 
 /**
@@ -47,7 +48,7 @@ export function Badge({
 }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full font-medium ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
     >
       {dot && (
         <span className={`h-1.5 w-1.5 rounded-full ${dotColor[variant]}`} />

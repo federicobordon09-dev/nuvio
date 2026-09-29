@@ -4,7 +4,7 @@ interface SpinnerProps {
 }
 
 export function Spinner({
-  className = "h-4 w-4",
+  className = "h-4 w-4 text-primary",
   "aria-label": ariaLabel = "Cargando",
 }: SpinnerProps) {
   return (
