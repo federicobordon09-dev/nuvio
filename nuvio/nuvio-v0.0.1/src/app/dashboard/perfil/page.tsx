@@ -7,36 +7,40 @@ import { LogOut } from "@/components/ui/icons";
 
 export default async function PerfilPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const userName = user?.user_metadata?.full_name ?? "Usuario";
   const userEmail = user?.email ?? "";
   const userAvatar = user?.user_metadata?.avatar_url;
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader title="Perfil" description="Tu información de cuenta." />
 
       <Card padding="lg">
-        <div className="flex items-center gap-4">
+        <p className="data-label text-muted-foreground">Cuenta</p>
+        <div className="mt-4 flex items-center gap-4">
           {userAvatar ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={userAvatar}
               alt=""
-              className="h-16 w-16 rounded-full"
+              className="h-16 w-16 shrink-0 rounded-full border border-border object-cover"
             />
           ) : (
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-muted text-[20px] font-medium text-primary">
+            <div
+              aria-hidden="true"
+              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary-muted text-[20px] font-semibold text-primary"
+            >
               {userName.charAt(0).toUpperCase()}
             </div>
           )}
-          <div>
-            <h2 className="text-[18px] font-medium text-foreground">
-              {userName}
-            </h2>
+          <div className="min-w-0">
+            <h2 className="text-heading truncate">{userName}</h2>
             {userEmail && (
-              <p className="text-[14px] text-muted-foreground">
+              <p className="mt-1 truncate text-[14px] text-muted-foreground">
                 {userEmail}
               </p>
             )}
@@ -44,14 +48,20 @@ export default async function PerfilPage() {
         </div>
       </Card>
 
-      <div className="mt-6">
-        <form action={signOut}>
-          <Button type="submit" variant="ghost">
-            <LogOut className="h-4 w-4" />
-            Cerrar sesión
-          </Button>
-        </form>
-      </div>
+      <Card padding="lg">
+        <p className="data-label text-muted-foreground">Sesión</p>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
+          <p className="max-w-prose text-[14px] leading-relaxed text-muted-foreground">
+            Cerrá la sesión de este dispositivo cuando termines de usar Nuvio.
+          </p>
+          <form action={signOut}>
+            <Button type="submit" variant="ghost">
+              <LogOut className="h-4 w-4" />
+              Cerrar sesión
+            </Button>
+          </form>
+        </div>
+      </Card>
     </div>
   );
 }
