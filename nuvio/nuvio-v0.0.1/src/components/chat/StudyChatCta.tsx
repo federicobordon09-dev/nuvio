@@ -48,13 +48,13 @@ export function StudyChatCta({
           type="button"
           onClick={handleClick}
           disabled={busy}
-          className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-[12px] font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-60"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border-strong bg-surface px-4 py-2 text-caption font-medium text-primary transition-colors duration-150 hover:border-lilac-glow hover:bg-primary-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lilac-glow focus-visible:ring-offset-2 disabled:opacity-60"
         >
-          <QuestionCircle className="h-3.5 w-3.5 shrink-0 text-primary" />
+          <QuestionCircle className="h-4 w-4 shrink-0 text-primary" />
           {busy ? "Abriendo…" : label}
         </button>
         {error && (
-          <p className="mt-1 text-[12px] text-danger" role="alert">
+          <p className="mt-1.5 text-[12px] text-danger" role="alert">
             {error}
           </p>
         )}
@@ -68,17 +68,17 @@ export function StudyChatCta({
         type="button"
         onClick={handleClick}
         disabled={busy}
-        className={`inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl px-4 text-[14px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-60 ${
+        className={`inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md px-5 py-2.5 text-body font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lilac-glow focus-visible:ring-offset-2 disabled:opacity-60 ${
           primary
-            ? "bg-primary text-primary-foreground hover:bg-primary-700"
-            : "border border-border bg-surface text-foreground hover:border-primary/40 hover:bg-primary-muted"
+            ? "bg-primary text-primary-foreground shadow-sm hover:-translate-y-px hover:bg-primary-hover hover:shadow-md active:translate-y-0"
+            : "border border-border-strong bg-surface text-primary hover:border-lilac-glow hover:bg-primary-muted/40"
         }`}
       >
         <QuestionCircle className="h-4 w-4 shrink-0" />
         {busy ? "Abriendo…" : label}
       </button>
       {error && (
-        <p className="mt-2 text-[13px] text-danger" role="alert">
+        <p className="mt-2 text-caption text-danger" role="alert">
           {error}
         </p>
       )}

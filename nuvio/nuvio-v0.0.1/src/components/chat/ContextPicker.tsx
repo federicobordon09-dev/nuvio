@@ -18,45 +18,54 @@ export function ContextPicker({
 }: ContextPickerProps) {
   return (
     <div>
-      <p className="mb-2 text-[12px] font-medium uppercase tracking-wide text-muted-foreground">
-        Estudios de contexto
-      </p>
+      <p className="data-label mb-2">Estudios de contexto</p>
       {studies.length === 0 ? (
-        <p className="text-[13px] text-muted-foreground">
-          No tenés estudios listos. Analizá un estudio para poder consultarlo acá.
+        <p className="text-caption text-muted-foreground">
+          No tenés estudios listos. Analizá un estudio para poder consultarlo
+          acá.
         </p>
       ) : (
-        <div className="flex flex-wrap gap-2">
+        <ul className="flex flex-wrap gap-2" role="list">
           {studies.map((study) => {
             const checked = selectedIds.includes(study.id);
             return (
-              <label
-                key={study.id}
-                className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[12px] font-medium transition-colors ${
-                  checked
-                    ? "border-primary bg-primary-muted text-primary"
-                    : "border-border bg-surface text-muted-foreground hover:border-primary/30 hover:text-foreground"
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  className="sr-only"
-                  checked={checked}
-                  onChange={(e) => onToggle(study.id, e.target.checked)}
-                />
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${checked ? "bg-primary" : "bg-muted-foreground/40"}`}
-                />
-                <span className="max-w-[160px] truncate">{study.file_name}</span>
-                <span className="text-muted-foreground/70">
-                  {getStudyTypeLabelNullable(study.study_type)}
-                </span>
-              </label>
+              <li key={study.id}>
+                <label
+                  className={`relative inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border px-3.5 py-2 text-caption font-medium transition-colors duration-150 ${
+                    checked
+                      ? "border-primary bg-primary-muted text-primary"
+                      : "border-border-strong bg-surface text-muted-foreground hover:border-lilac-glow hover:text-foreground"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    className="peer sr-only"
+                    checked={checked}
+                    onChange={(e) => onToggle(study.id, e.target.checked)}
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 rounded-xl peer-focus-visible:ring-2 peer-focus-visible:ring-lilac-glow peer-focus-visible:ring-offset-2"
+                  />
+                  <span
+                    className={`h-2 w-2 shrink-0 rounded-full ${
+                      checked ? "bg-primary" : "bg-outline-variant"
+                    }`}
+                    aria-hidden="true"
+                  />
+                  <span className="max-w-[160px] truncate">
+                    {study.file_name}
+                  </span>
+                  <span className="text-plum-muted">
+                    {getStudyTypeLabelNullable(study.study_type)}
+                  </span>
+                </label>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
-      {error && <p className="mt-2 text-[12px] text-danger">{error}</p>}
+      {error && <p className="mt-2 text-caption text-danger">{error}</p>}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import { formatStudyDate } from "@/lib/chat/dates";
 import type { SelectableStudy } from "@/lib/chat/schema";
 import { Check } from "@/components/ui/icons";
+import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 
 interface NewConversationStudyPickerProps {
@@ -12,6 +13,8 @@ interface NewConversationStudyPickerProps {
   selectedIds: string[];
   onToggle: (studyId: string, checked: boolean) => void;
   onContinue: () => void;
+  /** Nivel de encabezado: `h1` cuando abre la página, `h2` bajo el título del chat. */
+  headingAs?: "h1" | "h2";
 }
 
 export function NewConversationStudyPicker({
@@ -19,32 +22,34 @@ export function NewConversationStudyPicker({
   selectedIds,
   onToggle,
   onContinue,
+  headingAs = "h2",
 }: NewConversationStudyPickerProps) {
   const hasSelection = selectedIds.length > 0;
+  const Heading = headingAs;
 
   return (
-    <div className="mx-auto flex w-full max-w-lg flex-col px-4 py-8">
+    <div className="mx-auto flex w-full max-w-lg flex-col px-4 py-8 sm:px-6">
       <div className="mb-6">
-        <h2 className="text-[20px] font-medium leading-snug text-foreground">
+        <Heading className="text-heading text-primary">
           ¿Sobre qué estudio querés hablar?
-        </h2>
-        <p className="mt-1 text-[14px] leading-relaxed text-muted-foreground">
+        </Heading>
+        <p className="mt-2 text-body text-muted-foreground">
           Seleccioná un estudio para que Nuvio pueda ayudarte a entender tus
           resultados.
         </p>
       </div>
 
       {studies.length === 0 ? (
-        <div className="rounded-xl border border-border bg-surface px-5 py-8 text-center">
-          <p className="text-[15px] font-medium text-foreground">
+        <div className="rounded-2xl border border-border bg-surface px-6 py-10 text-center shadow-sm">
+          <p className="text-subheading text-primary">
             No tenés estudios listos
           </p>
-          <p className="mt-1 max-w-sm text-[13px] text-muted-foreground">
+          <p className="mt-2 max-w-sm text-caption text-muted-foreground">
             Subí y analizá un estudio para poder consultarlo acá.
           </p>
           <Link
             href="/dashboard/subir"
-            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary-700"
+            className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-body font-medium text-primary-foreground shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lilac-glow focus-visible:ring-offset-2 active:translate-y-0"
           >
             Subir un estudio
           </Link>
@@ -63,10 +68,10 @@ export function NewConversationStudyPicker({
                 <button
                   type="button"
                   onClick={() => onToggle(study.id, !checked)}
-                  className={`flex w-full items-start gap-3 rounded-xl border px-4 py-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                  className={`flex w-full items-start gap-3 rounded-xl border px-4 py-4 text-left transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lilac-glow focus-visible:ring-offset-2 ${
                     checked
-                      ? "border-primary bg-primary-muted/70 ring-1 ring-primary"
-                      : "border-border bg-surface hover:border-primary/40 hover:bg-primary-muted/40"
+                      ? "border-primary bg-primary-muted/50 ring-1 ring-primary/30"
+                      : "border-border-strong bg-surface hover:border-lilac-glow hover:bg-primary-muted/30"
                   }`}
                   aria-pressed={checked}
                 >
@@ -74,7 +79,7 @@ export function NewConversationStudyPicker({
                     className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 ${
                       checked
                         ? "border-primary bg-primary text-primary-foreground"
-                        : "border-muted-foreground/40"
+                        : "border-outline-variant"
                     }`}
                     aria-hidden="true"
                   >
@@ -82,16 +87,16 @@ export function NewConversationStudyPicker({
                   </span>
 
                   <div className="min-w-0 flex-1">
-                    <span className="block truncate text-[15px] font-medium text-foreground">
+                    <span className="block truncate text-body font-medium text-foreground">
                       {study.file_name}
                     </span>
-                    <span className="mt-0.5 block text-[13px] text-muted-foreground">
+                    <span className="mt-0.5 block text-caption text-muted-foreground">
                       {date ? `${date} · ${typeLabel}` : typeLabel}
                     </span>
-                    <span className="mt-1 inline-flex items-center gap-1 rounded-md bg-success-tint px-2 py-0.5 text-[11px] font-medium text-success-strong">
+                    <Badge variant="success" size="sm" className="mt-2">
                       <Check className="h-3 w-3" />
                       Analizado por Nuvio
-                    </span>
+                    </Badge>
                   </div>
                 </button>
               </li>

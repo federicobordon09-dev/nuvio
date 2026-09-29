@@ -21,44 +21,49 @@ export function SelectedStudyBanner({
   if (selected.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-primary-muted/60 px-3 py-3">
+    <div className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-border bg-background px-4 py-3 sm:px-6">
       <span
-        className="inline-flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-wide text-primary"
         aria-hidden="true"
+        className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-lilac-glow shadow-sm"
       >
-        <span className="flex h-5 w-5 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <CheckCircle className="h-3.5 w-3.5" />
-        </span>
-        Estudio seleccionado
+        <CheckCircle className="h-4 w-4" />
       </span>
 
-      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-        {selected.map((study) => {
-          const label = getStudyTypeLabelNullable(study.study_type);
-          const date = formatStudyDate(study.created_at ?? undefined);
-          return (
-            <span
-              key={study.id}
-              className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-primary/20 bg-surface px-2.5 py-1 text-[12px] font-medium text-foreground"
-            >
-              <span className="max-w-[170px] truncate">{study.file_name}</span>
-              <span className="hidden sm:inline text-muted-foreground/70">
-                · {label}
-              </span>
-              {date && (
-                <span className="hidden sm:inline text-muted-foreground/70">
-                  · {date}
+      <div className="min-w-0 flex-1">
+        <p className="data-label">
+          {selected.length === 1 ? "Estudio en foco" : "Estudios en foco"}
+        </p>
+
+        <div className="mt-1.5 flex flex-wrap items-center gap-2">
+          {selected.map((study) => {
+            const label = getStudyTypeLabelNullable(study.study_type);
+            const date = formatStudyDate(study.created_at ?? undefined);
+            return (
+              <span
+                key={study.id}
+                className="inline-flex max-w-full items-center gap-2 rounded-full border border-border-strong bg-surface px-3 py-1 text-caption font-medium text-primary shadow-sm"
+              >
+                <span className="max-w-[170px] truncate">
+                  {study.file_name}
                 </span>
-              )}
-            </span>
-          );
-        })}
+                <span className="hidden text-plum-muted sm:inline">
+                  · {label}
+                </span>
+                {date && (
+                  <span className="hidden text-plum-muted sm:inline">
+                    · {date}
+                  </span>
+                )}
+              </span>
+            );
+          })}
+        </div>
       </div>
 
       <button
         type="button"
         onClick={onChangeStudy}
-        className="ml-auto inline-flex shrink-0 items-center justify-center rounded-lg border border-primary/30 bg-surface px-3 py-2 text-[12px] font-medium text-primary transition-colors hover:bg-primary-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
+        className="ml-auto inline-flex min-h-11 shrink-0 items-center justify-center rounded-md border border-border-strong bg-surface px-4 text-caption font-medium text-primary transition-colors duration-150 hover:border-lilac-glow hover:bg-primary-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lilac-glow focus-visible:ring-offset-2"
         aria-label="Cambiar el estudio seleccionado"
       >
         Cambiar estudio

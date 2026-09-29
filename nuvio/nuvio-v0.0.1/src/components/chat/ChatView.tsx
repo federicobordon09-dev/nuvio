@@ -5,10 +5,12 @@ import { sendMessageAction, setContextAction } from "@/lib/actions/chat";
 import type { ChatMessage, SelectableStudy } from "@/lib/chat/schema";
 import { useSuggestedQuestions } from "@/lib/chat/use-suggested-questions";
 import { ContextPicker } from "./ContextPicker";
+import { MessageBubble } from "./MessageBubble";
 import { NewConversationStudyPicker } from "./NewConversationStudyPicker";
 import { SelectedStudyBanner } from "./SelectedStudyBanner";
 import { SuggestedQuestions } from "./SuggestedQuestions";
 import { Spinner } from "@/components/ui/Spinner";
+import { Chat, Send } from "@/components/ui/icons";
 
 interface ChatViewProps {
   conversationId: string;
@@ -168,14 +170,23 @@ export function ChatView({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="border-b border-border px-5 py-3">
-        <h1 className="truncate text-body font-medium text-foreground">
-          {conversationTitle}
-        </h1>
-      </div>
+      <header className="flex shrink-0 items-start gap-3 border-b border-border px-4 py-4 sm:px-6">
+        <span
+          aria-hidden="true"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary text-lilac-glow shadow-sm"
+        >
+          <Chat className="h-5 w-5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="data-label">Conversación</p>
+          <h1 className="truncate text-heading text-primary">
+            {conversationTitle}
+          </h1>
+        </div>
+      </header>
 
       {phase === "chat" && (
-        <div className="border-b border-border px-5 py-3">
+        <div className="shrink-0 border-b border-border bg-background px-4 py-3 sm:px-6">
           <ContextPicker
             studies={selectableStudies}
             selectedIds={selectedStudyIds}
@@ -215,15 +226,15 @@ export function ChatView({
         )}
 
         {phase === "chat" && (
-          <div className="space-y-4 px-5 py-4">
+          <div className="flex flex-col gap-5 px-4 py-5 sm:px-6 sm:py-6">
             {messages.map((m) => (
-              <MessageBubbleInline key={m.id} message={m} />
+              <MessageBubble key={m.id} message={m} />
             ))}
           </div>
         )}
 
         {sending && (
-          <div className="border-t border-border bg-muted/20 px-5 py-2.5">
+          <div className="border-t border-border bg-background/70 px-4 py-2.5 sm:px-6">
             <div className="flex items-center gap-2 text-caption text-muted-foreground">
               <Spinner className="h-3.5 w-3.5 text-primary" />
               Nuvio está escribiendo…
@@ -232,11 +243,11 @@ export function ChatView({
         )}
 
         {error && (
-          <div className="flex items-center justify-between gap-3 border-t border-border bg-danger-tint/50 px-5 py-2 text-caption text-danger">
+          <div className="flex items-center justify-between gap-3 border-t border-danger/20 bg-danger-tint px-4 py-2.5 text-caption text-danger sm:px-6">
             <span>{error}</span>
             <button
               onClick={() => setError(null)}
-              className="shrink-0 font-medium hover:underline"
+              className="shrink-0 rounded-md px-2 py-1 font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
               aria-label="Descartar error"
             >
               Descartar
@@ -255,8 +266,8 @@ export function ChatView({
       )}
 
       {phase !== "pick-study" && (
-        <div className="border-t border-border px-5 py-3">
-          <div className="flex items-end gap-2">
+        <div className="shrink-0 border-t border-border bg-surface px-4 py-3 sm:px-6 sm:py-4">
+          <div className="flex items-end gap-2 rounded-xl border border-border-strong bg-background px-2 py-1.5 transition-shadow duration-150 focus-within:border-lilac-glow focus-within:ring-[3px] focus-within:ring-lilac-glow/20">
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -272,39 +283,34 @@ export function ChatView({
                   ? "Escribí tu pregunta sobre este estudio…"
                   : "Escribí tu pregunta sobre tus estudios…"
               }
-              className="max-h-40 min-h-[44px] flex-1 resize-none rounded-lg border border-border bg-surface px-3 py-2.5 text-body text-foreground placeholder:text-muted-foreground transition-colors duration-150 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="max-h-40 min-h-[44px] flex-1 resize-none bg-transparent px-2 py-2.5 text-body leading-relaxed text-foreground placeholder:text-muted-foreground focus:outline-none"
               aria-label="Mensaje"
+              aria-describedby="chat-composer-hint"
             />
             <button
+              type="button"
               onClick={() => handleSend()}
               disabled={sending || !input.trim()}
-              className="inline-flex h-[44px] shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-body font-medium text-primary-foreground transition-all duration-150 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] disabled:opacity-50"
+              aria-label={sending ? "Enviando mensaje" : "Enviar mensaje"}
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground shadow-sm transition-all duration-150 hover:bg-primary-hover hover:shadow-md active:scale-[0.95] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {sending ? "Enviando…" : "Enviar"}
+              <Send className="h-5 w-5" />
             </button>
           </div>
-          <p className="mt-1.5 text-[11px] text-muted-foreground">
-            Enter para enviar · Shift+Enter para un salto de línea.
-          </p>
+          <div className="mt-2 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+            <p className="text-[11px] leading-4 text-muted-foreground">
+              Nuvio es una herramienta de explicación y orientación informativa.
+              No reemplaza la evaluación de un profesional de la salud.
+            </p>
+            <p
+              id="chat-composer-hint"
+              className="shrink-0 text-[11px] leading-4 text-muted-foreground"
+            >
+              Enter para enviar · Shift+Enter para un salto de línea.
+            </p>
+          </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function MessageBubbleInline({ message }: { message: ChatMessage }) {
-  const isUser = message.role === "user";
-  return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[85%] whitespace-pre-line rounded-xl px-4 py-2.5 text-body leading-body ${
-          isUser
-            ? "bg-primary text-primary-foreground"
-            : "border border-border bg-surface text-foreground"
-        }`}
-      >
-        {message.content}
-      </div>
     </div>
   );
 }

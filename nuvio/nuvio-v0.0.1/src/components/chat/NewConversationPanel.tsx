@@ -39,6 +39,7 @@ export function NewConversationPanel({ studies }: NewConversationPanelProps) {
         )
       }
       onContinue={handleContinue}
+      headingAs="h1"
     />
   );
 }
