@@ -24,12 +24,13 @@ export function StudyDownloadButton({ studyId }: { studyId: string }) {
   return (
     <div className="flex flex-col gap-1">
       <Button
+        variant="secondary"
         onClick={handleDownload}
         disabled={loading}
       >
         {loading ? "Generando enlace…" : "Descargar"}
       </Button>
-      {error && <p className="text-[12px] text-danger">{error}</p>}
+      {error && <p className="text-caption text-danger">{error}</p>}
     </div>
   );
 }

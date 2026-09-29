@@ -158,9 +158,9 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
     if (url) router.push(url);
   };
 
-  /** Clases del botón principal de evolución (violet). */
+  /** Clases del botón principal de evolución (violet). Radio de control 12px + target 44px. */
   const seriesButtonClasses = (mobile: boolean) =>
-    `inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors ${
+    `inline-flex min-h-11 items-center justify-center gap-2 rounded-md font-medium transition-colors ${
       mobile ? "flex-1 px-4 py-3 text-[15px]" : "px-4 py-2.5 text-[14px]"
     } ${
       canRunEvolution(series, allStudies)
@@ -170,7 +170,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
 
   /** Clases compartidas del botón principal según el estado habilitado. */
   const compareButtonClasses = (mobile: boolean) =>
-    `inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors ${
+    `inline-flex min-h-11 items-center justify-center gap-2 rounded-md font-medium transition-colors ${
       mobile ? "flex-1 px-4 py-3 text-[15px]" : "px-4 py-2.5 text-[14px]"
     } ${
       canCompareNow
@@ -185,7 +185,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
         {seriesNotification}
       </div>
       {/* Header del modo selección (tablet y desktop: md+) */}
-      <div className="hidden md:block sticky top-4 z-10 mb-4 rounded-xl border border-primary/20 bg-primary-muted/50 p-4">
+      <div className="hidden md:block sticky top-4 z-10 mb-4 rounded-[20px] border border-primary/20 bg-primary-muted/50 p-4 shadow-md">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <Compare className="h-5 w-5 text-primary shrink-0" />
@@ -197,7 +197,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                 {getSelectionLabel(selection)}
               </p>
               {selectedStudies.length > 0 && (
-                <p className="mt-0.5 truncate text-[12px] text-muted-foreground">
+                <p className="mt-0.5 truncate text-caption text-muted-foreground">
                   {selectedStudies.map((s) => s.file_name).join(" · ")}
                 </p>
               )}
@@ -215,7 +215,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
             <button
               type="button"
               onClick={handleClear}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-[14px] font-medium text-foreground transition-colors hover:bg-muted"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-border-strong px-4 py-2.5 text-[14px] font-medium text-foreground transition-colors hover:bg-muted"
             >
               Cancelar
             </button>
@@ -243,10 +243,10 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
               {/* Cabecera del grupo */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="min-w-0">
-                  <h2 className="text-[16px] font-medium tracking-[-0.01em] text-foreground">
+                  <h2 className="text-subheading text-primary">
                     {group.label}
                   </h2>
-                  <p className="mt-0.5 text-[13px] text-muted-foreground">
+                  <p className="mt-0.5 text-caption text-muted-foreground">
                     {group.studies.length} estudio{group.studies.length !== 1 ? "s" : ""}
                     {group.readyCount > 0 && (
                       <>
@@ -261,7 +261,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                   <div className="flex flex-wrap items-center gap-2">
                     {/* Contador de serie cuando está activa */}
                     {isActiveFamily && (
-                      <span className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-violet/30 bg-violet-tint/50 px-3 py-1.5 text-[13px] font-medium text-violet">
+                      <span className="shrink-0 inline-flex min-h-11 items-center gap-1.5 rounded-md border border-violet/30 bg-violet-tint/50 px-3 py-1.5 text-[13px] font-medium text-violet tabular-nums">
                         <Plus className="h-3.5 w-3.5" />
                         {getEvolutionCountLabel(familySelection)}
                       </span>
@@ -289,7 +289,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                       <button
                         type="button"
                         onClick={() => setSeries(beginEvolutionSeries(group.studyType!))}
-                        className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-violet/30 bg-violet-tint/50 px-3 py-1.5 text-[13px] font-medium text-violet transition-colors hover:bg-violet-tint/80"
+                        className="shrink-0 inline-flex min-h-11 items-center gap-1.5 rounded-md border border-violet/30 bg-violet-tint/50 px-3 py-1.5 text-[13px] font-medium text-violet transition-colors hover:bg-violet-tint/80"
                       >
                         <Plus className="h-3.5 w-3.5" />
                         Seleccionar serie
@@ -300,7 +300,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                       <button
                         type="button"
                         onClick={handleSeriesClear}
-                        className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-3 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted"
+                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-border px-3 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted"
                       >
                         Cancelar
                       </button>
@@ -309,40 +309,40 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                 )}
               </div>
 
-            {/* Estudios del grupo en orden cronológico */}
-            <div className="space-y-4">
-              {group.studies.map((study) => {
-                const seriesBadgeLabel = isActiveFamily
-                  ? getEvolutionBadgeLabel(familySelection, study.id)
-                  : null;
-                const seriesIsSelected = isActiveFamily && seriesBadgeLabel !== null;
-                const canAddToSeries =
-                  isActiveFamily &&
-                  seriesBadgeLabel === null &&
-                  isEvolutionReady(study.status, study.analysis_status) &&
-                  study.study_type === group.studyType &&
-                  !isEvolutionSeriesFull(familySelection);
+              {/* Estudios del grupo — grilla responsiva (1 col · 2 cols en xl) */}
+              <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
+                {group.studies.map((study) => {
+                  const seriesBadgeLabel = isActiveFamily
+                    ? getEvolutionBadgeLabel(familySelection, study.id)
+                    : null;
+                  const seriesIsSelected = isActiveFamily && seriesBadgeLabel !== null;
+                  const canAddToSeries =
+                    isActiveFamily &&
+                    seriesBadgeLabel === null &&
+                    isEvolutionReady(study.status, study.analysis_status) &&
+                    study.study_type === group.studyType &&
+                    !isEvolutionSeriesFull(familySelection);
 
-                return (
-                  <StudyCardWithCheckbox
-                    key={study.id}
-                    study={study}
-                    selected={isSelected(selection, study.id)}
-                    index={getSelectionIndex(selection, study.id)}
-                    disabled={!isSelectable && !isSelected(selection, study.id)}
-                    onToggle={() => handleToggle(study.id)}
-                    // Serie
-                    seriesSelected={seriesIsSelected}
-                    seriesBadge={seriesBadgeLabel}
-                    seriesDisabled={!canAddToSeries}
-                    onSeriesToggle={() => handleSeriesToggle(study)}
-                  />
-                );
-              })}
-            </div>
-          </section>
-      );
-    })}
+                  return (
+                    <StudyCardWithCheckbox
+                      key={study.id}
+                      study={study}
+                      selected={isSelected(selection, study.id)}
+                      index={getSelectionIndex(selection, study.id)}
+                      disabled={!isSelectable && !isSelected(selection, study.id)}
+                      onToggle={() => handleToggle(study.id)}
+                      // Serie
+                      seriesSelected={seriesIsSelected}
+                      seriesBadge={seriesBadgeLabel}
+                      seriesDisabled={!canAddToSeries}
+                      onSeriesToggle={() => handleSeriesToggle(study)}
+                    />
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
       </div>
 
       {/* Barra de acción fija en mobile (<md) */}
@@ -372,7 +372,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
                 <button
                   type="button"
                   onClick={handleSeriesClear}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-3 text-[15px] font-medium text-violet transition-colors hover:bg-violet-tint"
+                  className="flex-1 inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-border px-4 py-3 text-[15px] font-medium text-foreground transition-colors hover:bg-violet-tint"
                 >
                   Cancelar
                 </button>
@@ -382,7 +382,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
               <p
-                className="text-[13px] font-medium text-foreground"
+                className="text-caption font-medium text-foreground"
                 aria-live="polite"
               >
                 Selección de estudios
@@ -409,7 +409,7 @@ export function StudySelectionList({ groups }: StudySelectionListProps) {
             <button
               type="button"
               onClick={handleClear}
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-3 text-[15px] font-medium text-foreground transition-colors hover:bg-muted"
+              className="flex-1 inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-border px-4 py-3 text-[15px] font-medium text-foreground transition-colors hover:bg-muted"
             >
               Cancelar
             </button>
@@ -460,7 +460,7 @@ function StudyCardWithCheckbox({
     }`}>
       {/* Checkbox de COMPARACIÓN — superpuesto DERECHA (azul) */}
       <div className="absolute top-5 right-5 z-10">
-        <label className="inline-flex items-center cursor-pointer">
+        <label className="inline-flex touch-target -m-2.5 cursor-pointer items-center justify-center">
           <input
             type="checkbox"
             checked={selected}
@@ -501,7 +501,7 @@ function StudyCardWithCheckbox({
       {/* Selector de serie — overlay clickeable IZQUIERDA (cuando la familia está activa) */}
       {seriesBadge !== null && !seriesSelected && !seriesDisabled && (
         <div className="absolute top-5 left-5 z-10">
-          <label className="inline-flex items-center cursor-pointer">
+          <label className="inline-flex touch-target -m-2.5 cursor-pointer items-center justify-center">
             <input
               type="checkbox"
               checked={false}
@@ -516,8 +516,8 @@ function StudyCardWithCheckbox({
         </div>
       )}
 
-      {/* StudyCard existente */}
-      <div className="pr-12 pl-12">
+      {/* StudyCard existente — padding lateral para los overlays de selección */}
+      <div className="pr-14 pl-14">
         <StudyCard study={study} showDelete={false} />
       </div>
 
