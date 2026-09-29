@@ -18,26 +18,27 @@ export function EvolutionSeriesContext({
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
         <h2
           id="evolution-series-heading"
-          className="data-label"
+          className="text-subheading text-primary"
         >
           La serie · {typeLabel}
         </h2>
         <span className="text-caption text-muted-foreground">
-          {studies.length} estudio{studies.length !== 1 ? "s" : ""} ·{" "}
-          {getSeriesDateRangeLabel(studies)}
+          <span className="tabular-nums">{studies.length}</span>{" "}
+          estudio{studies.length !== 1 ? "s" : ""} ·{" "}
+          <span className="tabular-nums">{getSeriesDateRangeLabel(studies)}</span>
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {studies.map((study, i) => (
           <article
             key={study.id}
-            className="flex min-w-0 flex-col rounded-xl border border-border bg-surface p-4"
+            className="flex min-w-0 flex-col rounded-[20px] border border-border bg-surface p-4"
           >
             <div className="flex items-center gap-2">
               <span
                 aria-hidden="true"
-                className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-violet text-[12px] font-semibold text-white"
+                className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet text-[12px] font-semibold text-white"
               >
                 {SERIES_LETTERS[i]}
               </span>
@@ -48,14 +49,14 @@ export function EvolutionSeriesContext({
 
             <Link
               href={`/dashboard/estudios/${study.id}`}
-              className="mt-3 min-w-0"
+              className="mt-3 flex min-h-[44px] min-w-0 items-center"
             >
-              <p className="truncate text-body font-medium leading-snug text-foreground transition-colors hover:text-violet">
+              <p className="min-w-0 truncate text-body font-medium leading-snug text-foreground transition-colors hover:text-violet">
                 {study.file_name}
               </p>
             </Link>
 
-            <p className="mt-1 text-caption text-muted-foreground">
+            <p className="text-caption tabular-nums text-muted-foreground">
               {formatLongDate(study.created_at)}
             </p>
           </article>

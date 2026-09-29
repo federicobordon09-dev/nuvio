@@ -28,7 +28,7 @@ export function KeyFindingsList({
 }) {
   if (diffs.length === 0) {
     return (
-      <p className="text-[13px] text-muted-foreground">
+      <p className="text-caption text-muted-foreground">
         No hay hallazgos principales para comparar entre ambos estudios.
       </p>
     );
@@ -39,14 +39,14 @@ export function KeyFindingsList({
 
   return (
     <section aria-labelledby="comparison-findings-heading">
-      <div className="mb-3 flex items-baseline justify-between gap-2">
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
         <h2
           id="comparison-findings-heading"
-          className="text-[13px] font-semibold uppercase tracking-wide text-muted-foreground"
+          className="text-subheading text-primary"
         >
           Hallazgos principales
         </h2>
-        <span className="text-[12px] text-muted-foreground">
+        <span className="text-caption tabular-nums text-muted-foreground">
           {diffs.length} hallazgo{diffs.length !== 1 ? "s" : ""}
         </span>
       </div>
@@ -71,7 +71,7 @@ function ImportanceBadge({
 }) {
   return (
     <span
-      className={`inline-flex w-fit rounded-full px-2.5 py-0.5 text-[12px] font-medium ${
+      className={`inline-flex w-fit rounded-full px-2.5 py-0.5 text-caption font-medium ${
         importance ? IMPORTANCE_TONES[importance] : "bg-muted text-muted-foreground"
       }`}
     >
@@ -84,7 +84,7 @@ function ImportanceBadge({
 function NewMissingBadge({ kind }: { kind: "new" | "missing" }) {
   return (
     <span
-      className={`inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-[12px] font-medium ${
+      className={`inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-caption font-medium ${
         kind === "new"
           ? "bg-primary-muted text-primary"
           : "bg-muted text-muted-foreground"
@@ -104,13 +104,13 @@ function ComparableFindingCard({
   explanation: string | null;
 }) {
   return (
-    <article className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-4">
+    <article className="flex flex-col gap-2 rounded-[20px] border border-border bg-surface p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="min-w-0 text-[14px] font-medium leading-snug text-foreground">
+        <h3 className="min-w-0 text-body font-semibold leading-snug text-primary">
           {diff.title}
         </h3>
         {diff.importanceChanged ? (
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-medium bg-muted text-muted-foreground">
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-caption font-medium bg-muted text-muted-foreground">
             <span className="tabular-nums">
               {importanceLabel(diff.previousImportance)}
             </span>
@@ -124,7 +124,7 @@ function ComparableFindingCard({
         )}
       </div>
       {explanation && (
-        <p className="mt-auto pt-1 text-[13px] leading-[1.55] text-foreground/80">
+        <p className="mt-auto pt-1 text-body leading-body text-foreground/85">
           {explanation}
         </p>
       )}
@@ -141,16 +141,16 @@ function NewMissingFindingCard({
   explanation: string | null;
 }) {
   return (
-    <article className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-4">
+    <article className="flex flex-col gap-2 rounded-[20px] border border-border bg-surface p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="min-w-0 text-[14px] font-medium leading-snug text-foreground">
+        <h3 className="min-w-0 text-body font-semibold leading-snug text-primary">
           {diff.title}
         </h3>
         <NewMissingBadge kind={diff.status} />
       </div>
       <ImportanceBadge importance={diff.finding.importance} />
       {explanation && (
-        <p className="mt-auto pt-1 text-[13px] leading-[1.55] text-foreground/80">
+        <p className="mt-auto pt-1 text-body leading-body text-foreground/85">
           {explanation}
         </p>
       )}

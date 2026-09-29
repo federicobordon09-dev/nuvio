@@ -186,10 +186,10 @@ export default async function CompararPage({
         {header}
         <div className="space-y-6">
           {context}
-          <div className="rounded-xl border border-warning/20 bg-warning-tint/50 p-5">
+          <div className="rounded-[20px] border border-warning/20 bg-warning-tint/50 p-5">
             <div className="mb-2 flex items-center gap-2">
               <Split className="h-5 w-5 text-warning" />
-              <h2 className="text-body font-medium text-foreground">
+              <h2 className="text-subheading text-primary">
                 No podemos comparar estos estudios
               </h2>
             </div>
@@ -248,21 +248,21 @@ export default async function CompararPage({
         <ComparisonSummary result={result} />
 
         <section aria-labelledby="comparison-measurements-heading">
-          <div className="mb-4 flex items-baseline justify-between gap-2">
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
             <h2
               id="comparison-measurements-heading"
-              className="data-label"
+              className="text-subheading text-primary"
             >
               Mediciones
             </h2>
-            <span className="text-caption text-muted-foreground">
+            <span className="text-caption tabular-nums text-muted-foreground">
               {result.measurementDiffs.length} mediciones*
             </span>
           </div>
           <MeasurementDiffList diffs={result.measurementDiffs} />
           {nonNumericCount > 0 && (
             <p className="mt-3 text-caption text-muted-foreground">
-              * {nonNumericCount} valor
+              * <span className="tabular-nums">{nonNumericCount}</span> valor
               {nonNumericCount !== 1 ? "es" : ""} sin comparación numérica
               (texto o unidades distintas).
             </p>

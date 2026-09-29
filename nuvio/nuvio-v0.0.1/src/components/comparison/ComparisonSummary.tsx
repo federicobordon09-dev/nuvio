@@ -1,6 +1,11 @@
 import type { ComparisonResult } from "@/lib/comparison/types";
 import { computeComparisonTiles } from "@/lib/comparison/presentation";
 
+/**
+ * Tile de resumen: el tono viene del motor de presentación (lib) y tiñe
+ * fondo y texto; el número es un contador real de `compareStudies()`.
+ * `font-variant-numeric: tabular-nums` en todo valor numérico (DESIGN.md).
+ */
 function SummaryTile({
   tile,
   prominent = false,
@@ -9,17 +14,19 @@ function SummaryTile({
   prominent?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-1.5 rounded-lg bg-muted/50 p-3">
+    <div className={`flex flex-col gap-2 rounded-xl p-4 ${tile.tone}`}>
+      <dt className="order-2 text-caption font-medium leading-tight">
+        {tile.label}
+      </dt>
       <dd
-        className={`w-fit rounded-full px-2.5 py-0.5 font-semibold tabular-nums ${tile.tone} ${
-          prominent ? "text-body" : "text-caption"
+        className={`order-1 tabular-nums ${
+          prominent
+            ? "font-heading text-[1.75rem] font-bold leading-8 tracking-[-0.02em]"
+            : "text-subheading"
         }`}
       >
         {tile.value}
       </dd>
-      <dt className="text-caption leading-tight text-muted-foreground">
-        {tile.label}
-      </dt>
     </div>
   );
 }
@@ -36,12 +43,12 @@ export function ComparisonSummary({
   return (
     <section
       aria-labelledby="comparison-summary-heading"
-      className="animate-fade-in-up rounded-xl border border-border bg-surface p-5"
+      className="animate-fade-in-up rounded-[20px] border border-border bg-surface p-5 sm:p-6"
     >
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
         <h2
           id="comparison-summary-heading"
-          className="text-body font-medium text-foreground"
+          className="text-subheading text-primary"
         >
           Resumen de cambios
         </h2>
@@ -58,7 +65,7 @@ export function ComparisonSummary({
 
       {secondary.length > 0 && (
         <details className="group mt-4 border-t border-border pt-4">
-          <summary className="cursor-pointer list-none text-caption font-medium text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
+          <summary className="flex min-h-[44px] cursor-pointer list-none items-center text-caption font-medium text-muted-foreground transition-colors hover:text-foreground [&::-webkit-details-marker]:hidden">
             <span className="inline-flex items-center gap-1.5">
               <span
                 aria-hidden="true"

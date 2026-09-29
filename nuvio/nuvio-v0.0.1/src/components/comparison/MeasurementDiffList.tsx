@@ -15,6 +15,7 @@ import {
   MEASUREMENT_STATUS_TONES,
 } from "@/lib/comparison/presentation";
 
+/** Card de una medición presente en un solo estudio. */
 function NewMissingMeasurementCard({
   kind,
   measurement,
@@ -24,11 +25,11 @@ function NewMissingMeasurementCard({
 }) {
   const isNew = kind === "new";
   return (
-    <article className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-4">
+    <article className="flex flex-col gap-3 rounded-[20px] border border-border bg-surface p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h4 className="min-w-0 text-body font-medium leading-snug text-foreground">
+        <h3 className="min-w-0 text-body font-semibold leading-snug text-primary">
           {measurement.name}
-        </h4>
+        </h3>
         <span
           className={`inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-caption font-medium ${
             isNew ? "bg-primary-muted text-primary" : "bg-muted text-muted-foreground"
@@ -37,7 +38,7 @@ function NewMissingMeasurementCard({
           {isNew ? "Nuevo" : "Ausente"}
         </span>
       </div>
-      <p className="font-mono text-[17px] font-medium leading-none tracking-tight text-foreground">
+      <p className="data-value-sm">
         {formatValueWithUnit(measurement.value, measurement.unit)}
       </p>
       {measurement.status !== undefined && (
@@ -46,11 +47,11 @@ function NewMissingMeasurementCard({
         </span>
       )}
       {measurement.reference_range && (
-        <p className="text-caption text-muted-foreground">
+        <p className="text-caption tabular-nums text-muted-foreground">
           Ref. {measurement.reference_range}
         </p>
       )}
-      <p className="mt-1 text-caption text-muted-foreground">
+      <p className="mt-auto text-caption text-muted-foreground">
         {isNew
           ? "Solo aparece en el estudio más reciente."
           : "Solo aparece en el estudio anterior."}
@@ -59,6 +60,7 @@ function NewMissingMeasurementCard({
   );
 }
 
+/** Frase corta con la magnitud del cambio (delta y % salen del payload). */
 function HumanReadableChange({
   kind,
   diff,
@@ -100,7 +102,7 @@ function HumanReadableChange({
       <p className="text-body font-medium text-foreground">
         El valor {direction}
         {delta && (
-          <span className="text-muted-foreground">
+          <span className="tabular-nums text-muted-foreground">
             {" "}({delta}{unit ? ` ${unit}` : ""}{pct ? `, ${pct}` : ""})
           </span>
         )}
@@ -111,6 +113,7 @@ function HumanReadableChange({
   return null;
 }
 
+/** Card de una medición presente en ambos estudios. */
 function ComparableMeasurementCard({
   diff,
 }: {
@@ -125,11 +128,11 @@ function ComparableMeasurementCard({
   const currentRange = formatReferenceRange(diff.referenceRangeDiff.currentRange);
 
   return (
-    <article className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
+    <article className="flex flex-col gap-3 rounded-[20px] border border-border bg-surface p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h4 className="min-w-0 text-body font-medium leading-snug text-foreground">
+        <h3 className="min-w-0 text-body font-semibold leading-snug text-primary">
           {diff.name}
-        </h4>
+        </h3>
         <span
           className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-caption font-medium ${CHANGE_BADGE_TONES[kind]}`}
         >
@@ -140,20 +143,24 @@ function ComparableMeasurementCard({
 
       <HumanReadableChange kind={kind} diff={diff} />
 
-      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-        <span className="data-label">Anterior</span>
-        <span className="font-mono text-[15px] font-medium tabular-nums text-foreground">
-          {formatValueWithUnit(diff.previousValue, diff.unitMismatch.previousUnit)}
-        </span>
-        <span className="text-muted-foreground" aria-hidden="true">→</span>
-        <span className="data-label">Posterior</span>
-        <span className="font-mono text-[15px] font-medium tabular-nums text-foreground">
-          {formatValueWithUnit(diff.currentValue, diff.unitMismatch.currentUnit)}
-        </span>
+      {/* Valores reales de cada estudio, en columnas etiquetadas. */}
+      <div className="grid grid-cols-2 gap-3 rounded-xl border border-border bg-background p-3">
+        <div className="min-w-0">
+          <span className="data-label">Anterior</span>
+          <p className="mt-1 data-value-sm break-words">
+            {formatValueWithUnit(diff.previousValue, diff.unitMismatch.previousUnit)}
+          </p>
+        </div>
+        <div className="min-w-0 border-l border-border pl-3">
+          <span className="data-label">Posterior</span>
+          <p className="mt-1 data-value-sm break-words">
+            {formatValueWithUnit(diff.currentValue, diff.unitMismatch.currentUnit)}
+          </p>
+        </div>
       </div>
 
       {(statusChanged || currentStatus !== undefined || currentRange) && (
-        <div className="border-t border-border pt-2.5 text-caption leading-body text-muted-foreground">
+        <div className="mt-auto border-t border-border pt-3 text-caption leading-body text-muted-foreground">
           {statusChanged ? (
             <p>
               <span className="font-medium text-foreground">Estado:</span>{" "}
@@ -175,7 +182,8 @@ function ComparableMeasurementCard({
             </p>
           ) : currentRange ? (
             <p className={currentStatus !== undefined || statusChanged ? "mt-1" : ""}>
-              <span className="font-medium text-foreground">Ref.:</span> {currentRange}
+              <span className="font-medium text-foreground">Ref.:</span>{" "}
+              <span className="tabular-nums">{currentRange}</span>
             </p>
           ) : null}
         </div>
@@ -198,7 +206,7 @@ export function MeasurementDiffList({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {diffs.map((diff, index) =>
         diff.status === "comparable" ? (
           <ComparableMeasurementCard

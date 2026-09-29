@@ -67,7 +67,7 @@ function PointCell({
         </span>
       )}
       {point.referenceRange && (
-        <span className="max-w-full truncate text-[10px] text-muted-foreground">
+        <span className="max-w-full truncate text-[10px] tabular-nums text-muted-foreground">
           Ref {point.referenceRange}
         </span>
       )}
@@ -88,22 +88,24 @@ export function EvolutionParameterTable({
   const studyIds = studies.map((s) => s.id);
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+    <div className="overflow-x-auto rounded-[20px] border border-border bg-surface">
       <table className="w-full min-w-[48rem] border-collapse text-left">
         <caption className="sr-only">
-          Evolución de parámetros a lo largo de la serie de estudios
+          Evolución de parámetros a lo largo de la serie de estudios. Cada fila
+          muestra la tendencia gráfica y los valores de cada estudio en orden
+          cronológico.
         </caption>
         <thead>
           <tr className="border-b border-border">
             <th
               scope="col"
-              className="sticky left-0 z-10 bg-surface px-4 py-3 data-label"
+              className="sticky left-0 z-10 bg-background px-4 py-3 data-label"
             >
               Parámetro
             </th>
             <th
               scope="col"
-              className="px-3 py-3 text-center data-label"
+              className="bg-background px-3 py-3 text-center data-label"
             >
               Tendencia
             </th>
@@ -111,15 +113,15 @@ export function EvolutionParameterTable({
               <th
                 key={study.id}
                 scope="col"
-                className="min-w-[7rem] px-3 py-3 text-center"
+                className="min-w-[7rem] bg-background px-3 py-3 text-center"
               >
                 <span
                   aria-hidden="true"
-                  className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-violet text-[12px] font-semibold text-white"
+                  className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-violet text-[12px] font-semibold text-white"
                 >
                   {SERIES_LETTERS[i]}
                 </span>
-                <span className="mt-1 block text-[11px] font-medium text-muted-foreground">
+                <span className="mt-1 block text-[11px] font-medium tabular-nums text-muted-foreground">
                   {formatShortDate(study.created_at)}
                 </span>
               </th>
@@ -172,11 +174,11 @@ function EvolutionTrackRow({
         scope="row"
         className="sticky left-0 z-10 max-w-[12rem] bg-surface px-4 py-3 align-top"
       >
-        <span className="block text-body font-medium text-foreground">
+        <span className="block text-body font-semibold text-primary">
           {track.name}
         </span>
         {track.referenceRange && (
-          <span className="mt-1 block text-[11px] text-muted-foreground">
+          <span className="mt-1 block text-[11px] tabular-nums text-muted-foreground">
             Ref {track.referenceRange}
           </span>
         )}
