@@ -1,9 +1,14 @@
 "use client";
 
 import type { Measurement, MeasurementStatus } from "@/lib/analysis/schema";
-import { getMeasurementSignificance, getStatusLabel } from "@/lib/analysis/measurement-significance";
+import {
+  getMeasurementSignificance,
+  getStatusLabel,
+} from "@/lib/analysis/measurement-significance";
 import { StudyChatCta } from "@/components/chat/StudyChatCta";
 import { buildStudyChatPrompt } from "@/lib/chat/study-chat-cta";
+import { BiomarkerScale } from "./BiomarkerScale";
+import { SectionAccordion } from "./SectionAccordion";
 
 interface MeasurementsSectionProps {
   measurements: Measurement[];
@@ -15,7 +20,7 @@ interface MeasurementsSectionProps {
 const STATUS_STYLES: Record<MeasurementStatus, string> = {
   within_range: "bg-success-tint text-success-strong",
   above_range: "bg-warning-tint text-warning-strong",
-  below_range: "bg-warning-tint text-warning-strong",
+  below_range: "bg-info-tint text-info",
   abnormal: "bg-danger-tint text-danger-strong",
   unknown: "bg-muted text-muted-foreground",
   no_reference: "bg-muted text-muted-foreground",
@@ -30,65 +35,79 @@ export function MeasurementsSection({
   if (measurements.length === 0) return null;
 
   return (
-    <section aria-labelledby="measurements-section-heading">
-      <div className="mb-3 flex items-baseline justify-between gap-2">
-        <h3
-          id="measurements-section-heading"
-          className={`text-[13px] font-semibold uppercase tracking-wide ${
-            primary ? "text-primary" : "text-muted-foreground"
-          }`}
-        >
-          {title ?? "Valores de tu estudio"}
-        </h3>
-        <span className="text-[12px] text-muted-foreground">
-          {measurements.length} valor{measurements.length !== 1 ? "es" : ""}
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <SectionAccordion
+      title={title ?? "Valores de tu estudio"}
+      countLabel={`${measurements.length} valor${measurements.length !== 1 ? "es" : ""}`}
+      primary={primary}
+    >
+      <div className="flex flex-col gap-3">
         {measurements.map((m, index) => {
-          const significance = getMeasurementSignificance(m.significance, m.status);
+          const significance = getMeasurementSignificance(
+            m.significance,
+            m.status
+          );
           const statusLabel = getStatusLabel(m.status);
-          const hasStatus = m.status !== undefined && m.status !== "unknown" && m.status !== "no_reference";
+          const hasStatus =
+            m.status !== undefined &&
+            m.status !== "unknown" &&
+            m.status !== "no_reference";
           const style = m.status ? STATUS_STYLES[m.status] : "";
+          const hasValue = Boolean(m.value);
 
           return (
             <article
               key={m.name || index}
-              className="flex flex-col gap-1.5 rounded-xl border border-border bg-surface p-4"
+              className="flex flex-col gap-2 rounded-xl border border-border bg-background p-4"
             >
-              <h4 className="text-[13px] font-medium text-foreground">
-                {m.name}
-              </h4>
-
-              {significance && (
-                <p className="text-body font-medium text-foreground leading-snug">
-                  {significance}
-                </p>
-              )}
-
-              {m.value && (
-                <div className="flex items-baseline gap-1.5">
-                  <span className="font-mono text-[15px] font-medium tabular-nums text-foreground">
-                    {m.value}
-                  </span>
-                  {m.unit && (
-                    <span className="text-[12px] text-muted-foreground">
-                      {m.unit}
-                    </span>
-                  )}
+              <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+                <div className="flex min-w-0 flex-col items-start gap-2">
+                  <h4 className="text-body font-semibold text-primary">
+                    {m.name}
+                  </h4>
                   {hasStatus && statusLabel && (
-                    <span className={`ml-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${style}`}>
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold leading-4 tracking-[0.04em] ${style}`}
+                    >
                       {statusLabel}
                     </span>
                   )}
                 </div>
+
+                {hasValue && (
+                  <div className="flex shrink-0 items-baseline gap-1.5">
+                    <span className="data-value">{m.value}</span>
+                    {m.unit && (
+                      <span className="text-caption font-medium text-muted-foreground">
+                        {m.unit}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {significance && (
+                <p className="text-body leading-body text-foreground/85">
+                  {significance}
+                </p>
               )}
 
-              {m.reference_range && (
-                <p className="text-[11px] text-muted-foreground">
-                  Rango indicado: {m.reference_range}
-                </p>
+              {/* Escala de referencia: solo si hay rango + valor reales. */}
+              {m.reference_range && m.value ? (
+                <BiomarkerScale
+                  name={m.name}
+                  value={m.value}
+                  unit={m.unit ?? null}
+                  referenceRange={m.reference_range}
+                />
+              ) : (
+                m.reference_range && (
+                  <p className="text-caption text-muted-foreground">
+                    Rango indicado:{" "}
+                    <span className="font-medium tabular-nums text-foreground">
+                      {m.reference_range}
+                    </span>
+                  </p>
+                )
               )}
 
               <StudyChatCta
@@ -104,6 +123,6 @@ export function MeasurementsSection({
           );
         })}
       </div>
-    </section>
+    </SectionAccordion>
   );
 }

@@ -181,7 +181,6 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: var(--ring-offset);
-  border-radius: var(--radius-sm);
 }
 
 /* ── Focus on dark plum surfaces — the default plum outline is invisible there ── */

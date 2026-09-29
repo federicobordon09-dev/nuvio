@@ -54,6 +54,14 @@ export default async function EstudioDetailPage({
 
   const hasRenderableAnalysis = analysis !== null;
 
+  const typeLabel = getStudyTypeLabelNullable(study.study_type);
+
+  const uploadedOn = new Date(study.created_at).toLocaleDateString("es-AR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   const showPipeline =
     (study.status === "uploaded" ||
       study.status === "processing" ||
@@ -80,14 +88,25 @@ export default async function EstudioDetailPage({
       <Breadcrumbs
         items={[
           { label: "Mis estudios", href: "/dashboard/estudios" },
+          ...(typeLabel ? [{ label: typeLabel }] : []),
           { label: study.file_name },
         ]}
       />
 
       <PageHeader
         title={study.file_name}
-        description="Información detallada del estudio seleccionado."
-      />
+        description={
+          <>
+            {typeLabel && <span>{typeLabel} · </span>}
+            Subido el {uploadedOn}
+          </>
+        }
+      >
+        <StudyStatusBadge
+          status={study.status}
+          analysisStatus={study.analysis_status}
+        />
+      </PageHeader>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_300px] lg:items-start">
         {/* ── Columna principal ──────────────────────── */}
@@ -107,10 +126,10 @@ export default async function EstudioDetailPage({
           )}
 
           {showAnalysisError && (
-            <div className="rounded-xl border border-danger/20 bg-danger-tint/50 p-5">
+            <div className="rounded-[20px] border border-danger/20 bg-danger-tint p-5">
               <div className="mb-3 flex items-center gap-2">
                 <ErrorTriangle className="h-5 w-5 text-danger" />
-                <h2 className="text-body font-medium text-foreground">
+                <h2 className="text-subheading text-primary">
                   Análisis de IA
                 </h2>
               </div>
@@ -124,10 +143,10 @@ export default async function EstudioDetailPage({
           )}
 
           {showCorruptAnalysis && (
-            <div className="rounded-xl border border-warning/20 bg-warning-tint/50 p-5">
+            <div className="rounded-[20px] border border-warning/20 bg-warning-tint p-5">
               <div className="mb-3 flex items-center gap-2">
                 <span className="status-dot status-dot-warning" />
-                <h2 className="text-body font-medium text-foreground">
+                <h2 className="text-subheading text-primary">
                   Análisis de IA
                 </h2>
               </div>
@@ -151,7 +170,7 @@ export default async function EstudioDetailPage({
           )}
 
           {study.status === "processed" && !extraction && (
-            <div className="rounded-xl border border-primary/20 bg-primary-muted/50 p-4 text-body text-primary">
+            <div className="rounded-[20px] border border-primary/20 bg-primary-muted p-4 text-body text-primary">
               El documento fue procesado, pero todavía no tenemos disponible
               el contenido extraído.
             </div>
@@ -162,16 +181,22 @@ export default async function EstudioDetailPage({
         {/* ── Columna secundaria (300px) ────────────────────── */}
         <aside className="space-y-6">
           <section
-            aria-label="Metadatos del estudio"
-            className="rounded-xl border border-border bg-surface p-5"
+            aria-labelledby="study-metadata-heading"
+            className="rounded-[20px] border border-border bg-surface p-5"
           >
+            <h2
+              id="study-metadata-heading"
+              className="mb-4 text-subheading text-primary"
+            >
+              Datos del estudio
+            </h2>
             <dl className="space-y-4">
               <div>
                 <dt className="data-label">
                   Tipo
                 </dt>
                 <dd className="mt-1 text-body font-medium text-foreground">
-                  {getStudyTypeLabelNullable(study.study_type)}
+                  {typeLabel}
                 </dd>
               </div>
 

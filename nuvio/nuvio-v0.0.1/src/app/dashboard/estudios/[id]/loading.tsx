@@ -25,7 +25,7 @@ export default function EstudioDetailLoading() {
         {/* ── Columna principal (ancho) ─────────────────────── */}
         <div className="min-w-0 space-y-6">
           {/* Encabezado del resultado (simulado) */}
-          <div className="rounded-xl border border-border bg-surface p-5 animate-pulse">
+          <div className="rounded-[20px] border border-border bg-surface p-5 animate-pulse">
             <div className="h-4 w-1/3 rounded bg-muted mb-3" />
             <div className="space-y-2">
               <div className="h-4 w-1/2 rounded bg-muted" />
@@ -42,7 +42,7 @@ export default function EstudioDetailLoading() {
           {/* Secciones de contenido (simuladas) */}
           <div className="space-y-5">
             {/* Section 1 */}
-            <div className="rounded-xl border border-border bg-surface p-5">
+            <div className="rounded-[20px] border border-border bg-surface p-5">
               <div className="h-4 w-1/4 rounded bg-muted mb-3" />
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="h-28 rounded border border-border bg-muted" />
@@ -51,7 +51,7 @@ export default function EstudioDetailLoading() {
             </div>
 
             {/* Section 2 */}
-            <div className="rounded-xl border border-border bg-surface p-5">
+            <div className="rounded-[20px] border border-border bg-surface p-5">
               <div className="h-4 w-1/4 rounded bg-muted mb-3" />
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="h-32 rounded border border-border bg-muted" />
@@ -60,7 +60,7 @@ export default function EstudioDetailLoading() {
             </div>
 
             {/* Section 3 (lista simple) */}
-            <div className="rounded-xl border border-border bg-surface p-5">
+            <div className="rounded-[20px] border border-border bg-surface p-5">
               <div className="h-4 w-1/4 rounded bg-muted mb-3" />
               <div className="space-y-3">
                 <div className="h-5 rounded bg-muted" />
@@ -77,7 +77,7 @@ export default function EstudioDetailLoading() {
         {/* ── Columna secundaria (300px) ────────────────────── */}
         <aside className="space-y-6 animate-pulse">
           {/* Metadata */}
-          <section className="rounded-xl border border-border bg-surface p-5">
+          <section className="rounded-[20px] border border-border bg-surface p-5">
             <dl className="space-y-4">
               <div>
                 <div className="h-3 w-1/4 rounded bg-muted" />
@@ -110,7 +110,7 @@ export default function EstudioDetailLoading() {
           </section>
 
           {/* Contenido extraído (colapsado, simulado) */}
-          <div className="rounded-xl border border-border bg-surface">
+          <div className="rounded-[20px] border border-border bg-surface">
             <div className="flex items-center justify-between gap-3 px-4 py-3">
               <div>
                 <div className="h-4 w-1/3 rounded bg-muted" />

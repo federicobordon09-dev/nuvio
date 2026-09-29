@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { requestStudyAnalysis } from "@/lib/actions/studies";
-import { Spinner } from "@/components/ui/Spinner";
+import { Button } from "@/components/ui/Button";
 
 interface AnalyzeStudyButtonProps {
   studyId: string;
@@ -40,24 +40,20 @@ export function AnalyzeStudyButton({
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <button
+    <div className="flex flex-col items-start gap-2">
+      <Button
         type="button"
-        disabled={isPending}
+        variant="secondary"
+        size="md"
+        loading={isPending}
         onClick={handleSubmit}
-        className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-[14px] font-medium text-primary transition-colors hover:bg-primary-muted disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isPending ? (
-          <>
-            <Spinner className="h-4 w-4" />
-            Analizando…
-          </>
-        ) : hasAnalysis ? (
-          "Volver a analizar"
-        ) : (
-          "Analizar con IA"
-        )}
-      </button>
+        {isPending
+          ? "Analizando…"
+          : hasAnalysis
+            ? "Volver a analizar"
+            : "Analizar con IA"}
+      </Button>
 
       {error && (
         <p className="rounded-lg bg-danger-tint px-3 py-2 text-[13px] leading-[1.5] text-danger-strong">

@@ -139,10 +139,10 @@ export function StudyPipelineController({
 
   if (phase === "processing-failed") {
     return (
-      <div className="rounded-xl border border-danger/20 bg-danger-tint/50 p-5">
+      <div className="rounded-[20px] border border-danger/20 bg-danger-tint p-5">
         <div className="mb-3 flex items-center gap-2">
           <ErrorTriangle className="h-5 w-5 text-danger" />
-          <h2 className="text-body font-medium text-foreground">
+          <h2 className="text-subheading text-primary">
             Procesamiento del documento
           </h2>
         </div>
@@ -166,10 +166,10 @@ export function StudyPipelineController({
 
   if (phase === "failed") {
     return (
-      <div className="rounded-xl border border-danger/20 bg-danger-tint/50 p-5">
+      <div className="rounded-[20px] border border-danger/20 bg-danger-tint p-5">
         <div className="mb-3 flex items-center gap-2">
           <ErrorTriangle className="h-5 w-5 text-danger" />
-          <h2 className="text-body font-medium text-foreground">
+          <h2 className="text-subheading text-primary">
             Análisis de IA
           </h2>
         </div>
@@ -192,11 +192,11 @@ export function StudyPipelineController({
   }
 
   return (
-    <div className="rounded-xl border border-primary/20 bg-primary-muted/50 p-5">
+    <div className="rounded-[20px] border border-primary/20 bg-primary-muted p-5">
       <div className="flex items-center gap-3">
         <Spinner className="h-5 w-5 text-primary" />
         <div>
-          <h2 className="text-body font-medium text-foreground">
+          <h2 className="text-subheading text-primary">
             {phase === "processing"
               ? "Procesando documento…"
               : "Analizando con IA…"}

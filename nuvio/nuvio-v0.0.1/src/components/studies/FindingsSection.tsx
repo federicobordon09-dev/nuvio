@@ -2,6 +2,7 @@
 
 import type { KeyFinding } from "@/lib/analysis/schema";
 import { FindingRow } from "./FindingRow";
+import { SectionAccordion } from "./SectionAccordion";
 
 interface FindingsSectionProps {
   findings: KeyFinding[];
@@ -19,18 +20,11 @@ export function FindingsSection({
   if (findings.length === 0) return null;
 
   return (
-    <section aria-labelledby="findings-section-heading">
-      <div className="mb-4 flex items-baseline justify-between gap-2">
-        <h3
-          id="findings-section-heading"
-          className={`data-label ${primary ? "!text-primary" : ""}`}
-        >
-          {title ?? "Hallazgos"}
-        </h3>
-        <span className="text-caption text-muted-foreground">
-          {findings.length} hallazgo{findings.length !== 1 ? "s" : ""}
-        </span>
-      </div>
+    <SectionAccordion
+      title={title ?? "Hallazgos"}
+      countLabel={`${findings.length} hallazgo${findings.length !== 1 ? "s" : ""}`}
+      primary={primary}
+    >
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {findings.map((finding, index) => (
           <FindingRow
@@ -40,6 +34,6 @@ export function FindingsSection({
           />
         ))}
       </div>
-    </section>
+    </SectionAccordion>
   );
 }

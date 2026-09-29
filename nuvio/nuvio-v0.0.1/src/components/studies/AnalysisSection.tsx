@@ -1,6 +1,7 @@
 "use client";
 
 import { Warning, InfoCircle } from "@/components/ui/icons";
+import { SectionAccordion } from "./SectionAccordion";
 
 interface AnalysisSectionProps {
   title: string;
@@ -9,21 +10,26 @@ interface AnalysisSectionProps {
   empty?: string;
 }
 
+/**
+ * Panel de listas del análisis (observaciones / advertencias /
+ * recomendaciones / limitaciones). El tintado semántico vive en el
+ * contenido; el chip del título usa el acento lila del sistema.
+ */
 const VARIANTS = {
   default: {
-    container: "rounded-xl border border-border bg-surface p-5",
+    panel: "bg-background",
     textClass: "text-foreground/85",
     icon: null,
   },
   warning: {
-    container: "rounded-xl border border-warning/30 bg-warning-tint p-5",
+    panel: "bg-warning-tint border border-warning/20",
     textClass: "text-warning-strong",
-    icon: <Warning className="h-5 w-5 text-warning-strong" />,
+    icon: <Warning className="h-4 w-4" />,
   },
   info: {
-    container: "rounded-xl border border-primary/30 bg-primary-muted p-5",
-    textClass: "text-primary-700",
-    icon: <InfoCircle className="h-5 w-5 text-primary-600" />,
+    panel: "bg-primary-muted border border-primary/30",
+    textClass: "text-primary",
+    icon: <InfoCircle className="h-4 w-4" />,
   },
 };
 
@@ -38,37 +44,26 @@ export function AnalysisSection({
   const style = VARIANTS[variant];
 
   return (
-    <section
-      className={style.container}
-      aria-labelledby={`analysis-section-${title.toLowerCase().replace(/\s+/g, "-")}`}
-    >
-      <header className="mb-3 flex items-center gap-2">
-        {style.icon}
-        <h3
-          id={`analysis-section-${title.toLowerCase().replace(/\s+/g, "-")}`}
-          className="data-label"
-        >
-          {title}
-        </h3>
-      </header>
-
-      {items.length === 0 && empty ? (
-        <p className={`text-body ${style.textClass}`}>{empty}</p>
-      ) : (
-        <ul className="space-y-2">
-          {items.map((item, index) => (
-            <li key={index} className={`text-body ${style.textClass}`}>
-              <span className="inline-flex items-start gap-2">
-                <span
-                  className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
-                  aria-hidden="true"
-                />
-                <span>{item}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
+    <SectionAccordion title={title} icon={style.icon ?? undefined}>
+      <div className={`rounded-xl p-4 ${style.panel}`}>
+        {items.length === 0 && empty ? (
+          <p className={`text-body ${style.textClass}`}>{empty}</p>
+        ) : (
+          <ul className="space-y-2">
+            {items.map((item, index) => (
+              <li key={index} className={`text-body ${style.textClass}`}>
+                <span className="inline-flex items-start gap-2">
+                  <span
+                    className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
+                    aria-hidden="true"
+                  />
+                  <span>{item}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </SectionAccordion>
   );
 }
