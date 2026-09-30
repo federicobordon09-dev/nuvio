@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { Upload, Document, Shield } from "@/components/ui/icons";
-import { fadeInUp, scaleInSpring, getViewportOptions, STAGGER, float } from "@/lib/animation";
+import { fadeInUp, scaleInSpring, getViewportOptions, STAGGER } from "@/lib/animation";
 
 interface DashboardGreetingProps {
   userName: string;
@@ -25,11 +25,9 @@ export function DashboardGreeting({ userName, greetingSummary, maxFileMB }: Dash
         variants={fadeInUp}
         style={{ animationDelay: "0ms" }}
       >
-        <motion.div
+        <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary-muted/40 blur-3xl"
-          variants={float}
-          animate="animate"
+          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary-muted/40 blur-3xl animate-float"
         />
         <motion.div className="relative z-10 flex flex-col gap-3" variants={{ staggerChildren: STAGGER.tight }}>
           <motion.span

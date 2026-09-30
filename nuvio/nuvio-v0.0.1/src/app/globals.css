@@ -447,6 +447,10 @@ body {
   animation: pulse-subtle 2s ease-in-out infinite;
 }
 
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
 /* ── Stagger Delays ── */
 
 .delay-0 { animation-delay: 0ms; }
