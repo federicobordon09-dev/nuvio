@@ -1,3 +1,13 @@
+"use client";
+
+import { motion } from "motion/react";
+import {
+  sectionRevealStaggered,
+  fadeInUp,
+  getViewportOptions,
+  STAGGER,
+} from "@/lib/animation";
+
 const HIGHLIGHTS = [
   {
     title: "PDF e imágenes",
@@ -19,22 +29,34 @@ const HIGHLIGHTS = [
 
 export default function TrustBand() {
   return (
-    <section
+    <motion.section
       aria-label="En qué se basa Nuvio"
       className="border-b border-border bg-surface"
+      variants={sectionRevealStaggered}
+      initial="hidden"
+      animate="visible"
+      viewport={getViewportOptions()}
     >
       <div className="mx-auto max-w-6xl px-6 py-8 lg:px-8">
-        <ul className="grid grid-cols-2 gap-6 md:grid-cols-4">
-          {HIGHLIGHTS.map(({ title, description }) => (
-            <li key={title} className="flex flex-col gap-1">
+        <motion.ul
+          className="grid grid-cols-2 gap-6 md:grid-cols-4"
+          variants={sectionRevealStaggered}
+        >
+          {HIGHLIGHTS.map(({ title, description }, index) => (
+            <motion.li
+              key={title}
+              className="flex flex-col gap-1"
+              variants={fadeInUp}
+              style={{ animationDelay: `${index * STAGGER.section * 1000}ms` }}
+            >
               <span className="text-subheading text-primary">{title}</span>
               <span className="text-caption leading-body text-muted-foreground">
                 {description}
               </span>
-            </li>
+            </motion.li>
           ))}
-        </ul>
+        </motion.ul>
       </div>
-    </section>
+    </motion.section>
   );
 }

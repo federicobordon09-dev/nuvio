@@ -1,4 +1,8 @@
+"use client";
+
 import { forwardRef, type InputHTMLAttributes } from "react";
+import { motion } from "motion/react";
+import { inputFocus } from "@/lib/animation";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -14,7 +18,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
 
     return (
-      <div className="flex flex-col gap-1.5">
+      <motion.div
+        className="flex flex-col gap-1.5"
+        initial={inputFocus.rest}
+        animate={inputFocus.rest}
+      >
         {label && (
           <label
             htmlFor={inputId}
@@ -23,7 +31,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {label}
           </label>
         )}
-        <input
+        <motion.input
           ref={ref}
           id={inputId}
           className={`h-12 w-full rounded-md border border-border-strong bg-surface px-4 text-body text-foreground placeholder:text-muted-foreground transition-colors duration-150 focus:border-lilac-glow focus:ring-[3px] focus:ring-lilac-glow/20 disabled:opacity-50 disabled:cursor-not-allowed ${
@@ -31,19 +39,32 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           } ${className}`}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
+          whileFocus={inputFocus.focus}
           {...props}
         />
         {error && (
-          <p id={`${inputId}-error`} className="text-[12px] text-danger-strong">
+          <motion.p
+            id={`${inputId}-error`}
+            className="text-[12px] text-danger-strong"
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.15 }}
+          >
             {error}
-          </p>
+          </motion.p>
         )}
         {helperText && !error && (
-          <p id={`${inputId}-helper`} className="text-[12px] text-muted-foreground">
+          <motion.p
+            id={`${inputId}-helper`}
+            className="text-[12px] text-muted-foreground"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.15 }}
+          >
             {helperText}
-          </p>
+          </motion.p>
         )}
-      </div>
+      </motion.div>
     );
   },
 );

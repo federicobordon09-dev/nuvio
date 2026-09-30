@@ -1,4 +1,8 @@
+"use client";
+
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
+import { cardInteractive } from "@/lib/animation";
 
 type CardVariant = "default" | "elevated" | "outlined" | "interactive";
 type CardPadding = "none" | "sm" | "md" | "lg";
@@ -8,6 +12,7 @@ interface CardProps {
   padding?: CardPadding;
   className?: string;
   children: ReactNode;
+  hover?: boolean;
 }
 
 const variantStyles: Record<CardVariant, string> = {
@@ -30,10 +35,23 @@ export function Card({
   padding = "md",
   className = "",
   children,
+  hover = variant === "interactive",
 }: CardProps) {
+  if (!hover) {
+    return (
+      <div className={`${variantStyles[variant]} ${paddingStyles[padding]} ${className}`}>
+        {children}
+      </div>
+    );
+  }
+
   return (
-    <div className={`${variantStyles[variant]} ${paddingStyles[padding]} ${className}`}>
+    <motion.div
+      className={`${variantStyles[variant]} ${paddingStyles[padding]} ${className}`}
+      whileHover={cardInteractive.hover}
+      whileTap={cardInteractive.tap}
+    >
       {children}
-    </div>
+    </motion.div>
   );
 }

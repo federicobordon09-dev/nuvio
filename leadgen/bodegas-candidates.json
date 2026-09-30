@@ -1,0 +1,880 @@
+{
+  "candidates": [
+    {
+      "id": "ChIJq-h7JDQJfpYR-87F-yXktJ8",
+      "name": "Bodega Los Toneles",
+      "address": "Av. de Acceso Este 1360, M5519 Mendoza, Argentina",
+      "phone": "0261 15-661-8624",
+      "website": "https://linktr.ee/Bodegalostoneles",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/bodegalostoneles/"
+      },
+      "instagram": "https://www.instagram.com/bodegalostoneles/",
+      "rating": 4.8,
+      "reviews": 5508,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "argentinian_restaurant",
+        "tourist_attraction",
+        "south_american_restaurant",
+        "farm",
+        "manufacturer",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJq-h7JDQJfpYR-87F-yXktJ8"
+    },
+    {
+      "id": "ChIJ50auoClAgZYRqKi_MoZG4wY",
+      "name": "Restaurante Palito - Club Sirio Libanés",
+      "address": "Entre Ríos Sur 33, J5402EEA San Juan, Argentina",
+      "phone": "0264 422-3841",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 2704,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ50auoClAgZYRqKi_MoZG4wY"
+    },
+    {
+      "id": "ChIJd3bugF5BgZYRAAthJ1OKIFk",
+      "name": "ROCKY BAY",
+      "address": "DEB, B. Rivadavia Oeste 12, J5402 J5402DEB este, San Juan, Argentina",
+      "phone": "",
+      "website": "https://www.facebook.com/rockybaysj",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 1201,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJd3bugF5BgZYRAAthJ1OKIFk"
+    },
+    {
+      "id": "ChIJg5TKYTxBgZYRHAGc38um11I",
+      "name": "Bonito Café San Juan",
+      "address": "Av. España Sur 186, J5400 San Juan, Argentina",
+      "phone": "0261 366-4979",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 1190,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJg5TKYTxBgZYRHAGc38um11I"
+    },
+    {
+      "id": "ChIJP4wnBwhBgZYR24B9ZJ8_6PQ",
+      "name": "Tequila Lomos del Luchi",
+      "address": "Av. José Ignacio de la Roza Oeste 813, J5402 San Juan, Argentina",
+      "phone": "0264 422-8188",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4,
+      "reviews": 823,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJP4wnBwhBgZYR24B9ZJ8_6PQ"
+    },
+    {
+      "id": "ChIJrUq7eLRBgZYRvZBbG-eHbJk",
+      "name": "Casa Vinicola El Milagro",
+      "address": "D. F. Sarmiento 350, J5419 Albardón, San Juan, Argentina",
+      "phone": "0264 588-1298",
+      "website": "https://www.facebook.com/El-Milagro-Bodega-410140335823862/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/bodegaelmilagrosj/"
+      },
+      "instagram": "https://www.instagram.com/bodegaelmilagrosj/",
+      "rating": 4.7,
+      "reviews": 427,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJrUq7eLRBgZYRvZBbG-eHbJk"
+    },
+    {
+      "id": "ChIJsfSQF2s8gZYR4Nbps9ZzRIc",
+      "name": "Bodega Las Marianas",
+      "address": "Calle Nueva s/n La Rinconada, J5427 Pocito, San Juan, Argentina",
+      "phone": "0264 566-9061",
+      "website": "https://www.instagram.com/camunas.wine/profilecard/?igsh=ZGs3NnF1amRtNWN2",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/bodega_las_marianas_allaj/"
+      },
+      "instagram": "https://www.instagram.com/bodega_las_marianas_allaj/",
+      "rating": 4.9,
+      "reviews": 420,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "tourist_attraction",
+        "liquor_store",
+        "farm",
+        "manufacturer",
+        "store",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJsfSQF2s8gZYR4Nbps9ZzRIc"
+    },
+    {
+      "id": "ChIJ_wczYTVAgZYRgD22Zs44zpM",
+      "name": "LA CASA DEL VINO SAN JUAN",
+      "address": "Florentino Ameghino Nte. 146, J5400 San Juan, Argentina",
+      "phone": "0264 562-0073",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/lacasadelvinosanjuan/"
+      },
+      "instagram": "https://www.instagram.com/lacasadelvinosanjuan/",
+      "rating": 4.8,
+      "reviews": 347,
+      "status": "OPERATIONAL",
+      "types": [
+        "liquor_store",
+        "deli",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ_wczYTVAgZYRgD22Zs44zpM"
+    },
+    {
+      "id": "ChIJW-B86zVAgZYRaeKM2ggHphs",
+      "name": "GoBar San Juan Ameghino",
+      "address": "200 J5402 San Juan San Juan AR, Florentino Ameghino Sur 230, J5402GAD San Juan, Argentina",
+      "phone": "0264 628-8805",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.3,
+      "reviews": 246,
+      "status": "OPERATIONAL",
+      "types": [
+        "liquor_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJW-B86zVAgZYRaeKM2ggHphs"
+    },
+    {
+      "id": "ChIJMbqg1oRqgZYRwj_ytKbRm2U",
+      "name": "Güemes Drinks Up - Vinoteca en San Juan - Futbol - Día del Padre - Día de la Madre",
+      "address": "Martín Güemes Sur 210 sur, J5400 San Juan, Argentina",
+      "phone": "0264 485-4790",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/guemesdrinksup/"
+      },
+      "instagram": "https://www.instagram.com/guemesdrinksup/",
+      "rating": 4.7,
+      "reviews": 233,
+      "status": "OPERATIONAL",
+      "types": [
+        "liquor_store",
+        "sporting_goods_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJMbqg1oRqgZYRwj_ytKbRm2U"
+    },
+    {
+      "id": "ChIJE2blmMdBgZYR96qXZuEoV7c",
+      "name": "Santiago Graffigna Wine Museum",
+      "address": "Cristóbal Colón Nte. 1342, J5400 San Juan, Argentina",
+      "phone": "0264 421-4227",
+      "website": "https://www.facebook.com/MuseoBodegaSantiagoGraffigna",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/graffigna/"
+      },
+      "instagram": "https://www.instagram.com/graffigna/",
+      "rating": 4.4,
+      "reviews": 223,
+      "status": "OPERATIONAL",
+      "types": [
+        "museum",
+        "tourist_attraction",
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJE2blmMdBgZYR96qXZuEoV7c"
+    },
+    {
+      "id": "ChIJc9585ORrgZYRPJkzeG6fhMM",
+      "name": "Joy Wine [Restobar]",
+      "address": "San Juan Province, Argentina",
+      "phone": "",
+      "website": "https://instagram.com/joywinerestobar",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/joywinerestobar"
+      },
+      "instagram": "https://instagram.com/joywinerestobar",
+      "rating": 4.1,
+      "reviews": 219,
+      "status": "OPERATIONAL",
+      "types": [
+        "bar",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJc9585ORrgZYRPJkzeG6fhMM"
+    },
+    {
+      "id": "ChIJ5YJpmarXgJYRc2niSuhncUw",
+      "name": "Bodega Graffigna Yanzon",
+      "address": "San Juan Province, Argentina",
+      "phone": "0264 15-405-7793",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/graffignayanzon/"
+      },
+      "instagram": "https://www.instagram.com/graffignayanzon/",
+      "rating": 4.6,
+      "reviews": 211,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ5YJpmarXgJYRc2niSuhncUw"
+    },
+    {
+      "id": "ChIJqxhBo29qgZYRLRZBbBc_cDg",
+      "name": "Bodegas Hagmann",
+      "address": "Gertrudis Funes 1233 ( Este ) Capital, J5400 San Juan, Argentina",
+      "phone": "0264 421-3679",
+      "website": "https://www.instagram.com/bodegahagmannsrl/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/bodegahagmannsrl/"
+      },
+      "instagram": "https://www.instagram.com/bodegahagmannsrl/",
+      "rating": 4.6,
+      "reviews": 167,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJqxhBo29qgZYRLRZBbBc_cDg"
+    },
+    {
+      "id": "ChIJx1KaSlJAgZYR7hMO-FuVS0Q",
+      "name": "Ex Bodega Cinzano",
+      "address": "Av. José Ignacio de la Roza Oeste 2613, J5400 San Juan, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 96,
+      "status": "OPERATIONAL",
+      "types": [
+        "event_venue",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJx1KaSlJAgZYR7hMO-FuVS0Q"
+    },
+    {
+      "id": "ChIJnaUUfVuahpYRYVChDjmk8lI",
+      "name": "Bodega y viñedos Alta Bonanza de los Andes",
+      "address": "Ruta Nacional 149, Sorocayense, San Juan, Argentina",
+      "phone": "0264 459-0554",
+      "website": "https://www.instagram.com/alta.bonanza/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/alta.bonanza/"
+      },
+      "instagram": "https://www.instagram.com/alta.bonanza/",
+      "rating": 4.7,
+      "reviews": 81,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJnaUUfVuahpYRYVChDjmk8lI"
+    },
+    {
+      "id": "ChIJzwHk3AprgZYR5WHn5BuxJt4",
+      "name": "Rio Piedras Finca y Bodega",
+      "address": "Rodríguez Este 3769, San Juan, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.8,
+      "reviews": 71,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJzwHk3AprgZYR5WHn5BuxJt4"
+    },
+    {
+      "id": "ChIJSecRs4lBgZYRFwOAH8-BrrY",
+      "name": "VINITO - Vinos y tapas",
+      "address": "25 de Mayo Oeste 1331, J5400 ciudad, San Juan, Argentina",
+      "phone": "0264 616-3251",
+      "website": "https://www.instagram.com/vinito.vinotecaydegustaciones/?hl=es",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/vinito.vinotecaydegustaciones/?hl=es"
+      },
+      "instagram": "https://www.instagram.com/vinito.vinotecaydegustaciones/?hl=es",
+      "rating": 4.5,
+      "reviews": 67,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "liquor_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJSecRs4lBgZYRFwOAH8-BrrY"
+    },
+    {
+      "id": "ChIJ6f_MpFHhgJYRVzfer0n8mZI",
+      "name": "Viñedos De La Torre",
+      "address": "J5435 Media Agua, San Juan Province, Argentina",
+      "phone": "0264 442-7297",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 63,
+      "status": "OPERATIONAL",
+      "types": [
+        "liquor_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ6f_MpFHhgJYRVzfer0n8mZI"
+    },
+    {
+      "id": "ChIJK3AVNQBBgZYRQJUTInnWrr0",
+      "name": "Desfachatados Wine Bar Bistró",
+      "address": "J5400 San Juan, San Juan Province, Argentina",
+      "phone": "0264 317-2513",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.8,
+      "reviews": 50,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJK3AVNQBBgZYRQJUTInnWrr0"
+    },
+    {
+      "id": "ChIJPeiUrAeNhpYRDbx0Hpad1zo",
+      "name": "Bodega Cara Sur",
+      "address": "Barreal, San Juan Province, Argentina",
+      "phone": "0264 480-0300",
+      "website": "https://www.instagram.com/carasur.barreal/?hl=en",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/carasur.barreal/?hl=en"
+      },
+      "instagram": "https://www.instagram.com/carasur.barreal/?hl=en",
+      "rating": 4.6,
+      "reviews": 47,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJPeiUrAeNhpYRDbx0Hpad1zo"
+    },
+    {
+      "id": "ChIJx76wp8k_gZYRdGnVfn59DPU",
+      "name": "Bodega Jaled",
+      "address": "Mendoza Sur 5450, J5427, San Juan, Argentina",
+      "phone": "0264 424-3302",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.2,
+      "reviews": 43,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJx76wp8k_gZYRdGnVfn59DPU"
+    },
+    {
+      "id": "ChIJTWir02VrgZYRUUtxRnutUPA",
+      "name": "Wine Shop San juan",
+      "address": "San Lorenzo Este 2575, J5400 Santa Lucía, San Juan, Argentina",
+      "phone": "0264 15-403-4588",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.9,
+      "reviews": 34,
+      "status": "OPERATIONAL",
+      "types": [
+        "liquor_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJTWir02VrgZYRUUtxRnutUPA"
+    },
+    {
+      "id": "ChIJ-6gIUYsFgZYRjRBTl2wyBC0",
+      "name": "Bodega Casa Montes",
+      "address": "Colon y Caseros - Sin Número, J5442 Caucete, San Juan, Argentina",
+      "phone": "0264 423-6632",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.8,
+      "reviews": 29,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ-6gIUYsFgZYRjRBTl2wyBC0"
+    },
+    {
+      "id": "ChIJ86tbGgBBgZYR3l8l1fHtSJ0",
+      "name": "Entre Copas Vinoteca – San Juan",
+      "address": "25 de Mayo 1630 oeste, J5400 San Juan, Argentina",
+      "phone": "0264 575-7035",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 5,
+      "reviews": 27,
+      "status": "OPERATIONAL",
+      "types": [
+        "wine_bar",
+        "liquor_store",
+        "bar",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ86tbGgBBgZYR3l8l1fHtSJ0"
+    },
+    {
+      "id": "ChIJE8l4NqsnhJYR5BjdxZ3DEiA",
+      "name": "Bodega Las Cambachas",
+      "address": "HG5X+75, La Cañada, San Juan, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.7,
+      "reviews": 22,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJE8l4NqsnhJYR5BjdxZ3DEiA"
+    },
+    {
+      "id": "ChIJO1tod6hBgZYR3Y_Y0KFK0ZU",
+      "name": "LA BARRICA",
+      "address": "Av. Córdoba Oeste 1740 1740 OESTE, J5400 San Juan, Argentina",
+      "phone": "0264 444-8815",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 5,
+      "reviews": 20,
+      "status": "OPERATIONAL",
+      "types": [
+        "liquor_store",
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJO1tod6hBgZYR3Y_Y0KFK0ZU"
+    },
+    {
+      "id": "ChIJb7eAbAATgZYR-VoWtq0KxnI",
+      "name": "Bodega La Ejemplar",
+      "address": "9JRF+8R, Las Chacritas, San Juan, Argentina",
+      "phone": "0264 561-5064",
+      "website": "https://www.instagram.com/bodega_laejemplar/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/bodega_laejemplar/"
+      },
+      "instagram": "https://www.instagram.com/bodega_laejemplar/",
+      "rating": 5,
+      "reviews": 15,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJb7eAbAATgZYR-VoWtq0KxnI"
+    },
+    {
+      "id": "ChIJPT9z31PjgJYRBaO27Z8TRV0",
+      "name": "Bodega Herce",
+      "address": "RP319, Media Agua, San Juan, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.7,
+      "reviews": 15,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJPT9z31PjgJYRBaO27Z8TRV0"
+    },
+    {
+      "id": "ChIJvz6pocpBgZYRjiVdIB_0NsE",
+      "name": "Vinoteca Corral de Piedra vinos y quesos",
+      "address": "Catamarca Sur 607, J5402GSM San Juan, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.9,
+      "reviews": 12,
+      "status": "OPERATIONAL",
+      "types": [
+        "bar",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJvz6pocpBgZYRjiVdIB_0NsE"
+    },
+    {
+      "id": "ChIJrUXTFgBrgZYRO3MoeefMiUA",
+      "name": "Tifón Wines",
+      "address": "De Pueyrredon J. M. (N 16, J5411 Santa Lucía, San Juan, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 5,
+      "reviews": 11,
+      "status": "OPERATIONAL",
+      "types": [
+        "store",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJrUXTFgBrgZYRO3MoeefMiUA"
+    },
+    {
+      "id": "ChIJ_Sts0cdBgZYRo9Kh3aFigQY",
+      "name": "Antigua Bodega / ARBW facility",
+      "address": "J5400 San Juan, San Juan Province, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.8,
+      "reviews": 9,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ_Sts0cdBgZYRo9Kh3aFigQY"
+    },
+    {
+      "id": "ChIJy_lPI2g_gZYR44GOj3C4uJA",
+      "name": "Bodega Brix - San Juan. Argentina",
+      "address": "Avenida Joaquín Uñac antes de Calle 6, J5427, San Juan, Argentina",
+      "phone": "0264 474-3999",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.7,
+      "reviews": 3,
+      "status": "OPERATIONAL",
+      "types": [
+        "winery",
+        "farm",
+        "manufacturer",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJy_lPI2g_gZYR44GOj3C4uJA"
+    },
+    {
+      "id": "ChIJ93dMJ7ZBgZYR8cVYgbczN6E",
+      "name": "La Monarca wines",
+      "address": "Barrio Asuncion, Las Flores manzana A casa 7, J5400 San Juan, Argentina",
+      "phone": "0264 413-4822",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 5,
+      "reviews": 2,
+      "status": "OPERATIONAL",
+      "types": [
+        "liquor_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ93dMJ7ZBgZYR8cVYgbczN6E"
+    },
+    {
+      "id": "ChIJedfYQooRgZYRQ8VjZ7gee9A",
+      "name": "Finca Don Paco",
+      "address": "Bilbao S/N, Nueve de Julio, San Juan, Argentina",
+      "phone": "0264 671-3731",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 5,
+      "reviews": 1,
+      "status": "OPERATIONAL",
+      "types": [
+        "vineyard",
+        "farm",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJedfYQooRgZYRQ8VjZ7gee9A"
+    }
+  ],
+  "meta": {
+    "queries": 14
+  }
+}

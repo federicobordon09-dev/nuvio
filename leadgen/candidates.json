@@ -1,0 +1,3087 @@
+{
+  "candidates": [
+    {
+      "id": "ChIJo-2LVIzLvJURlCJpJvE5Ls8",
+      "name": "Puny - Pasta & Grill",
+      "address": "Av. Corrientes 1269, C1043 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 2246-4521",
+      "website": "https://www.instagram.com/puny.bsas/?hl=en",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/puny.bsas/?hl=en"
+      },
+      "instagram": "https://www.instagram.com/puny.bsas/?hl=en",
+      "rating": 4.9,
+      "reviews": 51947,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJo-2LVIzLvJURlCJpJvE5Ls8"
+    },
+    {
+      "id": "ChIJKcgRZLjKvJURv0XnanBXRCg",
+      "name": "El Cuartito",
+      "address": "Talcahuano 937, C1001 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4816-4331",
+      "website": "https://www.instagram.com/cuartito_paginaoficial/?hl=es",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/cuartito_paginaoficial/?hl=es"
+      },
+      "instagram": "https://www.instagram.com/cuartito_paginaoficial/?hl=es",
+      "rating": 4.5,
+      "reviews": 40659,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJKcgRZLjKvJURv0XnanBXRCg"
+    },
+    {
+      "id": "ChIJt7S9jc7KvJURKxSfAlOXQYM",
+      "name": "Las cuartetas",
+      "address": "Av. Corrientes 838, C1043 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4326-0171",
+      "website": "http://www.facebook.com/lascuartetas",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/lascuartetaspizza/"
+      },
+      "instagram": "https://www.instagram.com/lascuartetaspizza/",
+      "rating": 4.2,
+      "reviews": 33723,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJt7S9jc7KvJURKxSfAlOXQYM"
+    },
+    {
+      "id": "ChIJhZ31RYq1vJUResRODTKt81E",
+      "name": "Sarkis",
+      "address": "Thames 1101, C1414DCW Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4772-4911",
+      "website": "https://instagram.com/restaurantesarkis?igshid=1muwpf21lofr5",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/restaurantesarkis?igshid=1muwpf21lofr5"
+      },
+      "instagram": "https://instagram.com/restaurantesarkis?igshid=1muwpf21lofr5",
+      "rating": 4.6,
+      "reviews": 29372,
+      "status": "OPERATIONAL",
+      "types": [
+        "eastern_european_restaurant",
+        "middle_eastern_restaurant",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJhZ31RYq1vJUResRODTKt81E"
+    },
+    {
+      "id": "ChIJkwhyr9-1vJURE3N1kCoPkQU",
+      "name": "La Mezzetta",
+      "address": "Av. Álvarez Thomas 1321, C1427 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4554-7585",
+      "website": "https://www.instagram.com/pizzerialamezzetta",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/pizzerialamezzetta"
+      },
+      "instagram": "https://www.instagram.com/pizzerialamezzetta",
+      "rating": 4.6,
+      "reviews": 28027,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "fast_food_restaurant",
+        "meal_takeaway",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJkwhyr9-1vJURE3N1kCoPkQU"
+    },
+    {
+      "id": "ChIJFXdR3--jMpQRkzktEkn8kJ0",
+      "name": "Abeja Negra",
+      "address": "Av. Concepción Arenal 369, X5000 Córdoba, Argentina",
+      "phone": "0351 861-1111",
+      "website": "https://www.instagram.com/abejanegraresto/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/abejanegraresto/"
+      },
+      "instagram": "https://www.instagram.com/abejanegraresto/",
+      "rating": 4.7,
+      "reviews": 24235,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJFXdR3--jMpQRkzktEkn8kJ0"
+    },
+    {
+      "id": "ChIJMZN-NCW2vJURHgUYv8nYvqs",
+      "name": "El Antojo",
+      "address": "Tinogasta 3174, C1417 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "5253-7794",
+      "website": "https://m.facebook.com/elantojorestaurant/?locale2=es_LA",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/el_antojook/"
+      },
+      "instagram": "https://www.instagram.com/el_antojook/",
+      "rating": 4.4,
+      "reviews": 23461,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJMZN-NCW2vJURHgUYv8nYvqs"
+    },
+    {
+      "id": "ChIJzfgO3-fKvJUR-Et4sast0tg",
+      "name": "El Español",
+      "address": "Rincón 196, C1089 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "4954-2744",
+      "website": "https://www.instagram.com/elespanol1956/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/elespanol1956/"
+      },
+      "instagram": "https://www.instagram.com/elespanol1956/",
+      "rating": 4.3,
+      "reviews": 22593,
+      "status": "OPERATIONAL",
+      "types": [
+        "spanish_restaurant",
+        "pastry_shop",
+        "family_restaurant",
+        "shipping_service",
+        "pizza_restaurant",
+        "coffee_shop",
+        "cafe",
+        "dessert_shop",
+        "bakery",
+        "confectionery",
+        "food_store",
+        "european_restaurant",
+        "store",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJzfgO3-fKvJUR-Et4sast0tg"
+    },
+    {
+      "id": "ChIJo90zWsHKvJURxzJnW1kEu7w",
+      "name": "Banchero \"La Verdadera Pizza\"",
+      "address": "Av. Corrientes 1604, C1042 AAP, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4374-7046",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/pizzeriabanchero/"
+      },
+      "instagram": "https://www.instagram.com/pizzeriabanchero/",
+      "rating": 4.1,
+      "reviews": 18100,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJo90zWsHKvJURxzJnW1kEu7w"
+    },
+    {
+      "id": "ChIJneJIY_a1vJUR6mQWKtHeIDw",
+      "name": "Los Bohemios",
+      "address": "C1414CSL, Humboldt 540, C1414 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 6361-3810",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/losbohemios.bodegon/"
+      },
+      "instagram": "https://www.instagram.com/losbohemios.bodegon/",
+      "rating": 4.6,
+      "reviews": 17778,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJneJIY_a1vJUR6mQWKtHeIDw"
+    },
+    {
+      "id": "ChIJqxC9uADLvJURk3Icg8CAf1k",
+      "name": "Pizza San Antonio",
+      "address": "Av. Juan de Garay 3602, C1256ABS Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4921-4118",
+      "website": "https://www.facebook.com/sanantonio.boedo/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/pizzeriasanantoniook/"
+      },
+      "instagram": "https://www.instagram.com/pizzeriasanantoniook/",
+      "rating": 4.4,
+      "reviews": 16954,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJqxC9uADLvJURk3Icg8CAf1k"
+    },
+    {
+      "id": "ChIJ2cAKdo-iMpQRQZz-D4uj9_A",
+      "name": "COLORES SANTOS - Resto & Bar",
+      "address": "Buenos Aires 680, X5000 Córdoba, Argentina",
+      "phone": "0351 373-7383",
+      "website": "https://www.facebook.com/Colores.Santos.Bar/?fref=ts",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/colores_santos_bar/"
+      },
+      "instagram": "https://www.instagram.com/colores_santos_bar/",
+      "rating": 4.2,
+      "reviews": 14596,
+      "status": "OPERATIONAL",
+      "types": [
+        "gastropub",
+        "bar",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ2cAKdo-iMpQRQZz-D4uj9_A",
+      "igFollowers": "5200",
+      "igActive": "sí, stories de bar y eventos"
+    },
+    {
+      "id": "ChIJByJ6LnbKvJUR5vVvXm1xnwU",
+      "name": "Bellagamba Restorán Palermo",
+      "address": "Armenia 1242, C1414 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/bellagambapalermo/"
+      },
+      "instagram": "https://www.instagram.com/bellagambapalermo/",
+      "rating": 4.3,
+      "reviews": 13669,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJByJ6LnbKvJUR5vVvXm1xnwU",
+      "igFollowers": "33000",
+      "igActive": "sí, stories diarias de milanesas"
+    },
+    {
+      "id": "ChIJnfiT6_jKvJURV--NaRpVlw0",
+      "name": "Spiagge Di Napoli",
+      "address": "Av. Independencia 3527, C1226AAA Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4931-4420",
+      "website": "https://www.facebook.com/Spiagge-di-napoli-105900777951403/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/spiaggedinapoli/"
+      },
+      "instagram": "https://www.instagram.com/spiaggedinapoli/",
+      "rating": 4.2,
+      "reviews": 13332,
+      "status": "OPERATIONAL",
+      "types": [
+        "italian_restaurant",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJnfiT6_jKvJURV--NaRpVlw0",
+      "igFollowers": "70000",
+      "igActive": "sí, stories de pastas y bodegón"
+    },
+    {
+      "id": "ChIJEx1Rq0VmLZQRA933VzuLwrg",
+      "name": "Pizzería Don Luis",
+      "address": "Gral. Paz 338, X5000JLQ Córdoba, Argentina",
+      "phone": "0351 425-8061",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/pizzeriadonluis/"
+      },
+      "instagram": "https://www.instagram.com/pizzeriadonluis/",
+      "rating": 4.2,
+      "reviews": 13221,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "fast_food_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJEx1Rq0VmLZQRA933VzuLwrg",
+      "igFollowers": "18000",
+      "igActive": "sí, stories de pizza y museo"
+    },
+    {
+      "id": "ChIJp0ZJA8vLvJURbIx88jOaZk8",
+      "name": "Banchero Pizzeria",
+      "address": "Av. Corrientes 1300, C1043 AAZ, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4382-3353",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.2,
+      "reviews": 13112,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJp0ZJA8vLvJURbIx88jOaZk8"
+    },
+    {
+      "id": "ChIJX8e2CVoJfpYRIqtUCRzactk",
+      "name": "Che Picadas Parrilla",
+      "address": "Arístides Villanueva 284, M5500 Mendoza, Argentina",
+      "phone": "0261 418-4052",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/chepicadasmendoza"
+      },
+      "instagram": "https://www.instagram.com/chepicadasmendoza",
+      "rating": 4.3,
+      "reviews": 12125,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJX8e2CVoJfpYRIqtUCRzactk",
+      "igFollowers": "8500",
+      "igActive": "sí, historias diarias de parrilla"
+    },
+    {
+      "id": "ChIJPctP8HqjMpQR213MqXoF5FU",
+      "name": "Cherry Season | Yrigoyen",
+      "address": "Av. Hipólito Yrigoyen 171, X5000 Córdoba, Argentina",
+      "phone": "0351 860-4040",
+      "website": "https://www.instagram.com/cherryseason_arg?igsh=MXhqbnJib3ZzOW13dg==",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/cherryseason_arg?igsh=MXhqbnJib3ZzOW13dg=="
+      },
+      "instagram": "https://www.instagram.com/cherryseason_arg?igsh=MXhqbnJib3ZzOW13dg==",
+      "rating": 4.7,
+      "reviews": 11678,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJPctP8HqjMpQR213MqXoF5FU",
+      "igFollowers": "3200",
+      "igActive": "sí, historias de pasteles"
+    },
+    {
+      "id": "ChIJO3ZipYiiMpQR6IfuKtFDMsA",
+      "name": "Vidón – ʙᴀʀ [Nueva Córdoba]",
+      "address": "Dr. T. Achaval Rodriguez 152, X5000BKD Córdoba, Argentina",
+      "phone": "0351 279-2796",
+      "website": "https://www.instagram.com/vidonbar",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/vidonbar"
+      },
+      "instagram": "https://www.instagram.com/vidonbar",
+      "rating": 4.4,
+      "reviews": 10771,
+      "status": "OPERATIONAL",
+      "types": [
+        "bar",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJO3ZipYiiMpQR6IfuKtFDMsA",
+      "igFollowers": "4200",
+      "igActive": "sí, stories de coctelería"
+    },
+    {
+      "id": "ChIJP4wAKszKvJURLrJ1RWq3zPA",
+      "name": "El Palacio de la Pizza",
+      "address": "Av. Corrientes 751, C1043 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4322-9762",
+      "website": "https://www.instagram.com/palaciopizza?igsh=MXVic2pzbHA5aGRuYg==",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/palaciopizza?igsh=MXVic2pzbHA5aGRuYg=="
+      },
+      "instagram": "https://www.instagram.com/palaciopizza?igsh=MXVic2pzbHA5aGRuYg==",
+      "rating": 4.2,
+      "reviews": 10494,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJP4wAKszKvJURLrJ1RWq3zPA",
+      "igFollowers": "2800",
+      "igActive": "sí, posts semanales de pizza"
+    },
+    {
+      "id": "ChIJVVUFqunKvJURo3NOqn6tHU0",
+      "name": "Bellagamba",
+      "address": "Av. Rivadavia 2138, C1034 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4951-5833",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/bellagambapalermo/"
+      },
+      "instagram": "https://www.instagram.com/bellagambapalermo/",
+      "rating": 4.2,
+      "reviews": 10202,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "bar",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJVVUFqunKvJURo3NOqn6tHU0",
+      "igFollowers": "33000",
+      "igActive": "sí, stories diarias de milanesas"
+    },
+    {
+      "id": "ChIJJb6FZbqxvJURW0ZsdHh1wmo",
+      "name": "Via Flaminia",
+      "address": "Av. del Libertador 14699, B1641 Acassuso, Provincia de Buenos Aires, Argentina",
+      "phone": "011 4792-9867",
+      "website": "https://m.facebook.com/pages/Via-Flaminia-Helados/151150318282363",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/viaflaminia/"
+      },
+      "instagram": "https://www.instagram.com/viaflaminia/",
+      "rating": 4,
+      "reviews": 10133,
+      "status": "OPERATIONAL",
+      "types": [
+        "ice_cream_shop",
+        "dessert_shop",
+        "confectionery",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJJb6FZbqxvJURW0ZsdHh1wmo",
+      "igFollowers": "46100",
+      "igActive": "sí, stories de helados y cucuruchos"
+    },
+    {
+      "id": "ChIJ30Fo02PKvJURvVZfN4WkBBI",
+      "name": "Pin Pun Pizzeria",
+      "address": "Av. Corrientes 3954, C1194 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4862-3260",
+      "website": "https://www.instagram.com/pinpuncorrientes/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/pinpuncorrientes/"
+      },
+      "instagram": "https://www.instagram.com/pinpuncorrientes/",
+      "rating": 4.3,
+      "reviews": 10081,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ30Fo02PKvJURvVZfN4WkBBI",
+      "igFollowers": "1800",
+      "igActive": "sí, stories de pizzas"
+    },
+    {
+      "id": "ChIJa9tcxs7KvJURwAFAnpBVQNE",
+      "name": "Pizza Roma",
+      "address": "Lavalle 888, C1047 AAR, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 6268-3587",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.2,
+      "reviews": 9726,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJa9tcxs7KvJURwAFAnpBVQNE"
+    },
+    {
+      "id": "ChIJP3jUvX6YMpQRXy2lHt0RqZA",
+      "name": "Patio de la Cañada",
+      "address": "Av. Figueroa Alcorta 360, X5000 KFQ, Córdoba, Argentina",
+      "phone": "0351 427-0628",
+      "website": "https://linktr.ee/PatiodelaCanada",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/patiodelacanada/"
+      },
+      "instagram": "https://www.instagram.com/patiodelacanada/",
+      "rating": 4.4,
+      "reviews": 9688,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJP3jUvX6YMpQRXy2lHt0RqZA",
+      "igFollowers": "9500",
+      "igActive": "sí, stories de parrilla y eventos"
+    },
+    {
+      "id": "ChIJGw95AGWYMpQRUV-2AtrdRR8",
+      "name": "Pizza Italia",
+      "address": "Juan Antonio Lavalleja 1388, X5000KKP Córdoba, Argentina",
+      "phone": "0351 471-0606",
+      "website": "https://www.facebook.com/Pizza-Italia-675004625961280/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.5,
+      "reviews": 9126,
+      "status": "OPERATIONAL",
+      "types": [
+        "italian_restaurant",
+        "pizza_restaurant",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJGw95AGWYMpQRUV-2AtrdRR8"
+    },
+    {
+      "id": "ChIJV2S4jLk0o5URR359-mSq3do",
+      "name": "Banchero",
+      "address": "Av. Almte. Brown 1220, C1162 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4301-1406",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.3,
+      "reviews": 9008,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJV2S4jLk0o5URR359-mSq3do"
+    },
+    {
+      "id": "ChIJfW2h0DLLvJURt1NTLBH5JIQ",
+      "name": "La Popular de san telmo",
+      "address": "Av. Caseros 500, C1152AAN Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4307-6040",
+      "website": "http://www.facebook.com/pg/lapopulardesantelmo/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 8993,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJfW2h0DLLvJURt1NTLBH5JIQ"
+    },
+    {
+      "id": "ChIJZRdvRcrKvJURowdIEaS0F6o",
+      "name": "Florida Garden",
+      "address": "Florida 899, C1005 AAQ, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4312-7902",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.3,
+      "reviews": 8986,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "pastry_shop",
+        "south_american_restaurant",
+        "bar",
+        "coffee_shop",
+        "cafe",
+        "dessert_shop",
+        "bakery",
+        "confectionery",
+        "food_store",
+        "store",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJZRdvRcrKvJURowdIEaS0F6o"
+    },
+    {
+      "id": "ChIJo_whUJyiMpQR2R9TYegkbPA",
+      "name": "La Perla",
+      "address": "Centro, Av. Emilio Olmos 265, X5000EOC Córdoba, Argentina",
+      "phone": "0351 623-2514",
+      "website": "https://instagram.com/laperlarestaurantes",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/laperlarestaurantes"
+      },
+      "instagram": "https://instagram.com/laperlarestaurantes",
+      "rating": 4.1,
+      "reviews": 8969,
+      "status": "OPERATIONAL",
+      "types": [
+        "bar_and_grill",
+        "bar",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJo_whUJyiMpQR2R9TYegkbPA",
+      "igFollowers": "950",
+      "igActive": "sí, stories de platos"
+    },
+    {
+      "id": "ChIJvZaFMsjKvJURieIAHSNHtkM",
+      "name": "Santos Manjares",
+      "address": "Paraguay 938, C1057 AAN, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 15-6050-2225",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.6,
+      "reviews": 8927,
+      "status": "OPERATIONAL",
+      "types": [
+        "steak_house",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJvZaFMsjKvJURieIAHSNHtkM"
+    },
+    {
+      "id": "ChIJ-VOOiMDKvJUR0mw-CMUA94A",
+      "name": "Parrilla Peña",
+      "address": "Rodríguez Peña 682, C1020 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4371-5643",
+      "website": "https://www.instagram.com/parrillitapena?igsh=bXF1dHVvbGFuOXo4",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/parrillitapena?igsh=bXF1dHVvbGFuOXo4"
+      },
+      "instagram": "https://www.instagram.com/parrillitapena?igsh=bXF1dHVvbGFuOXo4",
+      "rating": 4.5,
+      "reviews": 8809,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ-VOOiMDKvJUR0mw-CMUA94A",
+      "igFollowers": "2100",
+      "igActive": "sí, stories de parrilla"
+    },
+    {
+      "id": "ChIJ81_9dsnKvJUR-vuez-wKYt0",
+      "name": "Broccolino",
+      "address": "Esmeralda 776, C1007ABH Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4322-9848",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 8795,
+      "status": "OPERATIONAL",
+      "types": [
+        "italian_restaurant",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ81_9dsnKvJUR-vuez-wKYt0"
+    },
+    {
+      "id": "ChIJ95GN7ya0vJUR6uNzHSXFLEU",
+      "name": "Bodegón Núñez",
+      "address": "Arribeños 3198, C1429BKH Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 6748-0818",
+      "website": "https://www.facebook.com/BodegonNunez/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.2,
+      "reviews": 8427,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ95GN7ya0vJUR6uNzHSXFLEU"
+    },
+    {
+      "id": "ChIJTUDhd9_KvJUR5rGt0-5JYcY",
+      "name": "El Nuevo Castel's",
+      "address": "Av. Entre Ríos 946, C1080ABQ Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4305-1907",
+      "website": "https://www.facebook.com/pages/El-Nuevo-Castels/425621050821738",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.5,
+      "reviews": 8410,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJTUDhd9_KvJUR5rGt0-5JYcY"
+    },
+    {
+      "id": "ChIJYzlVCYOiMpQRO3_DUiRMsDM",
+      "name": "El Ruedo",
+      "address": "Obispo Trejo 84, X5000 IYB, Córdoba, Argentina",
+      "phone": "0351 422-0347",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.2,
+      "reviews": 8354,
+      "status": "OPERATIONAL",
+      "types": [
+        "bar_and_grill",
+        "bar",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJYzlVCYOiMpQRO3_DUiRMsDM"
+    },
+    {
+      "id": "ChIJf6YlMCDLvJUR3a_X5eGfJeE",
+      "name": "Rotisería Miramar",
+      "address": "Av. San Juan 1999, C1232AAB Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4304-4261",
+      "website": "https://www.instagram.com/rotiseriamiramar/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/rotiseriamiramar/"
+      },
+      "instagram": "https://www.instagram.com/rotiseriamiramar/",
+      "rating": 4.3,
+      "reviews": 8333,
+      "status": "OPERATIONAL",
+      "types": [
+        "spanish_restaurant",
+        "bar_and_grill",
+        "bar",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJf6YlMCDLvJUR3a_X5eGfJeE",
+      "igFollowers": "800",
+      "igActive": "sí, stories de rotisería"
+    },
+    {
+      "id": "ChIJ1_jlq37KvJURaSQac0aBWl8",
+      "name": "La Alacena Trattoria",
+      "address": "Gascón 1401, C1181ADA Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4873-1988",
+      "website": "http://www.instagram.com/laalacenatrattoria",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "http://www.instagram.com/laalacenatrattoria"
+      },
+      "instagram": "http://www.instagram.com/laalacenatrattoria",
+      "rating": 4.5,
+      "reviews": 8126,
+      "status": "OPERATIONAL",
+      "types": [
+        "italian_restaurant",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ1_jlq37KvJURaSQac0aBWl8",
+      "igFollowers": "600",
+      "igActive": "sí, stories de pastas"
+    },
+    {
+      "id": "ChIJe02aGsbKvJURYATdVELWBNo",
+      "name": "Petit Colón",
+      "address": "Libertad 505, C1012 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4382-7306",
+      "website": "https://www.instagram.com/petitcolonba",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/petitcolonba"
+      },
+      "instagram": "https://www.instagram.com/petitcolonba",
+      "rating": 4.3,
+      "reviews": 8074,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJe02aGsbKvJURYATdVELWBNo",
+      "igFollowers": "1100",
+      "igActive": "sí, stories de brunch"
+    },
+    {
+      "id": "ChIJN4J7FMLKvJUR4Pqc40q6piA",
+      "name": "Cervantes",
+      "address": "Tte. Gral. Juan Domingo Perón 1883, C1040 AAA, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 3691-5844",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 8065,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJN4J7FMLKvJUR4Pqc40q6piA"
+    },
+    {
+      "id": "ChIJzUopt8LKvJURVPEiePYQcsc",
+      "name": "La Gran Taberna",
+      "address": "Combate de Los Pozos 95, C1079 AAA, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4951-7586",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 7394,
+      "status": "OPERATIONAL",
+      "types": [
+        "spanish_restaurant",
+        "shipping_service",
+        "meal_delivery",
+        "food_delivery",
+        "european_restaurant",
+        "meal_takeaway",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJzUopt8LKvJURVPEiePYQcsc"
+    },
+    {
+      "id": "ChIJz5F32sXKvJURCtbt2O4du3E",
+      "name": "Buenos Aires Grill",
+      "address": "Av. Corrientes 1318, C1043 ABN, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 15-4371-5969",
+      "website": "https://linktr.ee/bsasgrill",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "linktr.ee",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 6199,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJz5F32sXKvJURCtbt2O4du3E"
+    },
+    {
+      "id": "ChIJPXFM0qvLvJURM838Fw7Et3k",
+      "name": "Roque Bodegón",
+      "address": "Inclán 3999, C1258 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4924-6505",
+      "website": "https://www.instagram.com/roque.bodegon?igsh=MTZocGtzdGhya3liZg==",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/roque.bodegon?igsh=MTZocGtzdGhya3liZg=="
+      },
+      "instagram": "https://www.instagram.com/roque.bodegon?igsh=MTZocGtzdGhya3liZg==",
+      "rating": 4.3,
+      "reviews": 6091,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJPXFM0qvLvJURM838Fw7Et3k",
+      "igFollowers": "1400",
+      "igActive": "sí, stories de bodegón"
+    },
+    {
+      "id": "ChIJeyXj7KTKvJUR5GeRB4kOU4k",
+      "name": "El Sanjuanino",
+      "address": "Posadas 1515, C1112 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4804-2909",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 6038,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJeyXj7KTKvJUR5GeRB4kOU4k"
+    },
+    {
+      "id": "ChIJP9QMfqrMvJUR79nYBQHcyWM",
+      "name": "El Puentecito",
+      "address": "Vieytes 1895, C1275 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4301-1794",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.3,
+      "reviews": 5843,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJP9QMfqrMvJUR79nYBQHcyWM"
+    },
+    {
+      "id": "ChIJBeLdNuOjMpQRrvkM6qA5ic4",
+      "name": "Tokin Sushi & Ramen",
+      "address": "Galería Muy Güemes, Fructuoso Rivera 260, X5000BOF Córdoba, Argentina",
+      "phone": "0351 835-4987",
+      "website": "https://instagram.com/tokin.sushibar?igshid=sy05mbnr9q8e",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/tokin.sushibar?igshid=sy05mbnr9q8e"
+      },
+      "instagram": "https://instagram.com/tokin.sushibar?igshid=sy05mbnr9q8e",
+      "rating": 4.7,
+      "reviews": 5789,
+      "status": "OPERATIONAL",
+      "types": [
+        "sushi_restaurant",
+        "cocktail_bar",
+        "bar",
+        "japanese_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJBeLdNuOjMpQRrvkM6qA5ic4",
+      "igFollowers": "2200",
+      "igActive": "sí, stories de sushi"
+    },
+    {
+      "id": "ChIJCW9VsBHKvJURs_IFNzM0X3A",
+      "name": "Bellagamba",
+      "address": "Av. Gaona 1537, C1416 DRD, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4583-6200",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/bellagambapalermo/"
+      },
+      "instagram": "https://www.instagram.com/bellagambapalermo/",
+      "rating": 4.1,
+      "reviews": 5780,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJCW9VsBHKvJURs_IFNzM0X3A",
+      "igFollowers": "33000",
+      "igActive": "sí, stories diarias de milanesas"
+    },
+    {
+      "id": "ChIJJbTkhczKvJURgiRShZksWuk",
+      "name": "La Posada de 1820",
+      "address": "Tucumán 501, C1049AAI Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4829-4985",
+      "website": "https://www.instagram.com/laposada.1820?igsh=MTFhMzZtbmxiZjRibA%3D%3D&utm_source=qr",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/laposada.1820?igsh=MTFhMzZtbmxiZjRibA%3D%3D&utm_source=qr"
+      },
+      "instagram": "https://www.instagram.com/laposada.1820?igsh=MTFhMzZtbmxiZjRibA%3D%3D&utm_source=qr",
+      "rating": 4.2,
+      "reviews": 5569,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJJbTkhczKvJURgiRShZksWuk",
+      "igFollowers": "700",
+      "igActive": "sí, stories de bodegón"
+    },
+    {
+      "id": "ChIJB_MyXBCjMpQR-1l2jXlimWA",
+      "name": "GLOTÓN – ʙᴀʀ ᴅᴇ ᴄᴀʀɴᴇꜱ [Güemes]",
+      "address": "Francisco N de Laprida 273, X5000 Córdoba, Argentina",
+      "phone": "0351 15-788-7368",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 5495,
+      "status": "OPERATIONAL",
+      "types": [
+        "bar",
+        "cocktail_bar",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJB_MyXBCjMpQR-1l2jXlimWA"
+    },
+    {
+      "id": "ChIJKSZq4n2YMpQRReWk7tYsXwQ",
+      "name": "Di Solito",
+      "address": "Sta Rosa 826, X5000ESR Córdoba, Argentina",
+      "phone": "0351 425-4321",
+      "website": "https://instagram.com/disolito.oficial?igshid=MWI4MTIyMDE=",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/disolito.oficial?igshid=MWI4MTIyMDE="
+      },
+      "instagram": "https://instagram.com/disolito.oficial?igshid=MWI4MTIyMDE=",
+      "rating": 4.5,
+      "reviews": 5416,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJKSZq4n2YMpQRReWk7tYsXwQ",
+      "igFollowers": "1800",
+      "igActive": "sí, stories de pizza"
+    },
+    {
+      "id": "ChIJNUz9y9Y1o5URoZWeO9cSHDg",
+      "name": "Pizzería Popular",
+      "address": "Juana Manuela Gorriti 869, C1107 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 3104-7969",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.8,
+      "reviews": 5303,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJNUz9y9Y1o5URoZWeO9cSHDg"
+    },
+    {
+      "id": "ChIJ-z9vaYOiMpQR8TJVYBaLNw0",
+      "name": "El Solar de Tejeda",
+      "address": "27 de Abril 23, X5000 Córdoba, Argentina",
+      "phone": "0351 421-9702",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 5284,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ-z9vaYOiMpQR8TJVYBaLNw0"
+    },
+    {
+      "id": "ChIJ421EO8KjMpQRASbHcJscW0U",
+      "name": "Bullanga Milanga",
+      "address": "Caseros 308, X5000AHH Córdoba, Argentina",
+      "phone": "0351 812-7626",
+      "website": "http://www.instagram.com/bullanga.milanga/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "http://www.instagram.com/bullanga.milanga/"
+      },
+      "instagram": "http://www.instagram.com/bullanga.milanga/",
+      "rating": 4.7,
+      "reviews": 5187,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "fast_food_restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ421EO8KjMpQRASbHcJscW0U",
+      "igFollowers": "2500",
+      "igActive": "sí, stories de milanesas"
+    },
+    {
+      "id": "ChIJk9T_ds_KvJURIgq2CwFSACU",
+      "name": "Alma café",
+      "address": "Cerrito 304, C1010 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "",
+      "website": "https://www.instagram.com/almacerrito_?igsh=YTZkdzFqcWZ2c2gy",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/almacerrito_?igsh=YTZkdzFqcWZ2c2gy"
+      },
+      "instagram": "https://www.instagram.com/almacerrito_?igsh=YTZkdzFqcWZ2c2gy",
+      "rating": 3.9,
+      "reviews": 5060,
+      "status": "OPERATIONAL",
+      "types": [
+        "cafe",
+        "coffee_shop",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJk9T_ds_KvJURIgq2CwFSACU",
+      "igFollowers": "900",
+      "igActive": "sí, stories de café"
+    },
+    {
+      "id": "ChIJb1Rk4tnKvJUR18YQywKPCm8",
+      "name": "Le Famiglie",
+      "address": "Salta 440, C1074AAJ Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4384-9082",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 5039,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "fish_and_chips_restaurant",
+        "british_restaurant",
+        "spanish_restaurant",
+        "italian_restaurant",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJb1Rk4tnKvJUR18YQywKPCm8"
+    },
+    {
+      "id": "ChIJ03GK99jKvJURMStRR2Nmz_o",
+      "name": "Gijón",
+      "address": "Chile 1402, C1098 ABD, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4382-5130",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 5005,
+      "status": "OPERATIONAL",
+      "types": [
+        "spanish_restaurant",
+        "european_restaurant",
+        "meal_takeaway",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ03GK99jKvJURMStRR2Nmz_o"
+    },
+    {
+      "id": "ChIJofUtF461vJUR1kXkX4MLxMI",
+      "name": "Alchemy",
+      "address": "Humboldt 1923, C1414CTU Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "5263-0880",
+      "website": "https://instagram.com/alchemy.ba",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/alchemy.ba"
+      },
+      "instagram": "https://instagram.com/alchemy.ba",
+      "rating": 4.3,
+      "reviews": 4903,
+      "status": "OPERATIONAL",
+      "types": [
+        "ice_cream_shop",
+        "vegan_restaurant",
+        "cafeteria",
+        "cake_shop",
+        "vegetarian_restaurant",
+        "bar",
+        "pizza_restaurant",
+        "dessert_shop",
+        "bakery",
+        "manufacturer",
+        "confectionery",
+        "food_store",
+        "wholesaler",
+        "store",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJofUtF461vJUR1kXkX4MLxMI",
+      "igFollowers": "3100",
+      "igActive": "sí, stories de helados"
+    },
+    {
+      "id": "ChIJd_s73x7LvJUR6kMf28h6_7k",
+      "name": "Kentucky",
+      "address": "Perú 85, C1069 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.5,
+      "reviews": 4870,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJd_s73x7LvJUR6kMf28h6_7k"
+    },
+    {
+      "id": "ChIJmV5dRMjKvJURIAbB786yW74",
+      "name": "Exedra",
+      "address": "Carlos Pellegrini 807, C1009ABQ Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4322-9898",
+      "website": "https://www.facebook.com/pages/Exedra-Bar-E-Restaurante-Buenos-Aires/110319099142645",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 4794,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "bar",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJmV5dRMjKvJURIAbB786yW74"
+    },
+    {
+      "id": "ChIJKfZ7CqSiMpQRAKDnT-pU79s",
+      "name": "Pizza Zeta Gral Paz Restaurante",
+      "address": "Jacinto Ríos 92, X5004ASB Córdoba, Argentina",
+      "phone": "0351 757-6236",
+      "website": "https://linktr.ee/zetagralpaz",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "linktr.ee",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 4723,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJKfZ7CqSiMpQRAKDnT-pU79s"
+    },
+    {
+      "id": "ChIJfT_pV9jKvJURZWUGKiZlRh4",
+      "name": "El Mazacote",
+      "address": "Chile 1400, C1098ABB Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4381-4649",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.6,
+      "reviews": 4648,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJfT_pV9jKvJURZWUGKiZlRh4"
+    },
+    {
+      "id": "ChIJIR1AsB2jMpQRCMT0q_dMYYk",
+      "name": "Nakama Ramen Corner",
+      "address": "Av. Duarte Quirós 399, X5000 Córdoba, Argentina",
+      "phone": "0351 15-685-2613",
+      "website": "https://linktr.ee/nakamaramen",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "linktr.ee",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.8,
+      "reviews": 4473,
+      "status": "OPERATIONAL",
+      "types": [
+        "ramen_restaurant",
+        "japanese_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJIR1AsB2jMpQRCMT0q_dMYYk"
+    },
+    {
+      "id": "ChIJL8c8nYOiMpQRXrYF3XHMjqg",
+      "name": "Mandarina",
+      "address": "Obispo Trejo 171, X5000IYC Córdoba, Argentina",
+      "phone": "0351 426-4909",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 4446,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "cafeteria",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJL8c8nYOiMpQRXrYF3XHMjqg"
+    },
+    {
+      "id": "ChIJlSrGttPKvJURD0nTbWzzW2s",
+      "name": "La Junta de 1810",
+      "address": "Av. de Mayo 639, C1084 AAO, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4342-1127",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 4411,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "pizza_restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJlSrGttPKvJURD0nTbWzzW2s"
+    },
+    {
+      "id": "ChIJ-f80iIiiMpQRhYFRooCbveI",
+      "name": "Chilli Street Club",
+      "address": "Fructuoso Rivera 273, X5000BOE Córdoba, Argentina",
+      "phone": "0351 619-1137",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.6,
+      "reviews": 4390,
+      "status": "OPERATIONAL",
+      "types": [
+        "gastropub",
+        "cocktail_bar",
+        "bar",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ-f80iIiiMpQRhYFRooCbveI"
+    },
+    {
+      "id": "ChIJzUO1z46iMpQRGk3sQZYNmDI",
+      "name": "Fresco",
+      "address": "José Manuel Estrada 18, X5000 Córdoba, Argentina",
+      "phone": "0351 810-7788",
+      "website": "https://instagram.com/fresco.resto?igshid=YmMyMTA2M2Y=",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/fresco.resto?igshid=YmMyMTA2M2Y="
+      },
+      "instagram": "https://instagram.com/fresco.resto?igshid=YmMyMTA2M2Y=",
+      "rating": 4.2,
+      "reviews": 4379,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJzUO1z46iMpQRGk3sQZYNmDI",
+      "igFollowers": "8500",
+      "igActive": "sí, stories semanales de platos"
+    },
+    {
+      "id": "ChIJgdR2cMc0o5URUxHIhpHlTek",
+      "name": "El Obrero",
+      "address": "Agustín R. Caffarena 64, C1156 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4362-9912",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 4350,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJgdR2cMc0o5URUxHIhpHlTek"
+    },
+    {
+      "id": "ChIJ2djrCJO1vJUR08vy0HsTv3w",
+      "name": "Siamo nel Forno - Pizzeria Napoletana",
+      "address": "Costa Rica 5886, C1414BTJ Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4875-2162",
+      "website": "https://instagram.com/siamonelforno?igshid=sfb681r1ma05",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/siamonelforno?igshid=sfb681r1ma05"
+      },
+      "instagram": "https://instagram.com/siamonelforno?igshid=sfb681r1ma05",
+      "rating": 4.4,
+      "reviews": 4280,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "italian_restaurant",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ2djrCJO1vJUR08vy0HsTv3w",
+      "igFollowers": "1200",
+      "igActive": "sí, stories de pizza napolitana"
+    },
+    {
+      "id": "ChIJwyJiGs3KvJURbBVw-9v50UI",
+      "name": "Pétalo",
+      "address": "Av. Corrientes 487, C1043 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4327-0879",
+      "website": "https://m.facebook.com/restaurantpetalo",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "m.facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 4215,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJwyJiGs3KvJURbBVw-9v50UI"
+    },
+    {
+      "id": "ChIJQTxg8c7KvJURtB8P2ogcwbg",
+      "name": "Pizzería Genova",
+      "address": "Av. Corrientes 872, C1043AAV Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 6079-5763",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.2,
+      "reviews": 3988,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJQTxg8c7KvJURtB8P2ogcwbg"
+    },
+    {
+      "id": "ChIJ-T0RSISiMpQRwgqdGKykYmU",
+      "name": "Parrilla del Boulevard",
+      "address": "Blvd. San Juan 72, X5000ATC Córdoba, Argentina",
+      "phone": "0351 15-819-7787",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4,
+      "reviews": 3974,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ-T0RSISiMpQRwgqdGKykYmU"
+    },
+    {
+      "id": "ChIJ3WflI52jMpQRwuxVwJQazLE",
+      "name": "Bros. Comedor",
+      "address": "27 de Abril 568 Piso 2, X5000AEL X5000AEL, Córdoba, Argentina",
+      "phone": "0351 15-802-9418",
+      "website": "https://www.instagram.com/broscomedor/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/broscomedor/"
+      },
+      "instagram": "https://www.instagram.com/broscomedor/",
+      "rating": 4.8,
+      "reviews": 3923,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ3WflI52jMpQRwuxVwJQazLE",
+      "igFollowers": "950",
+      "igActive": "sí, stories de platos"
+    },
+    {
+      "id": "ChIJx8a2KdjLvJURr3ASEPpuChg",
+      "name": "El Santa Evita",
+      "address": "Julián Álvarez 1479, C1414 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 2765-9453",
+      "website": "http://facebook.com/ElSantaEvita",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.3,
+      "reviews": 3908,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJx8a2KdjLvJURr3ASEPpuChg"
+    },
+    {
+      "id": "ChIJiei4cQYJfpYRZVFO8N00O5k",
+      "name": "Burgery",
+      "address": "Arístides Villanueva 209, M5500 EOU, Mendoza, Argentina",
+      "phone": "0261 15-476-1534",
+      "website": "https://www.instagram.com/burgeryargentina/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/burgeryargentina/"
+      },
+      "instagram": "https://www.instagram.com/burgeryargentina/",
+      "rating": 4,
+      "reviews": 3891,
+      "status": "OPERATIONAL",
+      "types": [
+        "hamburger_restaurant",
+        "fast_food_restaurant",
+        "bar",
+        "american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJiei4cQYJfpYRZVFO8N00O5k",
+      "igFollowers": "12000",
+      "igActive": "sí, stories de burgers y promos"
+    },
+    {
+      "id": "ChIJvcWIh4GiMpQRC8l5Mq1oCOk",
+      "name": "Estación 27",
+      "address": "27 de Abril 364, X5000AEH X5000AEH, Córdoba, Argentina",
+      "phone": "0351 425-1651",
+      "website": "https://www.instagram.com/estacionveintisiete",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/estacionveintisiete"
+      },
+      "instagram": "https://www.instagram.com/estacionveintisiete",
+      "rating": 4.4,
+      "reviews": 3650,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "cafe",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJvcWIh4GiMpQRC8l5Mq1oCOk",
+      "igFollowers": "4800",
+      "igActive": "sí, stories de lomitos y pizzas"
+    },
+    {
+      "id": "ChIJsZ6SxNS1vJURd6gLcFxladA",
+      "name": "All Saints Cafe",
+      "address": "Cdad. de la Paz 2300, C1428 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4326-5081",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.2,
+      "reviews": 3647,
+      "status": "OPERATIONAL",
+      "types": [
+        "coffee_shop",
+        "coffee_roastery",
+        "cafe",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJsZ6SxNS1vJURd6gLcFxladA"
+    },
+    {
+      "id": "ChIJZw-5nm-YMpQRGTQT1BdtfPE",
+      "name": "La Vieja Esquina",
+      "address": "Belgrano 193, X5000 Córdoba, Argentina",
+      "phone": "0351 424-7940",
+      "website": "https://www.instagram.com/laviejaesquinacba/?hl=es",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/laviejaesquinacba/?hl=es"
+      },
+      "instagram": "https://www.instagram.com/laviejaesquinacba/?hl=es",
+      "rating": 4.6,
+      "reviews": 3641,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJZw-5nm-YMpQRGTQT1BdtfPE",
+      "igFollowers": "1200",
+      "igActive": "sí, posts semanales de empanadas y locro"
+    },
+    {
+      "id": "ChIJWWKVnNrKvJURI2MzsSmgd_U",
+      "name": "El Globo",
+      "address": "Hipólito Yrigoyen 1199, C1086AAS Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 2856-2700",
+      "website": "https://www.facebook.com/El-Globo-Restaurante-1642392222526433/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.2,
+      "reviews": 3595,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJWWKVnNrKvJURI2MzsSmgd_U"
+    },
+    {
+      "id": "ChIJNQV8CbiiMpQRV_g8nblcAuw",
+      "name": "Restaurante Rancho Viejo",
+      "address": "Av. Rogelio Nores Martínez 1900, X5000 Córdoba, Argentina",
+      "phone": "0351 468-3685",
+      "website": "https://instagram.com/ranchoviejo_restaurante?igshid=50xgukq18gm7",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/ranchoviejo_restaurante?igshid=50xgukq18gm7"
+      },
+      "instagram": "https://instagram.com/ranchoviejo_restaurante?igshid=50xgukq18gm7",
+      "rating": 4.2,
+      "reviews": 3514,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJNQV8CbiiMpQRV_g8nblcAuw"
+    },
+    {
+      "id": "ChIJVwbytZ2iMpQRJWjJQN-7-hs",
+      "name": "Lago Di Garda Ristorante",
+      "address": "Lima 278, X5000 Córdoba, Argentina",
+      "phone": "0351 421-6297",
+      "website": "https://linktr.ee/lagodigardacba?utm_source=linktree_profile_share&ltsid=5992bb6a-ce7b-4799-8c1d-9e7753fbeceb",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "linktr.ee",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.5,
+      "reviews": 3488,
+      "status": "OPERATIONAL",
+      "types": [
+        "italian_restaurant",
+        "european_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJVwbytZ2iMpQRJWjJQN-7-hs"
+    },
+    {
+      "id": "ChIJ8_BVyTYJfpYRo1CtbrW5nbU",
+      "name": "Onda Libre - Restaurante Parrilla",
+      "address": "Av. Las Heras 446, M5500 Mendoza, Argentina",
+      "phone": "0261 429-1616",
+      "website": "https://instagram.com/ondalibre.mendoza?igshid=Yzg5MTU1MDY=",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/ondalibre.mendoza?igshid=Yzg5MTU1MDY="
+      },
+      "instagram": "https://instagram.com/ondalibre.mendoza?igshid=Yzg5MTU1MDY=",
+      "rating": 4.2,
+      "reviews": 3300,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ8_BVyTYJfpYRo1CtbrW5nbU",
+      "igFollowers": "1100",
+      "igActive": "sí, stories de parrilla"
+    },
+    {
+      "id": "ChIJe4cyoyWjMpQRyAgblNgxoyQ",
+      "name": "Pizza Zeta Buen Pastor Restaurante",
+      "address": "Av. Hipólito Yrigoyen 349, X5000 Córdoba, Argentina",
+      "phone": "0351 317-1028",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 3221,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJe4cyoyWjMpQRyAgblNgxoyQ"
+    },
+    {
+      "id": "ChIJr6zNSirLvJUR_Izb9XhJnQ4",
+      "name": "El Refuerzo",
+      "address": "Chacabuco 860, C1069 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4361-3013",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.5,
+      "reviews": 3067,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJr6zNSirLvJUR_Izb9XhJnQ4"
+    },
+    {
+      "id": "ChIJEfnovIXLvJURk78AfQ1I8tA",
+      "name": "CCS Coffee Shop",
+      "address": "Bernardo de Irigoyen 356, C1072AAH Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 15-2404-6013",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.8,
+      "reviews": 3039,
+      "status": "OPERATIONAL",
+      "types": [
+        "cafe",
+        "internet_cafe",
+        "coffee_shop",
+        "food_store",
+        "store",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "service",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJEfnovIXLvJURk78AfQ1I8tA"
+    },
+    {
+      "id": "ChIJuZ0_ACW2vJURnDTYgferJWM",
+      "name": "Cadore Ice Cream gelato style",
+      "address": "Cuenca 2977, C1417AAO Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.3,
+      "reviews": 3035,
+      "status": "OPERATIONAL",
+      "types": [
+        "ice_cream_shop",
+        "dessert_shop",
+        "confectionery",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJuZ0_ACW2vJURnDTYgferJWM"
+    },
+    {
+      "id": "ChIJ84H7oYaDMpQR_kUThI7pNdc",
+      "name": "Los Aroza - Restaurante / Cantina",
+      "address": "Santiago Derqui 44, X5105 Villa Allende, Córdoba, Argentina",
+      "phone": "0351 666-7638",
+      "website": "https://www.instagram.com/losaroza?igsi=ajJjNmJzMm5qZzBu&utm_source=qr",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/losaroza?igsi=ajJjNmJzMm5qZzBu&utm_source=qr"
+      },
+      "instagram": "https://www.instagram.com/losaroza?igsi=ajJjNmJzMm5qZzBu&utm_source=qr",
+      "rating": 4.7,
+      "reviews": 2913,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "gastropub",
+        "bar",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ84H7oYaDMpQR_kUThI7pNdc",
+      "igFollowers": "800",
+      "igActive": "sí, stories de cantina"
+    },
+    {
+      "id": "ChIJWbNvnJfKvJURwdkgTuQZipU",
+      "name": "La Querencia",
+      "address": "Junín 1314, C1113 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4821-1888",
+      "website": "https://instagram.com/laquerencia.ok?igshid=Y2I5dm02NW5ybjQx",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/laquerencia.ok?igshid=Y2I5dm02NW5ybjQx"
+      },
+      "instagram": "https://instagram.com/laquerencia.ok?igshid=Y2I5dm02NW5ybjQx",
+      "rating": 4,
+      "reviews": 2823,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJWbNvnJfKvJURwdkgTuQZipU",
+      "igFollowers": "650",
+      "igActive": "sí, stories de platos"
+    },
+    {
+      "id": "ChIJsR6edZrKvJURY5zu-Q_vbjA",
+      "name": "La Cocina",
+      "address": "Av. Pueyrredón 1508, C1118 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4825-3171",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.6,
+      "reviews": 2798,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "fast_food_restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJsR6edZrKvJURY5zu-Q_vbjA"
+    },
+    {
+      "id": "ChIJqwKfS8HLvJURP6xz1vDpIj0",
+      "name": "Clorindo Café/Brunch",
+      "address": "Talcahuano 1261, C1014 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "",
+      "website": "https://instagram.com/clorindo.ba?igshid=MzRlODBiNWFlZA==",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/clorindo.ba?igshid=MzRlODBiNWFlZA=="
+      },
+      "instagram": "https://instagram.com/clorindo.ba?igshid=MzRlODBiNWFlZA==",
+      "rating": 4.4,
+      "reviews": 2675,
+      "status": "OPERATIONAL",
+      "types": [
+        "coffee_shop",
+        "cafe",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJqwKfS8HLvJURP6xz1vDpIj0",
+      "igFollowers": "1200",
+      "igActive": "sí, stories de brunch"
+    },
+    {
+      "id": "ChIJi344TwfJvJURcZih1lEQ0YE",
+      "name": "La Ochavita",
+      "address": "Pieres 1399, C1440 CSK, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 5253-6063",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.5,
+      "reviews": 2667,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "coffee_shop",
+        "cafe",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJi344TwfJvJURcZih1lEQ0YE"
+    },
+    {
+      "id": "ChIJyyX2hleZMpQR4z6C_CfQu9E",
+      "name": "San Luis Pizzería: LA AUTÉNTICA",
+      "address": "Gral. Paz 365, X5000 Córdoba, Argentina",
+      "phone": "0351 421-5331",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 2425,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJyyX2hleZMpQR4z6C_CfQu9E"
+    },
+    {
+      "id": "ChIJO0yTcRXLvJURMikqGD27a2c",
+      "name": "Bodegón El Globito",
+      "address": "Av. Caseros 3159, C1263 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 3148-2987",
+      "website": "https://www.instagram.com/bodegonelglobito/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/bodegonelglobito/"
+      },
+      "instagram": "https://www.instagram.com/bodegonelglobito/",
+      "rating": 4.4,
+      "reviews": 2377,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJO0yTcRXLvJURMikqGD27a2c",
+      "igFollowers": "500",
+      "igActive": "sí, posts de bodegón"
+    },
+    {
+      "id": "ChIJpb-DrXeYMpQRfJJX4jSxbIY",
+      "name": "La Cocina de Fazzio",
+      "address": "Pto.113 Mercado Municipal Norte Centro, Oncativo 50, X5000FDB Córdoba, Argentina",
+      "phone": "0351 446-1622",
+      "website": "https://www.instagram.com/lacocinadefazzio/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/lacocinadefazzio/"
+      },
+      "instagram": "https://www.instagram.com/lacocinadefazzio/",
+      "rating": 4.3,
+      "reviews": 2347,
+      "status": "OPERATIONAL",
+      "types": [
+        "seafood_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJpb-DrXeYMpQRfJJX4jSxbIY",
+      "igFollowers": "39200",
+      "igActive": "sí, stories diarias de platos y mercado"
+    },
+    {
+      "id": "ChIJJVFBMnDKvJUR8jiP4KKPesM",
+      "name": "La Flor de Almagro",
+      "address": "Av. Estado de Israel 4727, C1185 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4854-0717",
+      "website": "https://instagram.com/laflordealmagro_?utm_medium=copy_link",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/laflordealmagro_?utm_medium=copy_link"
+      },
+      "instagram": "https://instagram.com/laflordealmagro_?utm_medium=copy_link",
+      "rating": 4.6,
+      "reviews": 2334,
+      "status": "OPERATIONAL",
+      "types": [
+        "ice_cream_shop",
+        "dessert_shop",
+        "confectionery",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJJVFBMnDKvJUR8jiP4KKPesM",
+      "igFollowers": "550",
+      "igActive": "sí, stories de platos"
+    },
+    {
+      "id": "ChIJq9LFK800o5URpJRj3hMv-9Y",
+      "name": "The pizza OTL",
+      "address": "C1152AAN, Av. Caseros 424, 1152 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4300-6195",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 2318,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJq9LFK800o5URpJRj3hMv-9Y"
+    },
+    {
+      "id": "ChIJMY44SyijMpQR2YY7y5Sa7u0",
+      "name": "Camelia",
+      "address": "Ayacucho 538, X5000JUL X5000JUL, Córdoba, Argentina",
+      "phone": "0351 742-0285",
+      "website": "https://instagram.com/camelia.cba?igshid=1tez71k608tvv",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/camelia.cba?igshid=1tez71k608tvv"
+      },
+      "instagram": "https://instagram.com/camelia.cba?igshid=1tez71k608tvv",
+      "rating": 4.5,
+      "reviews": 2223,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "bar",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJMY44SyijMpQR2YY7y5Sa7u0",
+      "igFollowers": "400",
+      "igActive": "sí, stories de café y tortas"
+    },
+    {
+      "id": "ChIJr4GtJCWfMpQRueqJA01GVm8",
+      "name": "Renato",
+      "address": "Av. Colón 5681, X5003 Córdoba, Argentina",
+      "phone": "0351 484-7202",
+      "website": "http://www.instagram.com/renatoristorante",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "http://www.instagram.com/renatoristorante"
+      },
+      "instagram": "http://www.instagram.com/renatoristorante",
+      "rating": 4.5,
+      "reviews": 2207,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJr4GtJCWfMpQRueqJA01GVm8",
+      "igFollowers": "300",
+      "igActive": "sí, stories de pastas"
+    },
+    {
+      "id": "ChIJMSowmNTKvJURAhOFUC8WN2Q",
+      "name": "El Nacional",
+      "address": "Bolívar 220, C1066AAF Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4342-9228",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 2200,
+      "status": "OPERATIONAL",
+      "types": [
+        "bar_and_grill",
+        "bar",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJMSowmNTKvJURAhOFUC8WN2Q"
+    },
+    {
+      "id": "ChIJHUAuLSvLvJURzsSMY2dskow",
+      "name": "PIZZA Pirilo",
+      "address": "Defensa 821, C1065 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4307-0248",
+      "website": "https://www.facebook.com/Pizzeria-Pirilo-Pagina-oficial--315757821847786/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.5,
+      "reviews": 2191,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJHUAuLSvLvJURzsSMY2dskow"
+    },
+    {
+      "id": "ChIJ484mZLjKvJURwODnJcv0ma8",
+      "name": "Pal Que Guste",
+      "address": "Talcahuano 949, C1013 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4816-1281",
+      "website": "https://m.facebook.com/palqueguste949/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "m.facebook.com",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.5,
+      "reviews": 2188,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ484mZLjKvJURwODnJcv0ma8"
+    },
+    {
+      "id": "ChIJC9Lw8bkLfpYRwUVF-VIYaXs",
+      "name": "Parrilla Colinas",
+      "address": "Cervantes 2099, M5501 Godoy Cruz, Mendoza, Argentina",
+      "phone": "0261 440-0233",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/colinasparrilla/"
+      },
+      "instagram": "https://www.instagram.com/colinasparrilla/",
+      "rating": 4.6,
+      "reviews": 2168,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJC9Lw8bkLfpYRwUVF-VIYaXs",
+      "igFollowers": "2800",
+      "igActive": "sí, stories de parrilla"
+    },
+    {
+      "id": "ChIJG2nMEnm1vJURwHxozPMx9uY",
+      "name": "Fraga Bodegón",
+      "address": "Av. Dorrego 1194, C1414CKT Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "",
+      "website": "https://www.instagram.com/fragabodegon/profilecard/?igsh=MW84ejd2aHpyc3Bmcw==",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/fragabodegon/profilecard/?igsh=MW84ejd2aHpyc3Bmcw=="
+      },
+      "instagram": "https://www.instagram.com/fragabodegon/profilecard/?igsh=MW84ejd2aHpyc3Bmcw==",
+      "rating": 4.7,
+      "reviews": 2117,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJG2nMEnm1vJURwHxozPMx9uY"
+    },
+    {
+      "id": "ChIJFbHptr3KvJURV32e4brgtXU",
+      "name": "Rigoletto Restaurant",
+      "address": "Rodríguez Peña 1291, C1021 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4814-4777",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.1,
+      "reviews": 2108,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "cocktail_bar",
+        "cafeteria",
+        "bar",
+        "italian_restaurant",
+        "european_restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJFbHptr3KvJURV32e4brgtXU"
+    },
+    {
+      "id": "ChIJjyN-jw_LvJURPa1s_AGjsb0",
+      "name": "El Gordo. El sabor de la Victoria",
+      "address": "Tucumán 633, C1049AAM, C1049 AAM, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 2089,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJjyN-jw_LvJURPa1s_AGjsb0"
+    },
+    {
+      "id": "ChIJze0g44W1vJURtTqWHwq0xSo",
+      "name": "Parrilla \"La Barata\" de Palermo comidas caseras",
+      "address": "C. Jeronimo Salguero 1440, C1177 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4822-4479",
+      "website": "https://www.instagram.com/parrillalabarata_depalermo/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/parrillalabarata_depalermo/"
+      },
+      "instagram": "https://www.instagram.com/parrillalabarata_depalermo/",
+      "rating": 4.1,
+      "reviews": 2084,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJze0g44W1vJURtTqWHwq0xSo"
+    },
+    {
+      "id": "ChIJl_QqUhLLvJUR87hhK--OXKE",
+      "name": "Bodegón Núñez en Palermo",
+      "address": "José A. Cabrera 4667, C1414 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 6220-0025",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 2069,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJl_QqUhLLvJUR87hhK--OXKE"
+    },
+    {
+      "id": "ChIJaSd8tr3KvJURvQaYkeWC3xw",
+      "name": "Valence Recoleta",
+      "address": "Rodríguez Peña 1299, C1021 ABA, Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4813-8438",
+      "website": "https://www.instagram.com/valenceargentina/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/valenceargentina/"
+      },
+      "instagram": "https://www.instagram.com/valenceargentina/",
+      "rating": 4.5,
+      "reviews": 2038,
+      "status": "OPERATIONAL",
+      "types": [
+        "ice_cream_shop",
+        "coffee_shop",
+        "cafe",
+        "dessert_shop",
+        "confectionery",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJaSd8tr3KvJURvQaYkeWC3xw"
+    },
+    {
+      "id": "ChIJh1nMVYKiMpQRt8sHq5okGrY",
+      "name": "La TASCA del Paseo",
+      "address": "Deán Funes 163, Paula Albarracín Centro Locales 11, X5000 AAC, Córdoba, Argentina",
+      "phone": "",
+      "website": "https://instagram.com/latascadelpaseo?igshid=MTg0ZDhmNDA=",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/latascadelpaseo?igshid=MTg0ZDhmNDA="
+      },
+      "instagram": "https://instagram.com/latascadelpaseo?igshid=MTg0ZDhmNDA=",
+      "rating": 4.1,
+      "reviews": 1922,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "beer_garden",
+        "south_american_restaurant",
+        "cafeteria",
+        "bar",
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJh1nMVYKiMpQRt8sHq5okGrY"
+    },
+    {
+      "id": "ChIJPyZiiOrKvJURG_7VNpj3_1o",
+      "name": "El bodegón de la calle Ayacucho",
+      "address": "Ayacucho 449, C1026 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4953-0635",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.3,
+      "reviews": 1822,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJPyZiiOrKvJURG_7VNpj3_1o"
+    },
+    {
+      "id": "ChIJdwNwjoiiMpQRaQy4YGK2TOE",
+      "name": "Elefante Bengal",
+      "address": "Fructuoso Rivera 224, X5000 BOF, Córdoba, Argentina",
+      "phone": "0351 530-9801",
+      "website": "https://www.instagram.com/elefantebengal",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/elefantebengal"
+      },
+      "instagram": "https://www.instagram.com/elefantebengal",
+      "rating": 4.5,
+      "reviews": 1792,
+      "status": "OPERATIONAL",
+      "types": [
+        "indian_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJdwNwjoiiMpQRaQy4YGK2TOE"
+    },
+    {
+      "id": "ChIJ-T9GvaO1vJUR8dSpaAFVeEI",
+      "name": "Casa Sáenz Botánico",
+      "address": "República Árabe Siria 3001, C1425 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "",
+      "website": "https://www.instagram.com/casa.saenz/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/casa.saenz/"
+      },
+      "instagram": "https://www.instagram.com/casa.saenz/",
+      "rating": 4.6,
+      "reviews": 1750,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ-T9GvaO1vJUR8dSpaAFVeEI"
+    },
+    {
+      "id": "ChIJa_6ryAWjMpQRorJWfoe_EF4",
+      "name": "BOCATANA",
+      "address": "Av. Gral. Ortiz de Ocampo 6, X5000 Córdoba, Argentina",
+      "phone": "0351 807-9066",
+      "website": "https://linktr.ee/pizzeriabocatana.ok",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "linktr.ee",
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.5,
+      "reviews": 1749,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJa_6ryAWjMpQRorJWfoe_EF4"
+    },
+    {
+      "id": "ChIJsWAL_cPKvJURD5FlQ-em-iY",
+      "name": "Lalo de Buenos Aires",
+      "address": "Montevideo 306, C1042 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "6320-5335",
+      "website": "https://www.instagram.com/cooperativalalo/?hl=es-la",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/cooperativalalo/?hl=es-la"
+      },
+      "instagram": "https://www.instagram.com/cooperativalalo/?hl=es-la",
+      "rating": 4.4,
+      "reviews": 1737,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJsWAL_cPKvJURD5FlQ-em-iY"
+    },
+    {
+      "id": "ChIJXyNwoYPKvJURckUwHW5p45w",
+      "name": "La Aguada",
+      "address": "Billinghurst 1862, C1425DTL Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 4827-1802",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.4,
+      "reviews": 1714,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJXyNwoYPKvJURckUwHW5p45w"
+    },
+    {
+      "id": "ChIJzdlowf91fpYRyG_9eATtWNc",
+      "name": "ZANDY",
+      "address": "San Martín 1035, M5507 Luján de Cuyo, Mendoza, Argentina",
+      "phone": "0261 690-2501",
+      "website": "http://instagram.com/Zandyburguer",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "http://instagram.com/Zandyburguer"
+      },
+      "instagram": "http://instagram.com/Zandyburguer",
+      "rating": 4.8,
+      "reviews": 1681,
+      "status": "OPERATIONAL",
+      "types": [
+        "hamburger_restaurant",
+        "american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJzdlowf91fpYRyG_9eATtWNc"
+    },
+    {
+      "id": "ChIJdwsTZgRmzZURx6f0LOk-OhI",
+      "name": "Fortunato Ames",
+      "address": "Antonio del Viso 11, X5001AHA Córdoba, Argentina",
+      "phone": "0351 471-0133",
+      "website": "",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": null,
+        "instagram": null
+      },
+      "instagram": null,
+      "rating": 4.3,
+      "reviews": 1661,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJdwsTZgRmzZURx6f0LOk-OhI"
+    },
+    {
+      "id": "ChIJ-5C_aJcMfpYRpsJTTu7smtg",
+      "name": "Parrilla Churrasquito",
+      "address": "Emilio Civit 791, M5515 Maipú, Mendoza, Argentina",
+      "phone": "0261 15-272-8971",
+      "website": "https://linktr.ee/churrasquitomendoza",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/churrasquitomendoza"
+      },
+      "instagram": "https://www.instagram.com/churrasquitomendoza",
+      "rating": 4.5,
+      "reviews": 1595,
+      "status": "OPERATIONAL",
+      "types": [
+        "argentinian_restaurant",
+        "south_american_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJ-5C_aJcMfpYRpsJTTu7smtg",
+      "igFollowers": "1500",
+      "igActive": "sí, stories de parrilla"
+    },
+    {
+      "id": "ChIJBxb0daDLvJURDUVml7HuFTU",
+      "name": "Antonio's Pizza",
+      "address": "Tacuarí 76, C1071 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 7237-1066",
+      "website": "https://www.instagram.com/antoniospizzaba",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/antoniospizzaba"
+      },
+      "instagram": "https://www.instagram.com/antoniospizzaba",
+      "rating": 4.5,
+      "reviews": 1592,
+      "status": "OPERATIONAL",
+      "types": [
+        "pizza_restaurant",
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJBxb0daDLvJURDUVml7HuFTU"
+    },
+    {
+      "id": "ChIJGW3NMYDLvJURvo7J4LTRreE",
+      "name": "Rondó Cafe",
+      "address": "Uruguay 1048, C1016 Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 15-6358-7679",
+      "website": "https://instagram.com/rondddocafe",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://instagram.com/rondddocafe"
+      },
+      "instagram": "https://instagram.com/rondddocafe",
+      "rating": 4.5,
+      "reviews": 1552,
+      "status": "OPERATIONAL",
+      "types": [
+        "coffee_shop",
+        "cafeteria",
+        "cafe",
+        "food_store",
+        "store",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJGW3NMYDLvJURvo7J4LTRreE"
+    },
+    {
+      "id": "ChIJZcB6HFLLvJURjDM3TBgufxg",
+      "name": "ULTIMO BODEGON AR",
+      "address": "Florida 122, C1005AAF Cdad. Autónoma de Buenos Aires, Argentina",
+      "phone": "011 2263-9032",
+      "website": "https://www.instagram.com/ultimo_bodegon/",
+      "webClass": {
+        "hasRealWeb": false,
+        "social": "instagram.com",
+        "instagram": "https://www.instagram.com/ultimo_bodegon/"
+      },
+      "instagram": "https://www.instagram.com/ultimo_bodegon/",
+      "rating": 4.2,
+      "reviews": 1551,
+      "status": "OPERATIONAL",
+      "types": [
+        "restaurant",
+        "food",
+        "point_of_interest",
+        "establishment"
+      ],
+      "mapsUrl": "https://www.google.com/maps/place/?q=place_id:ChIJZcB6HFLLvJURjDM3TBgufxg"
+    }
+  ],
+  "meta": {
+    "queries": 112,
+    "totalPlaces": 509,
+    "report": {
+      "total": 509,
+      "closed": 0,
+      "withRealWeb": 207,
+      "noRealWeb": 302,
+      "withInstagramFromWeb": 105
+    }
+  }
+}

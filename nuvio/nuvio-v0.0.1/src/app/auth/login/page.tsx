@@ -1,9 +1,16 @@
 "use client";
 
+import { motion } from "motion/react";
 import { useState, Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/Button";
+import {
+  fadeInUpHero,
+  fadeInUp,
+  staggerContainer,
+  scaleInSpring,
+  getViewportOptions,
+} from "@/lib/animation";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -26,21 +33,30 @@ function LoginForm() {
   };
 
   return (
-    <>
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
       {error && (
-        <div
+        <motion.div
           className="mb-6 rounded-lg border border-danger/20 bg-danger-tint/50 p-4 text-caption text-danger-strong"
           role="alert"
+          variants={fadeInUp}
+          style={{ animationDelay: "0ms" }}
         >
           {error}
-        </div>
+        </motion.div>
       )}
 
-      <Button
+      <motion.button
         onClick={handleGoogleSignIn}
         disabled={loading}
-        className="w-full"
-        size="lg"
+        className="w-full inline-flex items-center justify-center font-medium h-14 px-8 text-body gap-2 rounded-md"
+        variants={scaleInSpring}
+        style={{ animationDelay: error ? "100ms" : "0ms" }}
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.98 }}
       >
         <svg
           className="h-5 w-5"
@@ -65,9 +81,13 @@ function LoginForm() {
           />
         </svg>
         {loading ? "Conectando..." : "Continuar con Google"}
-      </Button>
+      </motion.button>
 
-      <p className="mt-6 text-center text-caption text-muted-foreground">
+      <motion.p
+        className="mt-6 text-center text-caption text-muted-foreground"
+        variants={fadeInUp}
+        style={{ animationDelay: error ? "200ms" : "100ms" }}
+      >
         Al continuar, aceptás nuestros{" "}
         <a href="/terminos" className="underline hover:text-primary">
           Términos de uso
@@ -76,38 +96,57 @@ function LoginForm() {
         <a href="/privacidad" className="underline hover:text-primary">
           Política de privacidad
         </a>
-      </p>
-    </>
+      </motion.p>
+    </motion.div>
   );
 }
 
 export default function LoginPage() {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-12">
-      <div
+      <motion.div
         className="radial-lilac-glow pointer-events-none absolute inset-0"
         aria-hidden="true"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
       />
-      <div className="relative w-full max-w-md rounded-xl border border-border bg-surface p-8 shadow-[var(--shadow-md)]">
-        <div className="mb-8 text-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+
+      <motion.div
+        className="relative w-full max-w-md rounded-xl border border-border bg-surface p-8 shadow-[var(--shadow-md)]"
+        variants={fadeInUpHero}
+        initial="hidden"
+        animate="visible"
+        viewport={getViewportOptions()}
+      >
+        <motion.div className="mb-8 text-center" variants={staggerContainer}>
+          <motion.img
             src="/nuvio_logo_nuevo.png"
             alt="Nuvio"
             className="mx-auto h-14 w-auto"
+            variants={scaleInSpring}
+            style={{ animationDelay: "0ms" }}
           />
-          <h1 className="mt-5 text-heading font-semibold text-primary">
+          <motion.h1
+            className="mt-5 text-heading font-semibold text-primary"
+            variants={fadeInUpHero}
+            style={{ animationDelay: "100ms" }}
+          >
             Iniciá sesión en Nuvio
-          </h1>
-          <p className="mt-2 text-body leading-body text-muted-foreground">
+          </motion.h1>
+          <motion.p
+            className="mt-2 text-body leading-body text-muted-foreground"
+            variants={fadeInUp}
+            style={{ animationDelay: "150ms" }}
+          >
             Accedé con tu cuenta de Google para gestionar tus estudios médicos
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         <Suspense>
           <LoginForm />
         </Suspense>
-      </div>
+      </motion.div>
     </div>
   );
 }

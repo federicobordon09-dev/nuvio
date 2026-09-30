@@ -1,4 +1,15 @@
+"use client";
+
+import { motion } from "motion/react";
 import { CheckCircle, X } from "@/components/ui/icons";
+import {
+  sectionRevealStaggered,
+  fadeInUp,
+  slideInLeft,
+  slideInRight,
+  getViewportOptions,
+  STAGGER,
+} from "@/lib/animation";
 
 const PAINS = [
   "Valores y siglas sin contexto: no sabés qué es normal.",
@@ -13,13 +24,20 @@ const GAINS = [
 
 export default function ClarityComparison() {
   return (
-    <section
+    <motion.section
       id="claridad"
       className="overflow-hidden bg-background"
       aria-labelledby="claridad-heading"
+      variants={sectionRevealStaggered}
+      initial="hidden"
+      animate="visible"
+      viewport={getViewportOptions()}
     >
       <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
+        <motion.div
+          className="mx-auto max-w-2xl text-center"
+          variants={fadeInUp}
+        >
           <p className="text-caption font-medium uppercase tracking-caption text-violet">
             Tranquilidad y comprensión
           </p>
@@ -33,11 +51,18 @@ export default function ClarityComparison() {
             Comparamos el documento crudo que genera desasosiego con la
             explicación clara que te entrega Nuvio.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="mt-14 grid items-stretch gap-6 lg:grid-cols-2">
+        <motion.div
+          className="mt-14 grid items-stretch gap-6 lg:grid-cols-2"
+          variants={sectionRevealStaggered}
+        >
           {/* ── Antes: informe crudo ── */}
-          <div className="flex flex-col rounded-xl border border-border bg-surface p-6 shadow-[var(--shadow-sm)] sm:p-8">
+          <motion.div
+            className="flex flex-col rounded-xl border border-border bg-surface p-6 shadow-[var(--shadow-sm)] sm:p-8"
+            variants={slideInLeft}
+            style={{ animationDelay: "0ms" }}
+          >
             <div className="flex items-center justify-between gap-3 pb-4">
               <h3 className="text-caption font-medium uppercase tracking-caption text-muted-foreground">
                 Lo que te entrega el laboratorio
@@ -59,29 +84,48 @@ export default function ClarityComparison() {
               </p>
             </div>
 
-            <ul className="mt-6 space-y-2.5 text-caption leading-body text-muted-foreground">
-              {PAINS.map((pain) => (
-                <li key={pain} className="flex items-start gap-2">
+            <motion.ul
+              className="mt-6 space-y-2.5 text-caption leading-body text-muted-foreground"
+              variants={sectionRevealStaggered}
+            >
+              {PAINS.map((pain, index) => (
+                <motion.li
+                  key={pain}
+                  className="flex items-start gap-2"
+                  variants={fadeInUp}
+                  style={{ animationDelay: `${index * STAGGER.tight * 1000}ms` }}
+                >
                   <X className="mt-0.5 h-4 w-4 shrink-0 text-danger-strong" />
                   <span>{pain}</span>
-                </li>
+                </motion.li>
               ))}
-            </ul>
+            </motion.ul>
 
             <p className="mt-auto pt-6 text-center text-caption text-muted-foreground">
               Genera búsquedas caóticas que aumentan el estrés.
             </p>
-          </div>
+          </motion.div>
 
           {/* ── Después: explicación de Nuvio ── */}
-          <div className="relative flex flex-col overflow-hidden rounded-xl border border-border bg-surface p-6 shadow-[var(--shadow-lg)] sm:p-8">
+          <motion.div
+            className="relative flex flex-col overflow-hidden rounded-xl border border-border bg-surface p-6 shadow-[var(--shadow-lg)] sm:p-8"
+            variants={slideInRight}
+            style={{ animationDelay: "100ms" }}
+          >
             <div
               className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-primary-muted/50 blur-2xl"
               aria-hidden="true"
             />
 
-            <div className="relative flex items-center justify-between gap-3 pb-4">
-              <div className="flex items-center gap-2">
+            <motion.div
+              className="relative flex items-center justify-between gap-3 pb-4"
+              variants={fadeInUp}
+              style={{ animationDelay: "0ms" }}
+            >
+              <motion.div
+                className="flex items-center gap-2"
+                whileHover={{ x: 4, transition: { duration: 0.2 } }}
+              >
                 <span
                   aria-hidden="true"
                   className="flex h-6 w-6 items-center justify-center rounded-md bg-primary font-heading text-caption font-bold text-white"
@@ -91,13 +135,17 @@ export default function ClarityComparison() {
                 <h3 className="text-caption font-medium uppercase tracking-caption text-primary">
                   Lo que Nuvio te explica
                 </h3>
-              </div>
+              </motion.div>
               <span className="shrink-0 rounded-full bg-success-tint px-2.5 py-1 text-caption font-medium text-success-strong">
                 Lenguaje claro
               </span>
-            </div>
+            </motion.div>
 
-            <div className="relative space-y-4 rounded-lg bg-primary-muted/30 p-5">
+            <motion.div
+              className="relative space-y-4 rounded-lg bg-primary-muted/30 p-5"
+              variants={fadeInUp}
+              style={{ animationDelay: "100ms" }}
+            >
               <div>
                 <span className="block text-caption font-semibold uppercase tracking-caption text-violet">
                   En palabras simples
@@ -121,27 +169,43 @@ export default function ClarityComparison() {
                   es el valor más alejado de su rango.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
-            <ul className="relative mt-6 space-y-2.5 text-caption leading-body text-foreground">
-              {GAINS.map((gain) => (
-                <li key={gain} className="flex items-start gap-2">
+            <motion.ul
+              className="relative mt-6 space-y-2.5 text-caption leading-body text-foreground"
+              variants={sectionRevealStaggered}
+            >
+              {GAINS.map((gain, index) => (
+                <motion.li
+                  key={gain}
+                  className="flex items-start gap-2"
+                  variants={fadeInUp}
+                  style={{ animationDelay: `${index * STAGGER.tight * 1000}ms` }}
+                >
                   <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                   <span>{gain}</span>
-                </li>
+                </motion.li>
               ))}
-            </ul>
+            </motion.ul>
 
-            <p className="relative mt-auto pt-6 text-center text-caption font-medium text-violet">
+            <motion.p
+              className="relative mt-auto pt-6 text-center text-caption font-medium text-violet"
+              variants={fadeInUp}
+              style={{ animationDelay: "200ms" }}
+            >
               Llegás a tu consulta con contexto y preguntas concretas.
-            </p>
-          </div>
-        </div>
+            </motion.p>
+          </motion.div>
+        </motion.div>
 
-        <p className="mt-6 text-center text-caption text-muted-foreground">
+        <motion.p
+          className="mt-6 text-center text-caption text-muted-foreground"
+          variants={fadeInUp}
+          style={{ animationDelay: "300ms" }}
+        >
           Ejemplo con fines ilustrativos.
-        </p>
+        </motion.p>
       </div>
-    </section>
+    </motion.section>
   );
 }

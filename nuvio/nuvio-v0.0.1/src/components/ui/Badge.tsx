@@ -1,4 +1,8 @@
+"use client";
+
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
+import { badgeInteractive } from "@/lib/animation";
 
 type BadgeVariant = "success" | "warning" | "error" | "info" | "neutral" | "muted";
 type BadgeSize = "sm" | "md";
@@ -9,6 +13,7 @@ interface BadgeProps {
   dot?: boolean;
   className?: string;
   children: ReactNode;
+  hover?: boolean;
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
@@ -29,31 +34,31 @@ const dotColor: Record<BadgeVariant, string> = {
   muted: "bg-muted-foreground",
 };
 
-/* label-sm: 11px / 600 / 16px / 0.04em — pill padding 4px 12px on md */
 const sizeStyles: Record<BadgeSize, string> = {
   sm: "px-2 py-0.5 text-[11px] leading-4 font-semibold tracking-[0.04em]",
   md: "px-3 py-1 text-[11px] leading-4 font-semibold tracking-[0.04em]",
 };
 
-/**
- * Badge / StatusPill reutilizable.
- * El texto siempre comunica el estado — no depende solo del color.
- */
 export function Badge({
   variant = "muted",
   size = "md",
   dot = false,
   className = "",
   children,
+  hover = false,
 }: BadgeProps) {
+  const Component = hover ? motion.span : "span";
+
   return (
-    <span
+    <Component
       className={`inline-flex items-center gap-1.5 rounded-full ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      whileHover={hover ? badgeInteractive.hover : undefined}
+      whileTap={hover ? badgeInteractive.tap : undefined}
     >
       {dot && (
         <span className={`h-1.5 w-1.5 rounded-full ${dotColor[variant]}`} />
       )}
       {children}
-    </span>
+    </Component>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { sendMessageAction, setContextAction } from "@/lib/actions/chat";
 import type { ChatMessage, SelectableStudy } from "@/lib/chat/schema";
@@ -101,8 +102,17 @@ export function ChatView({
     messages
   );
 
-  // Schedule auto-send for initial prompt when arriving from a CTA
-  // handleSend is a function declaration (hoisted), safe to omit from deps
+  const handleSend = useCallback(async (rawContent?: string) => {
+    const content = (rawContent ?? input).trim();
+    if (!content || sending) return;
+
+    if (rawContent !== undefined) markUsed(rawContent);
+
+    if (rawContent === undefined) setInput("");
+
+    await doSend(content);
+  }, [input, sending, markUsed, doSend]);
+
   useEffect(() => {
     if (autoSendPromptRef.current !== null) return;
     if (!initialPrompt) return;
@@ -110,12 +120,11 @@ export function ChatView({
     if (!hasContext) return;
     if (sending) return;
     autoSendPromptRef.current = initialPrompt;
-    // Defer send to avoid setState-in-effect lint error
     const id = requestAnimationFrame(() => {
       handleSend(initialPrompt);
     });
     return () => cancelAnimationFrame(id);
-  }, [initialPrompt, hasMessages, hasContext, sending]);
+  }, [initialPrompt, hasMessages, hasContext, sending, handleSend]);
 
   const guidedQuestions = useMemo(() => {
     if (!initialPrompt) return visibleQuestions;
@@ -156,17 +165,6 @@ export function ChatView({
       behavior: "smooth",
     });
   }, [messages, sending]);
-
-  async function handleSend(rawContent?: string) {
-    const content = (rawContent ?? input).trim();
-    if (!content || sending) return;
-
-    if (rawContent !== undefined) markUsed(rawContent);
-
-    if (rawContent === undefined) setInput("");
-
-    await doSend(content);
-  }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -227,23 +225,35 @@ export function ChatView({
 
         {phase === "chat" && (
           <div className="flex flex-col gap-5 px-4 py-5 sm:px-6 sm:py-6">
-            {messages.map((m) => (
-              <MessageBubble key={m.id} message={m} />
-            ))}
+            <AnimatePresence mode="popLayout">
+              {messages.map((m) => (
+                <MessageBubble key={m.id} message={m} />
+              ))}
+            </AnimatePresence>
           </div>
         )}
 
         {sending && (
-          <div className="border-t border-border bg-background/70 px-4 py-2.5 sm:px-6">
+          <motion.div
+            className="border-t border-border bg-background/70 px-4 py-2.5 sm:px-6"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
             <div className="flex items-center gap-2 text-caption text-muted-foreground">
               <Spinner className="h-3.5 w-3.5 text-primary" />
               Nuvio está escribiendo…
             </div>
-          </div>
+          </motion.div>
         )}
 
         {error && (
-          <div className="flex items-center justify-between gap-3 border-t border-danger/20 bg-danger-tint px-4 py-2.5 text-caption text-danger sm:px-6">
+          <motion.div
+            className="flex items-center justify-between gap-3 border-t border-danger/20 bg-danger-tint px-4 py-2.5 text-caption text-danger sm:px-6"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
             <span>{error}</span>
             <button
               onClick={() => setError(null)}
@@ -252,7 +262,7 @@ export function ChatView({
             >
               Descartar
             </button>
-          </div>
+          </motion.div>
         )}
       </div>
 
@@ -267,7 +277,10 @@ export function ChatView({
 
       {phase !== "pick-study" && (
         <div className="shrink-0 border-t border-border bg-surface px-4 py-3 sm:px-6 sm:py-4">
-          <div className="flex items-end gap-2 rounded-xl border border-border-strong bg-background px-2 py-1.5 transition-shadow duration-150 focus-within:border-lilac-glow focus-within:ring-[3px] focus-within:ring-lilac-glow/20">
+          <motion.div
+            className="flex items-end gap-2 rounded-xl border border-border-strong bg-background px-2 py-1.5 transition-shadow duration-150 focus-within:border-lilac-glow focus-within:ring-[3px] focus-within:ring-lilac-glow/20"
+            whileHover={{ boxShadow: "var(--shadow-md)" }}
+          >
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -287,16 +300,18 @@ export function ChatView({
               aria-label="Mensaje"
               aria-describedby="chat-composer-hint"
             />
-            <button
+            <motion.button
               type="button"
               onClick={() => handleSend()}
               disabled={sending || !input.trim()}
               aria-label={sending ? "Enviando mensaje" : "Enviar mensaje"}
               className="grid h-11 w-11 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground shadow-sm transition-all duration-150 hover:bg-primary-hover hover:shadow-md active:scale-[0.95] disabled:opacity-50 disabled:cursor-not-allowed"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <Send className="h-5 w-5" />
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
           <div className="mt-2 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <p className="text-[11px] leading-4 text-muted-foreground">
               Nuvio es una herramienta de explicación y orientación informativa.

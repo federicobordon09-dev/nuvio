@@ -1,12 +1,14 @@
 "use client";
 
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { motion, type MotionProps } from "motion/react";
 import { Spinner } from "./Spinner";
+import { buttonInteractive } from "@/lib/animation";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 type ButtonSize = "sm" | "md" | "lg";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onAnimationStart" | "onAnimationEnd" | "onAnimationIteration"> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   loading?: boolean;
@@ -44,15 +46,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) {
     return (
-      <button
+      <motion.button
         ref={ref}
         disabled={disabled || loading}
-        className={`inline-flex items-center justify-center font-medium transition-all duration-150 ease-out focus-visible:ring-2 focus-visible:ring-lilac-glow focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-offset-4 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+        className={`inline-flex items-center justify-center font-medium transition-all duration-150 ease-out focus-visible:ring-2 focus-visible:ring-lilac-glow focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-offset-4 disabled:opacity-50 disabled:cursor-not-allowed ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+        whileHover={!disabled && !loading ? buttonInteractive.hover : undefined}
+        whileTap={!disabled && !loading ? buttonInteractive.tap : undefined}
         {...props}
       >
         {loading && <Spinner className="shrink-0" />}
         {children}
-      </button>
+      </motion.button>
     );
   },
 );
