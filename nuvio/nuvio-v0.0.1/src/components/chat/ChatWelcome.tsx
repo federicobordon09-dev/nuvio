@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { MessageCircle, Plus } from "@/components/ui/icons";
+import { MotionLink } from "@/components/ui/MotionLink";
 import { fadeInUpHero, fadeInUp, scaleInSpring, staggerContainer, pulseScale } from "@/lib/animation";
 
 export function ChatWelcome() {
@@ -35,7 +36,7 @@ export function ChatWelcome() {
         Creá una conversación, seleccioná uno de tus estudios y hacé preguntas
         sobre tus resultados.
       </motion.p>
-      <motion.link
+      <MotionLink
         href="/dashboard/chat?new=1"
         className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-md bg-primary px-6 py-3 text-body font-medium text-primary-foreground shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-primary-hover hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lilac-glow focus-visible:ring-offset-2 focus-visible:ring-offset-background active:translate-y-0"
         aria-label="Crear nueva conversación"
@@ -46,7 +47,7 @@ export function ChatWelcome() {
       >
         <Plus className="h-5 w-5" />
         Nueva conversación
-      </motion.link>
+      </MotionLink>
     </motion.div>
   );
 }

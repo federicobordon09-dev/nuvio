@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/Button";
+import { MotionLink } from "@/components/ui/MotionLink";
 import {
   fadeInUpHero,
   fadeInUp,
@@ -70,7 +71,7 @@ export default function FinalCta() {
           variants={staggerContainer}
           style={{ animationDelay: "300ms" }}
         >
-          <motion.a
+          <MotionLink
             href="/auth/login"
             variants={fadeInUp}
             style={{ animationDelay: "0ms" }}
@@ -78,7 +79,7 @@ export default function FinalCta() {
             <Button variant="secondary" size="lg">
               Subir un documento
             </Button>
-          </motion.a>
+          </MotionLink>
           <motion.a
             href="#seguridad"
             className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-md border border-white/20 bg-white/10 px-8 text-body font-medium text-white backdrop-blur-md transition-colors duration-150 hover:bg-white/15 sm:w-auto"

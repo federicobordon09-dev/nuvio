@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { Upload, Document, Shield } from "@/components/ui/icons";
+import { MotionLink } from "@/components/ui/MotionLink";
 import { fadeInUp, scaleInSpring, getViewportOptions, STAGGER } from "@/lib/animation";
 
 interface DashboardGreetingProps {
@@ -58,7 +59,7 @@ export function DashboardGreeting({ userName, greetingSummary, maxFileMB }: Dash
         </motion.div>
 
         <motion.div className="relative z-10 mt-6 flex flex-wrap items-center gap-3" variants={{ staggerChildren: STAGGER.tight }}>
-          <motion.link
+          <MotionLink
             href="/dashboard/subir"
             className="inline-flex min-h-11 items-center gap-2 rounded-md bg-primary px-6 py-3 text-body font-medium text-primary-foreground shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-primary-hover active:translate-y-0"
             variants={scaleInSpring}
@@ -67,8 +68,8 @@ export function DashboardGreeting({ userName, greetingSummary, maxFileMB }: Dash
           >
             <Upload className="h-4 w-4" />
             Subir nuevo estudio
-          </motion.link>
-          <motion.link
+          </MotionLink>
+          <MotionLink
             href="/dashboard/estudios"
             className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border-strong bg-surface px-5 py-3 text-body font-medium text-primary transition-colors duration-150 hover:bg-background"
             variants={scaleInSpring}
@@ -77,11 +78,11 @@ export function DashboardGreeting({ userName, greetingSummary, maxFileMB }: Dash
           >
             <Document className="h-4 w-4" />
             Ver mis estudios
-          </motion.link>
+          </MotionLink>
         </motion.div>
       </motion.div>
 
-      <motion.link
+      <MotionLink
         href="/dashboard/subir"
         className="group flex flex-col items-center justify-center gap-1 rounded-xl border border-border bg-surface p-6 text-center shadow-sm transition-all duration-150 hover:shadow-md lg:w-96"
         variants={fadeInUp}
@@ -105,7 +106,7 @@ export function DashboardGreeting({ userName, greetingSummary, maxFileMB }: Dash
           <Shield aria-hidden="true" className="h-3.5 w-3.5" />
           Tus estudios son privados
         </motion.span>
-      </motion.link>
+      </MotionLink>
     </motion.section>
   );
 }

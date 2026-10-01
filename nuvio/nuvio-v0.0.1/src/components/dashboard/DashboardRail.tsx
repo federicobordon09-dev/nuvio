@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { getSuggestedQuestions } from "@/lib/chat/suggested-questions";
 import { Chat, Compare, ChevronRight, Shield } from "@/components/ui/icons";
+import { MotionLink } from "@/components/ui/MotionLink";
 import {
   fadeInUp,
   scaleInSpring,
@@ -86,7 +87,7 @@ export function DashboardRail({ studies }: DashboardRailProps) {
           ))}
         </motion.ul>
 
-        <motion.link
+        <MotionLink
           href="/dashboard/chat"
           className="mt-4 flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-muted px-4 py-2.5 text-body font-medium text-primary transition-colors duration-150 hover:bg-primary-muted"
           variants={fadeInUp}
@@ -95,7 +96,7 @@ export function DashboardRail({ studies }: DashboardRailProps) {
         >
           Ir al chat
           <ChevronRight className="h-4 w-4" />
-        </motion.link>
+        </MotionLink>
       </motion.section>
 
       {/* Comparar — tarjeta de navegación, sin valores inventados */}
@@ -135,7 +136,7 @@ export function DashboardRail({ studies }: DashboardRailProps) {
             Elegí dos estudios y compará sus fechas, estados y resultados en una
             sola vista.
           </motion.p>
-          <motion.link
+          <MotionLink
             href="/dashboard/comparar"
             className="mt-1 flex min-h-11 w-full items-center justify-between gap-2 rounded-md bg-white/10 px-4 py-2.5 text-body font-medium text-white transition-colors duration-150 hover:bg-white/20"
             variants={scaleInSpring}
@@ -144,7 +145,7 @@ export function DashboardRail({ studies }: DashboardRailProps) {
           >
             Abrir comparador
             <ChevronRight aria-hidden="true" className="h-4 w-4" />
-          </motion.link>
+          </MotionLink>
         </motion.div>
       </motion.section>
 

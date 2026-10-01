@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import ProductPreview from "./ProductPreview";
 import { Button } from "@/components/ui/Button";
 import { Document, InfoCircle, Shield } from "@/components/ui/icons";
+import { MotionLink } from "@/components/ui/MotionLink";
 import {
   fadeInUpHero,
   fadeInUp,
@@ -112,7 +113,7 @@ export default function Hero() {
               variants={staggerContainer}
               style={{ animationDelay: "350ms" }}
             >
-              <motion.a
+              <MotionLink
                 href="/auth/login"
                 variants={fadeInUp}
                 style={{ animationDelay: "0ms" }}
@@ -120,7 +121,7 @@ export default function Hero() {
                 <Button variant="secondary" size="lg">
                   Subir un documento
                 </Button>
-              </motion.a>
+              </MotionLink>
               <motion.a
                 href="#como-funciona"
                 className="inline-flex h-14 items-center justify-center gap-2 rounded-md border border-white/20 bg-white/10 px-8 text-body font-medium text-white backdrop-blur-md transition-colors duration-150 hover:bg-white/15"

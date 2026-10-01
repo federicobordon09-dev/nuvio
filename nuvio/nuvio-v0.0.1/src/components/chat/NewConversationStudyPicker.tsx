@@ -7,6 +7,7 @@ import type { SelectableStudy } from "@/lib/chat/schema";
 import { Check } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { MotionLink } from "@/components/ui/MotionLink";
 import { fadeInUp, STAGGER } from "@/lib/animation";
 
 const CHECKBOX_TRANSITION = {
@@ -135,14 +136,14 @@ export function NewConversationStudyPicker({
           <p className="mt-2 max-w-sm text-caption text-muted-foreground">
             Subí y analizá un estudio para poder consultarlo acá.
           </p>
-          <motion.link
+          <MotionLink
             href="/dashboard/subir"
             className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-md bg-primary px-5 py-2.5 text-body font-medium text-primary-foreground shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lilac-glow focus-visible:ring-offset-2 active:translate-y-0"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.98 }}
           >
             Subir un estudio
-          </motion.link>
+          </MotionLink>
         </motion.div>
       ) : (
         <motion.ul className="flex flex-col gap-3" role="list" variants={{ staggerChildren: STAGGER.tight }}>
