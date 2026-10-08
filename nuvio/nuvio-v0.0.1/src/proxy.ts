@@ -1,6 +1,14 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+/**
+ * True only for routes that are gated by authentication. Public routes are
+ * skipped before a Supabase client is created.
+ */
+export function needsSessionCheck(pathname: string) {
+  return pathname.startsWith("/dashboard") || pathname.startsWith("/auth");
+}
+
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
@@ -8,6 +16,13 @@ export async function proxy(request: NextRequest) {
   // cookies (including the PKCE code verifier) to call exchangeCodeForSession().
   // Creating a Supabase server client here would interfere with those cookies.
   if (pathname === "/auth/callback") {
+    return NextResponse.next({ request });
+  }
+
+  // Public routes don't need a session check. Creating a Supabase client here
+  // triggers a session load (and possibly a token-refresh round-trip); skip it
+  // to avoid an outbound auth call on every request.
+  if (!needsSessionCheck(pathname)) {
     return NextResponse.next({ request });
   }
 

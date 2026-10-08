@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { getServerClient, getServerUser } from "@/lib/supabase/server";
 import { getStudyStats, listStudies } from "@/lib/actions/studies";
 import { MAX_FILE_SIZE, type StudyStats } from "@/lib/studies-utils";
 import { StudyCard } from "@/components/dashboard/StudyCard";
@@ -57,22 +58,23 @@ function buildGreetingSummary(stats: StudyStats): string {
 }
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const supabase = await getServerClient();
+  const user = await getServerUser();
   if (!user) {
-    const { redirect } = await import("next/navigation");
     redirect("/auth/login");
   }
 
   let stats: StudyStats = { total: 0, ready: 0, in_progress: 0, pending: 0, errors: 0 };
   let studies: Awaited<ReturnType<typeof listStudies>> = [];
   try {
-    const opts = { supabase, userId: user!.id };
+    const opts = { supabase, userId: user.id };
     const [s, list] = await Promise.all([getStudyStats(opts), listStudies(opts)]);
     stats = s;
     studies = list;
   } catch (err) {
-    console.error("[nuvio:dashboard] Error cargando datos:", err);
+    if (process.env.NODE_ENV === "development") {
+      console.error("[nuvio:dashboard] Error cargando datos:", err);
+    }
   }
 
   const recent = studies.slice(0, RECENT_LIMIT);

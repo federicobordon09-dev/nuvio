@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { getServerClient, getServerUser } from "@/lib/supabase/server";
 import { listStudies } from "@/lib/actions/studies";
 import { groupStudiesByType } from "@/lib/studies/history";
 import { computeStudyStats, type StudyStats } from "@/lib/studies-utils";
@@ -83,18 +84,19 @@ function StudySummaryBar({ stats }: { stats: StudyStats }) {
 }
 
 export default async function EstudiosPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const supabase = await getServerClient();
+  const user = await getServerUser();
   if (!user) {
-    const { redirect } = await import("next/navigation");
     redirect("/auth/login");
   }
 
   let studies: NonNullable<Awaited<ReturnType<typeof listStudies>>>;
   try {
-    studies = await listStudies({ supabase, userId: user!.id });
+    studies = await listStudies({ supabase, userId: user.id });
   } catch (err) {
-    console.error("[nuvio:estudios] Error cargando estudios:", err);
+    if (process.env.NODE_ENV === "development") {
+      console.error("[nuvio:estudios] Error cargando estudios:", err);
+    }
     studies = [];
   }
 

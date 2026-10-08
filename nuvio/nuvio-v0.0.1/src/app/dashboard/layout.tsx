@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getServerUser } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { MobileNav } from "@/components/dashboard/MobileNav";
@@ -12,18 +12,15 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
+  const user = await getServerUser();
 
-  if (!data) {
+  if (!user) {
     redirect("/auth/login");
   }
 
-  const { data: { user } } = await supabase.auth.getUser();
-
-  const userName = user?.user_metadata?.full_name ?? user?.email ?? "Usuario";
-  const userEmail = user?.email ?? "";
-  const userAvatar = user?.user_metadata?.avatar_url;
+  const userName = user.user_metadata?.full_name ?? user.email ?? "Usuario";
+  const userEmail = user.email ?? "";
+  const userAvatar = user.user_metadata?.avatar_url;
 
   return (
     <div className="min-h-screen bg-background">

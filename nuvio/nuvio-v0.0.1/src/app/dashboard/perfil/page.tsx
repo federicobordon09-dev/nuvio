@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getServerUser } from "@/lib/supabase/server";
 import { signOut } from "@/lib/actions/auth";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Card } from "@/components/ui/Card";
@@ -6,10 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { LogOut } from "@/components/ui/icons";
 
 export default async function PerfilPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getServerUser();
 
   const userName = user?.user_metadata?.full_name ?? "Usuario";
   const userEmail = user?.email ?? "";
