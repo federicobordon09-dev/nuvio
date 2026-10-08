@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { Upload, Document, Shield } from "@/components/ui/icons";
 import { MotionLink } from "@/components/ui/MotionLink";
 import { fadeInUp, scaleInSpring, getViewportOptions, STAGGER } from "@/lib/animation";
@@ -19,7 +19,7 @@ export function DashboardGreeting({ userName, greetingSummary, maxFileMB }: Dash
       initial="hidden"
       animate="visible"
       viewport={getViewportOptions()}
-      variants={{ staggerChildren: STAGGER.section }}
+      variants={{ staggerChildren: STAGGER.section } as unknown as Variants}
     >
       <motion.div
         className="relative flex flex-1 flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface p-6 shadow-sm sm:p-8"
@@ -30,7 +30,7 @@ export function DashboardGreeting({ userName, greetingSummary, maxFileMB }: Dash
           aria-hidden="true"
           className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary-muted/40 blur-3xl animate-float"
         />
-        <motion.div className="relative z-10 flex flex-col gap-3" variants={{ staggerChildren: STAGGER.tight }}>
+        <motion.div className="relative z-10 flex flex-col gap-3" variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}>
           <motion.span
             className="inline-flex items-center gap-2 self-start rounded-full bg-primary-muted/60 px-3 py-1 text-caption font-medium text-primary"
             variants={scaleInSpring}
@@ -58,7 +58,7 @@ export function DashboardGreeting({ userName, greetingSummary, maxFileMB }: Dash
           </motion.p>
         </motion.div>
 
-        <motion.div className="relative z-10 mt-6 flex flex-wrap items-center gap-3" variants={{ staggerChildren: STAGGER.tight }}>
+        <motion.div className="relative z-10 mt-6 flex flex-wrap items-center gap-3" variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}>
           <MotionLink
             href="/dashboard/subir"
             className="inline-flex min-h-11 items-center gap-2 rounded-md bg-primary px-6 py-3 text-body font-medium text-primary-foreground shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-primary-hover active:translate-y-0"

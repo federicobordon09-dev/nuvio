@@ -1,10 +1,10 @@
 "use client";
 
 import { forwardRef, type TextareaHTMLAttributes } from "react";
-import { motion } from "motion/react";
+import { motion, type HTMLMotionProps } from "motion/react";
 import { inputFocus } from "@/lib/animation";
 
-interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface TextareaProps extends Omit<HTMLMotionProps<"textarea">, "onAnimationStart" | "onAnimationEnd" | "onAnimationIteration"> {
   label?: string;
   error?: string;
   helperText?: string;

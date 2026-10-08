@@ -70,7 +70,9 @@ export async function extractPdfText(
       // Ignorable: la versión del motor puede no exponer setLog.
     }
   } catch (err) {
-    console.error("[nuvio:extract-pdf] No se pudo cargar mupdf.", err);
+    if (process.env.NODE_ENV === "development") {
+      console.error("[nuvio:extract-pdf] No se pudo cargar mupdf.", err);
+    }
     throw new PdfExtractionError(
       "extraction_failed",
       "No se pudo cargar el motor de extracción de texto."

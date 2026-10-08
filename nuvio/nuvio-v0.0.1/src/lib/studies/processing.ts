@@ -115,8 +115,10 @@ export async function processStudy(
     await setStudyProcessingStatus(supabase, target, "error", code);
 
     // Log interno seguro: solo IDs y código, nunca contenido del documento.
-    console.error(
-      `[nuvio:process-study] study=${target.id} code=${code}`
-    );
+    if (process.env.NODE_ENV === "development") {
+      console.error(
+        `[nuvio:process-study] study=${target.id} code=${code}`
+      );
+    }
   }
 }

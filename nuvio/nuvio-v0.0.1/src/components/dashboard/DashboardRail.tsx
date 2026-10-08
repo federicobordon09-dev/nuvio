@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { getSuggestedQuestions } from "@/lib/chat/suggested-questions";
 import { Chat, Compare, ChevronRight, Shield } from "@/components/ui/icons";
 import { MotionLink } from "@/components/ui/MotionLink";
@@ -69,7 +69,7 @@ export function DashboardRail({ studies }: DashboardRailProps) {
 
         <motion.ul
           className="mt-2 flex flex-col gap-2"
-          variants={{ staggerChildren: STAGGER.tight }}
+          variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}
         >
           {examples.map((question, index) => (
             <motion.li
@@ -114,7 +114,7 @@ export function DashboardRail({ studies }: DashboardRailProps) {
         />
         <motion.div
           className="relative flex flex-col gap-3"
-          variants={{ staggerChildren: STAGGER.tight }}
+          variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}
         >
           <span className="inline-flex items-center gap-2 text-caption font-semibold text-primary-muted">
             <Compare aria-hidden="true" className="h-4 w-4 text-lilac-glow" />

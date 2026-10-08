@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, type Variants } from "motion/react";
 import { useState } from "react";
 import { ConversationList } from "./ConversationList";
 import type { ChatConversation } from "@/lib/chat/schema";
@@ -40,7 +40,7 @@ export function ChatPageLayout({
       className="grid h-[calc(100vh-7rem)] min-h-[480px] gap-4 overflow-hidden lg:h-[calc(100vh-6rem)] lg:grid-cols-[280px_1fr] lg:gap-6"
       initial="hidden"
       animate="visible"
-      variants={{ staggerChildren: STAGGER.section }}
+      variants={{ staggerChildren: STAGGER.section } as unknown as Variants}
     >
       <motion.aside
         className="hidden min-h-0 lg:block"

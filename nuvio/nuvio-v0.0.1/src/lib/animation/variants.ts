@@ -1,6 +1,8 @@
 "use client";
 
-import { type Variants } from "motion/react";
+import { type Variants, type Transition } from "motion/react";
+
+export type { Transition };
 
 /**
  * Nuvio Animation System — Serene Clinical Editorial
@@ -31,12 +33,13 @@ export const EASING = {
 
 // ── Stagger Tokens ────────────────────────────────────────────────
 
-export const STAGGER = {
+// Typed as Record<string, number> to be compatible with Variants['staggerChildren']
+export const STAGGER: Record<string, number> = {
   tight: 0.04,
   base: 0.075,
   loose: 0.12,
   section: 0.15,
-} as const;
+};
 
 // ── Reusable Variants ─────────────────────────────────────────────
 

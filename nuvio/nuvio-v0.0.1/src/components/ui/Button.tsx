@@ -1,14 +1,14 @@
 "use client";
 
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { motion, type MotionProps } from "motion/react";
+import { motion, type HTMLMotionProps } from "motion/react";
 import { Spinner } from "./Spinner";
 import { buttonInteractive } from "@/lib/animation";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 type ButtonSize = "sm" | "md" | "lg";
 
-interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onAnimationStart" | "onAnimationEnd" | "onAnimationIteration"> {
+interface ButtonProps extends Omit<HTMLMotionProps<"button">, "onAnimationStart" | "onAnimationEnd" | "onAnimationIteration"> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   loading?: boolean;

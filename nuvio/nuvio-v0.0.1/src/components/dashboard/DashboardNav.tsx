@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { usePathname } from "next/navigation";
 import { navItems, isActivePath } from "./nav-items";
-import { slideInRight, navLinkVariants } from "@/lib/animation";
+import { slideInRight, navLinkVariants, STAGGER } from "@/lib/animation";
 
 export function DashboardNav() {
   const pathname = usePathname();
@@ -15,7 +15,7 @@ export function DashboardNav() {
       className="flex flex-col gap-1"
       initial="hidden"
       animate="visible"
-      variants={{ staggerChildren: 0.05 }}
+      variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}
     >
       {navItems.map((item, index) => {
         const active = isActivePath(pathname, item.href);

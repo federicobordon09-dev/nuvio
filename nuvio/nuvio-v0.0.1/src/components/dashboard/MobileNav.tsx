@@ -1,13 +1,14 @@
 "use client";
 
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, type Transition, type Variants } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/lib/actions/auth";
 import { navItems, isActivePath } from "./nav-items";
 import { X, Menu, LogOut } from "@/components/ui/icons";
-import { mobileNavPanel, mobileNavOverlay, slideInRight, getMotionSafeTransition } from "@/lib/animation";
+import { mobileNavPanel, mobileNavOverlay, slideInRight, getMotionSafeTransition, STAGGER } from "@/lib/animation";
 
 interface MobileNavProps {
   userName?: string;
@@ -77,7 +78,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
 
   return (
     <div className="lg:hidden">
-      <button
+      <motion.button
         ref={toggleRef}
         onClick={() => setOpen((v) => !v)}
         className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground transition-all duration-150 hover:bg-primary-muted/40 hover:text-foreground active:scale-[0.98]"
@@ -89,7 +90,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
         <AnimatePresence mode="wait">
           {open ? <X /> : <Menu />}
         </AnimatePresence>
-      </button>
+      </motion.button>
 
       <AnimatePresence>
         {open && (
@@ -102,7 +103,7 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
             animate="open"
             exit="closed"
             variants={mobileNavOverlay}
-            transition={getMotionSafeTransition({ duration: 0.2, ease: [0.16, 1, 0.3, 1] })}
+            transition={getMotionSafeTransition({ duration: 0.2, ease: [0.16, 1, 0.3, 1] } as Transition)}
           >
             <motion.div
               className="absolute inset-0 bg-foreground/30 backdrop-blur-md"
@@ -121,18 +122,18 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
               initial="closed"
               animate="open"
               exit="closed"
-              transition={getMotionSafeTransition({ duration: 0.3, ease: [0.16, 1, 0.3, 1] })}
+              transition={getMotionSafeTransition({ duration: 0.3, ease: [0.16, 1, 0.3, 1] } as Transition)}
             >
               <div className="flex items-center justify-between px-5 py-4">
                 <span className="text-subheading text-primary">Nuvio</span>
-                <button
+                <motion.button
                   onClick={close}
                   className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground hover:bg-primary-muted/40 active:scale-[0.98]"
                   aria-label="Cerrar menú"
                   whileTap={{ scale: 0.95 }}
                 >
                   <X />
-                </button>
+                </motion.button>
               </div>
 
               <div className="px-3">
@@ -144,7 +145,10 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
                   className="flex flex-col gap-1"
                   initial="hidden"
                   animate="visible"
-                  variants={{ staggerChildren: 0.05 }}
+                  variants={{
+                    hidden: {},
+                    visible: { transition: { staggerChildren: STAGGER.tight } },
+                  }}
                 >
                   {navItems.map((item, index) => {
                     const active = isActivePath(pathname, item.href);
@@ -233,10 +237,12 @@ export function MobileNav({ userName, userEmail, userAvatar }: MobileNavProps) {
                 {userName && (
                   <div className="mb-3 flex items-center gap-3 px-3">
                     {userAvatar ? (
-                      <img
+                      <Image
                         src={userAvatar}
                         alt=""
                         className="h-9 w-9 rounded-full"
+                        width={36}
+                        height={36}
                       />
                     ) : (
                       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-muted text-caption font-medium text-primary">

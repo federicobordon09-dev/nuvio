@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import "./globals.css";
 
 const inter = Inter({
@@ -24,7 +25,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 const TITLE = "Nuvio | Información médica compleja, explicada de forma clara";
 const DESCRIPTION =
   "Nuvio transforma documentos médicos en explicaciones claras y comprensibles. Subí tu estudio y entendé tus resultados.";
-const SITE_URL = "https://nuvio-lemon-six.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nuvio-lemon-six.vercel.app";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -62,7 +63,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="es"
       className={`${inter.variable} ${plusJakartaSans.variable} ${ibmPlexMono.variable}`}
     >
-      <body className="min-h-screen flex flex-col">{children}</body>
+      <body className="min-h-screen flex flex-col">
+        <ErrorBoundary>{children}</ErrorBoundary>
+      </body>
     </html>
   );
 }

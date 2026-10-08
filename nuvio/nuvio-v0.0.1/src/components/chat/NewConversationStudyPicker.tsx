@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import { formatStudyDate } from "@/lib/chat/dates";
 import type { SelectableStudy } from "@/lib/chat/schema";
@@ -113,7 +113,7 @@ export function NewConversationStudyPicker({
       className="mx-auto flex w-full max-w-lg flex-col px-4 py-8 sm:px-6"
       initial="hidden"
       animate="visible"
-      variants={{ staggerChildren: STAGGER.section }}
+      variants={{ staggerChildren: STAGGER.section } as unknown as Variants}
     >
       <motion.div className="mb-6" variants={fadeInUp}>
         <Heading className="text-heading text-primary">
@@ -146,7 +146,7 @@ export function NewConversationStudyPicker({
           </MotionLink>
         </motion.div>
       ) : (
-        <motion.ul className="flex flex-col gap-3" role="list" variants={{ staggerChildren: STAGGER.tight }}>
+        <motion.ul className="flex flex-col gap-3" role="list" variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}>
           {studies.map((study, index) => (
             <StudyOption
               key={study.id}

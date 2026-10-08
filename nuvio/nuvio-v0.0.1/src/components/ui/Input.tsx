@@ -1,10 +1,10 @@
 "use client";
 
 import { forwardRef, type InputHTMLAttributes } from "react";
-import { motion } from "motion/react";
+import { motion, type HTMLMotionProps } from "motion/react";
 import { inputFocus } from "@/lib/animation";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends Omit<HTMLMotionProps<"input">, "onAnimationStart" | "onAnimationEnd" | "onAnimationIteration"> {
   label?: string;
   error?: string;
   helperText?: string;

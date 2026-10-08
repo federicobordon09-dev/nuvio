@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Transition } from "motion/react";
 
 /**
  * Hook to detect prefers-reduced-motion
@@ -42,9 +43,9 @@ export function useMotionSafe<T>(normal: T, reduced: T): T {
  * Get transition config that respects reduced motion
  */
 export function getMotionSafeTransition(
-  normalTransition: object,
-  reducedTransition: object = { duration: 0.01 }
-) {
+  normalTransition: Transition,
+  reducedTransition: Transition = { duration: 0.01 }
+): Transition {
   const reducedMotion = typeof window !== "undefined"
     ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
     : false;

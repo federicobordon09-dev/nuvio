@@ -105,9 +105,11 @@ export async function withRetry<T>(
       const jitter = Math.random() * BASE_DELAY_MS;
       const waitMs = Math.round(delay + jitter);
 
-      console.warn(
-        `[nuvio:analyze-study] Transient error on attempt ${attempt}/${maxAttempts}, retrying in ${waitMs}ms: ${(err as Error).message}`
-      );
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          `[nuvio:analyze-study] Transient error on attempt ${attempt}/${maxAttempts}, retrying in ${waitMs}ms: ${(err as Error).message}`
+        );
+      }
 
       await new Promise((resolve) => setTimeout(resolve, waitMs));
     }
@@ -246,9 +248,11 @@ export async function analyzeStudyWithDeps(
       .eq("user_id", user.id);
 
     if (err instanceof GeminiError) {
-      console.error(
-        `[nuvio:analyze-study] Gemini ${err.type} for study=${studyId}: ${err.message}`
-      );
+      if (process.env.NODE_ENV === "development") {
+        console.error(
+          `[nuvio:analyze-study] Gemini ${err.type} for study=${studyId}: ${err.message}`
+        );
+      }
       throw new AnalysisError(
         err.type,
         `Gemini ${err.type}: ${err.message}`
@@ -256,9 +260,11 @@ export async function analyzeStudyWithDeps(
     }
     const message =
       err instanceof Error ? err.message : "Error desconocido de Gemini";
-    console.error(
-      `[nuvio:analyze-study] Gemini failed for study=${studyId}: ${message}`
-    );
+    if (process.env.NODE_ENV === "development") {
+      console.error(
+        `[nuvio:analyze-study] Gemini failed for study=${studyId}: ${message}`
+      );
+    }
     throw new AnalysisError("gemini_failed", "El análisis con IA falló.");
   }
 
@@ -268,9 +274,11 @@ export async function analyzeStudyWithDeps(
   } catch (err) {
     const message =
       err instanceof Error ? err.message : "Error desconocido de persistencia";
-    console.error(
-      `[nuvio:analyze-study] Persist failed for study=${studyId}: ${message}`
-    );
+    if (process.env.NODE_ENV === "development") {
+      console.error(
+        `[nuvio:analyze-study] Persist failed for study=${studyId}: ${message}`
+      );
+    }
     await supabase
       .from("studies")
       .update({

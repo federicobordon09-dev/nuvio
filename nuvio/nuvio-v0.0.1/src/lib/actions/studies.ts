@@ -10,6 +10,8 @@ import { MAX_FILE_SIZE, ALLOWED_MIME_TYPES, type StudyType, computeStudyStats, t
 import { sanitizeStorageFileName } from "@/lib/studies/sanitize-file-name";
 import { deleteStudyCore, countStudiesCore } from "@/lib/studies/study-ops";
 import { findConversationsForStudyCore, cleanupConversationsForDeletedStudyCore } from "@/lib/chat/chat-db";
+import { uploadRateLimiter } from "@/lib/security/rate-limiter";
+import { validateMimeType } from "@/lib/security/mime-validation";
 
 async function assertAuthenticated(supabase: Awaited<ReturnType<typeof createClient>>) {
   const { data: { user } } = await supabase.auth.getUser();
@@ -96,7 +98,16 @@ export async function uploadStudy(formData: FormData) {
     throw new Error("Debés seleccionar un archivo.");
   }
 
-  if (!(ALLOWED_MIME_TYPES as readonly string[]).includes(file.type)) {
+  // Rate limit: 10 uploads per minute per user
+  if (!uploadRateLimiter.check(user.id)) {
+    throw new Error("Demasiadas subidas. Esperá un minuto e intentá de nuevo.");
+  }
+
+  // Server-side MIME validation via magic-number signature
+  const arrayBuffer = await file.arrayBuffer();
+  const detectedMime = await validateMimeType(arrayBuffer, file.name);
+
+  if (!(ALLOWED_MIME_TYPES as readonly string[]).includes(detectedMime)) {
     throw new Error(
       "Tipo de archivo no permitido. Permitidos: PDF, JPEG, PNG, WebP."
     );
@@ -117,7 +128,7 @@ export async function uploadStudy(formData: FormData) {
   const { error: uploadError } = await supabase.storage
     .from("medical-studies")
     .upload(filePath, file, {
-      contentType: file.type,
+      contentType: detectedMime,
       cacheControl: "3600",
       upsert: false,
     });
@@ -132,7 +143,7 @@ export async function uploadStudy(formData: FormData) {
     file_name: fileName,
     file_path: filePath,
     file_size: file.size,
-    mime_type: file.type,
+    mime_type: detectedMime,
     study_type: null,
     status: "uploaded",
   });
@@ -386,7 +397,9 @@ export async function requestStudyAnalysis(
     if (err instanceof AnalysisError) {
       return { success: false, error: getAnalysisErrorMessage(err.code) };
     }
-    console.error("[nuvio:requestStudyAnalysis] Unexpected error:", err);
+    if (process.env.NODE_ENV === "development") {
+      console.error("[nuvio:requestStudyAnalysis] Unexpected error:", err);
+    }
     return { success: false, error: "No pudimos analizar este estudio." };
   }
 }

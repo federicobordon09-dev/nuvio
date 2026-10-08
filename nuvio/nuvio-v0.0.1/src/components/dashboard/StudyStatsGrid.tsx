@@ -1,6 +1,4 @@
-"use client";
-
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
 import type { StudyStats } from "@/lib/studies-utils";
 import { CheckCircle, Clock, Document, Warning } from "@/components/ui/icons";
@@ -11,12 +9,14 @@ import {
   STAGGER,
 } from "@/lib/animation";
 
-const STAT_ITEMS: Array<{
-  key: keyof StudyStats;
+interface StatItemConfig {
+  key: string;
   label: string;
   iconTone: string;
   icon: ReactNode;
-}> = [
+}
+
+const STAT_ITEMS: readonly StatItemConfig[] = [
   {
     key: "ready",
     label: "Estudios listos",
@@ -112,14 +112,16 @@ export function StudyStatsGrid({ stats }: { stats: StudyStats }) {
       initial="hidden"
       animate="visible"
       viewport={getViewportOptions()}
-      variants={{ staggerChildren: STAGGER.section }}
+      variants={{ staggerChildren: STAGGER.section } as unknown as Variants}
     >
       <motion.ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {STAT_ITEMS.map((item, index) => (
           <StatItem
-            key={item.key}
-            {...item}
-            value={stats[item.key]}
+            key={`stat-${item.key}`}
+            label={item.label}
+            iconTone={item.iconTone}
+            icon={item.icon}
+            value={stats[item.key as keyof StudyStats]}
             totalLabel={totalLabel}
             index={index}
           />

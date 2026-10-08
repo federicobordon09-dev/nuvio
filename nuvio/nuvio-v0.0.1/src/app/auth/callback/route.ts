@@ -27,12 +27,14 @@ export async function GET(request: NextRequest) {
       ? rawNext
       : "/dashboard";
 
-  console.log("[auth/callback]", {
-    hasCode: Boolean(code),
-    hasFlowId: searchParams.has("flow_id"),
-    next,
-    cookieNames: request.cookies.getAll().map((cookie) => cookie.name),
-  });
+  if (process.env.NODE_ENV === "development") {
+    console.log("[auth/callback]", {
+      hasCode: Boolean(code),
+      hasFlowId: searchParams.has("flow_id"),
+      next,
+      cookieNames: request.cookies.getAll().map((cookie) => cookie.name),
+    });
+  }
 
   if (!code) {
     return buildRedirect(request, "/auth/login", { error: "missing_code" });

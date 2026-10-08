@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { getSuggestedQuestions } from "@/lib/chat/suggested-questions";
 import { ChevronRight, QuestionCircle } from "@/components/ui/icons";
 import { fadeInUp, scaleInSpring, getViewportOptions, STAGGER } from "@/lib/animation";
@@ -33,12 +33,12 @@ export function SuggestedQuestions({
         initial="hidden"
         animate="visible"
         viewport={getViewportOptions()}
-        variants={{ staggerChildren: STAGGER.tight }}
+        variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}
       >
         <motion.p className="data-label mb-2" variants={fadeInUp}>
           También podés preguntar
         </motion.p>
-        <motion.div className="flex flex-wrap gap-2" variants={{ staggerChildren: STAGGER.tight }}>
+        <motion.div className="flex flex-wrap gap-2" variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}>
           {questions.slice(0, 3).map((q, index) => (
             <motion.button
               key={q}
@@ -65,7 +65,7 @@ export function SuggestedQuestions({
       initial="hidden"
       animate="visible"
       viewport={getViewportOptions()}
-      variants={{ staggerChildren: STAGGER.section }}
+      variants={{ staggerChildren: STAGGER.section } as unknown as Variants}
     >
       <motion.h2 className="text-subheading text-primary" variants={fadeInUp}>
         {title}
@@ -73,7 +73,7 @@ export function SuggestedQuestions({
       <motion.p className="mt-1 text-caption text-muted-foreground" variants={fadeInUp}>
         {subtitle}
       </motion.p>
-      <motion.div className="mt-4 grid gap-3 sm:grid-cols-2" variants={{ staggerChildren: STAGGER.tight }}>
+      <motion.div className="mt-4 grid gap-3 sm:grid-cols-2" variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}>
         {questions.map((q, index) => (
           <motion.button
             key={q}

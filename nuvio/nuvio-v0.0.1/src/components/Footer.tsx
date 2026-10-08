@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { fadeInUp, getViewportOptions, STAGGER } from "@/lib/animation";
@@ -76,14 +76,15 @@ export default function Footer() {
       viewport={getViewportOptions()}
     >
       <div className="mx-auto max-w-6xl px-6 py-14 lg:px-8">
-<motion.div
+        <motion.div
           className="grid gap-10 md:grid-cols-12"
-          // @ts-expect-error - inline variants object
-          variants={{ staggerChildren: STAGGER.section }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: STAGGER.section } },
+          }}
         >
         <motion.div
           className="md:col-span-5"
-          // @ts-expect-error - fadeInUp is a valid Variants object
           variants={fadeInUp}
           style={{ animationDelay: "0ms" }}
         >
@@ -114,7 +115,6 @@ export default function Footer() {
           <motion.nav
             aria-label="Plataforma"
             className="flex flex-col gap-3 md:col-span-3"
-            // @ts-expect-error - fadeInUp is a valid Variants object
             variants={fadeInUp}
             style={{ animationDelay: "100ms" }}
           >
@@ -123,7 +123,10 @@ export default function Footer() {
             </span>
             <motion.ul
               className="flex flex-col gap-2"
-              variants={{ staggerChildren: STAGGER.tight }}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: STAGGER.tight } },
+              }}
             >
               {PLATFORM_LINKS.map((link, index) => (
                 <FooterLink key={link.href} {...link} index={index} />
@@ -134,7 +137,6 @@ export default function Footer() {
           <motion.nav
             aria-label="Acceso"
             className="flex flex-col gap-3 md:col-span-2"
-            // @ts-expect-error - fadeInUp is a valid Variants object
             variants={fadeInUp}
             style={{ animationDelay: "200ms" }}
           >
@@ -143,7 +145,10 @@ export default function Footer() {
             </span>
             <motion.ul
               className="flex flex-col gap-2"
-              variants={{ staggerChildren: STAGGER.tight }}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: STAGGER.tight } },
+              }}
             >
               {ACCESS_LINKS.map((link, index) => (
                 <FooterLink key={link.href} {...link} index={index} />
@@ -153,7 +158,6 @@ export default function Footer() {
 
           <motion.div
             className="flex flex-col gap-3 md:col-span-2"
-            // @ts-expect-error - fadeInUp is a valid Variants object
             variants={fadeInUp}
             style={{ animationDelay: "300ms" }}
           >
@@ -162,7 +166,10 @@ export default function Footer() {
             </span>
             <motion.ul
               className="flex flex-col gap-2"
-              variants={{ staggerChildren: STAGGER.tight }}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: STAGGER.tight } },
+              }}
             >
               {RESPONSIBILITY.map((item, index) => (
                 <ResponsibilityItem key={item} item={item} index={index} />

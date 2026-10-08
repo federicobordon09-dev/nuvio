@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import { formatStudyDate } from "@/lib/chat/dates";
 import type { SelectableStudy } from "@/lib/chat/schema";
@@ -28,14 +28,14 @@ export function SelectedStudyBanner({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      variants={{ staggerChildren: STAGGER.tight }}
+      variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}
     >
       <motion.span
         aria-hidden="true"
         className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-lilac-glow shadow-sm"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.1, ...scaleInSpring.transition }}
+        transition={{ delay: 0.1, type: "spring", stiffness: 80, damping: 12 }}
       >
         <CheckCircle className="h-4 w-4" />
       </motion.span>
@@ -45,7 +45,7 @@ export function SelectedStudyBanner({
           {selected.length === 1 ? "Estudio en foco" : "Estudios en foco"}
         </p>
 
-        <motion.div className="mt-1.5 flex flex-wrap items-center gap-2" variants={{ staggerChildren: STAGGER.tight }}>
+        <motion.div className="mt-1.5 flex flex-wrap items-center gap-2" variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}>
           {selected.map((study, index) => {
             const label = getStudyTypeLabelNullable(study.study_type);
             const date = formatStudyDate(study.created_at ?? undefined);

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { getStudyTypeLabelNullable } from "@/lib/studies-utils";
 import type { SelectableStudy } from "@/lib/chat/schema";
 import { fadeInUp, STAGGER } from "@/lib/animation";
@@ -80,7 +80,7 @@ export function ContextPicker({
     <motion.div
       initial="hidden"
       animate="visible"
-      variants={{ staggerChildren: STAGGER.tight }}
+      variants={{ staggerChildren: STAGGER.tight } as unknown as Variants}
     >
       <p className="data-label mb-2">Estudios de contexto</p>
       {studies.length === 0 ? (

@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://nuvio-lemon-six.vercel.app
+
+# Sitemaps
+Sitemap: https://nuvio-lemon-six.vercel.app/sitemap.xml

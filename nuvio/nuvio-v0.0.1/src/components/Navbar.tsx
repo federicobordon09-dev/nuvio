@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, type Transition } from "motion/react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { Menu, X } from "@/components/ui/icons";
@@ -46,17 +46,17 @@ export default function Navbar() {
           : "rgba(255, 255, 255, 0.1)",
         backdropFilter: scrolled ? "blur(20px)" : "none",
       }}
-      transition={getMotionSafeTransition({ duration: 0.3, ease: [0.16, 1, 0.3, 1] })}
+      transition={getMotionSafeTransition({ duration: 0.3, ease: [0.16, 1, 0.3, 1] } as Transition)}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8">
         <Link href="/" className="flex items-center" aria-label="Nuvio">
           <motion.div
+            transition={getMotionSafeTransition({
+              duration: 0.3,
+              ease: [0.16, 1, 0.3, 1],
+            } as Transition)}
             style={{
               filter: scrolled ? "brightness(1)" : "brightness(0) invert(1)",
-              transition: getMotionSafeTransition({
-                duration: 0.3,
-                ease: [0.16, 1, 0.3, 1],
-              }),
             }}
           >
             <Image
@@ -79,15 +79,11 @@ export default function Navbar() {
           animate="visible"
         >
           <motion.ul
-            className="flex items-center gap-8 text-caption font-medium"
+            className="flex items-center gap-8 text-caption font-medium transition-colors duration-300"
             style={{
               color: scrolled
                 ? "rgb(74, 69, 77)"
                 : "rgba(255, 255, 255, 0.75)",
-              transition: getMotionSafeTransition({
-                duration: 0.3,
-                ease: [0.16, 1, 0.3, 1],
-              }),
             }}
             variants={fadeInDown}
           >
@@ -167,7 +163,7 @@ export default function Navbar() {
           variants={mobileNavPanel}
           initial="closed"
           animate={mobileOpen ? "open" : "closed"}
-          transition={getMotionSafeTransition({ duration: 0.3, ease: [0.16, 1, 0.3, 1] })}
+transition={getMotionSafeTransition({ duration: 0.3, ease: [0.16, 1, 0.3, 1] } as Transition)}
         >
           <div className="flex items-center justify-between px-5 py-4">
             <span className="text-subheading text-primary">Nuvio</span>

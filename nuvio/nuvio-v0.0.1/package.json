@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --experimental-test-module-mocks --test src/lib/analysis/__tests__/schema.test.ts src/lib/analysis/__tests__/gemini-unit.test.ts src/lib/analysis/__tests__/analyze-study.test.ts src/lib/analysis/__tests__/analysis-ui.test.ts src/lib/analysis/__tests__/analysis-action.test.ts src/lib/analysis/__tests__/gemini-timeout.test.ts src/lib/analysis/__tests__/analysis-automation.test.ts src/lib/analysis/__tests__/retry-and-pipeline.test.ts src/lib/studies/__tests__/study-ops.test.ts src/lib/studies/__tests__/sanitize-file-name.test.ts src/lib/studies/__tests__/history.test.ts src/lib/security/__tests__/policy-hardening.test.ts src/lib/chat/__tests__/schema.test.ts src/lib/chat/__tests__/chat-db.test.ts src/lib/chat/__tests__/chat-cleanup.test.ts src/lib/chat/__tests__/study-context.test.ts src/lib/chat/__tests__/chat-service.test.ts src/lib/chat/__tests__/suggested-questions.test.ts src/lib/chat/__tests__/active-conversation.test.ts src/lib/chat/__tests__/resolve-conversation.test.ts src/lib/chat/__tests__/study-chat-cta.test.ts src/components/studies/__tests__/analysis-ui-redesigned.test.ts src/lib/analysis/__tests__/result-presentation.test.ts src/lib/comparison/__tests__/compare-studies.test.ts src/lib/evolution/__tests__/parse-ids.test.ts src/lib/evolution/__tests__/presentation.test.ts src/lib/evolution/__tests__/build-series.test.ts src/lib/evolution/__tests__/selection.test.ts src/lib/evolution/__tests__/sparkline.test.ts"
+    "test": "node --experimental-strip-types --experimental-test-module-mocks --test src/lib/analysis/__tests__/schema.test.ts src/lib/analysis/__tests__/gemini-unit.test.ts src/lib/analysis/__tests__/analyze-study.test.ts src/lib/analysis/__tests__/analysis-ui.test.ts src/lib/analysis/__tests__/analysis-action.test.ts src/lib/analysis/__tests__/gemini-timeout.test.ts src/lib/analysis/__tests__/analysis-automation.test.ts src/lib/analysis/__tests__/retry-and-pipeline.test.ts src/lib/studies/__tests__/study-ops.test.ts src/lib/studies/__tests__/sanitize-file-name.test.ts src/lib/studies/__tests__/history.test.ts src/lib/security/__tests__/policy-hardening.test.ts src/lib/chat/__tests__/schema.test.ts src/lib/chat/__tests__/chat-db.test.ts src/lib/chat/__tests__/chat-cleanup.test.ts src/lib/chat/__tests__/study-context.test.ts src/lib/chat/__tests__/chat-service.test.ts src/lib/chat/__tests__/suggested-questions.test.ts src/lib/chat/__tests__/active-conversation.test.ts src/lib/chat/__tests__/resolve-conversation.test.ts src/lib/chat/__tests__/study-chat-cta.test.ts src/components/studies/__tests__/analysis-ui-redesigned.test.ts src/lib/analysis/__tests__/result-presentation.test.ts src/lib/comparison/__tests__/compare-studies.test.ts src/lib/evolution/__tests__/parse-ids.test.ts src/lib/evolution/__tests__/presentation.test.ts src/lib/evolution/__tests__/build-series.test.ts src/lib/evolution/__tests__/selection.test.ts src/lib/evolution/__tests__/sparkline.test.ts",
+    "test:vitest": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@google/genai": "^2.20.0",
@@ -15,20 +19,28 @@
     "@supabase/supabase-js": "^2.112.4",
     "motion": "^13.4.5",
     "mupdf": "^1.28.0",
-    "next": "16.3.3",
+    "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "zod": "^4.5.4"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.3",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@types/node": "^20.19.43",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.1",
+    "@vitest/coverage-v8": "^5.0.3",
+    "brace-expansion": "^5.0.12",
+    "eslint": "^10.11.0",
+    "eslint-config-next": "16.3.8",
+    "file-type": "^21.3.4",
+    "jsdom": "^30.1.1",
+    "next-sitemap": "^4.2.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.3"
   },
   "packageManager": "pnpm@11.24.0"
 }
